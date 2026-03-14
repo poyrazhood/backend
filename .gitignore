@@ -1,45 +1,20 @@
-# Dependencies
-node_modules/
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-
-# Environment
+﻿node_modules/
 .env
-.env.local
-.env.*.local
-
-# Logs
-logs/
+uploads/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Runtime
-.DS_Store
-*.pid
-*.seed
-*.pid.lock
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Build
-dist/
-build/
-.cache/
-
-# Testing
-coverage/
-.nyc_output/
-
-# Docker
-docker-compose.override.yml
-
-# Prisma
 prisma/migrations/
+fix-*.mjs
+fix-*.sql
+fix-*.cjs
+status*.cjs
+test-*.cjs
+test-*.mjs
+test_*.mjs
+update-*.cjs
+update-*.mjs
+update_*.mjs
+telegram-*.cjs
+watch.cjs
+statuskapsamli.cjs
+statusv1.cjs
+{
