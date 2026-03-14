@@ -18,3 +18,7 @@ watch.cjs
 statuskapsamli.cjs
 statusv1.cjs
 {
+
+memory/
+db-export.json
+*.db
