@@ -1,0 +1,37 @@
+{
+  "name": "tecrubelerim",
+  "version": "0.1.0",
+  "description": "High-trust local business discovery platform",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "db:generate": "node scripts/fix-bom.mjs && prisma generate",
+    "db:push": "node scripts/fix-bom.mjs && prisma db push --skip-generate",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:seed": "node prisma/seed.js",
+    "fix:bom": "node scripts/fix-bom.mjs",
+    "predev": "node scripts/fix-bom.mjs"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "@fastify/multipart": "^9.4.0",
+    "@fastify/static": "^9.0.0",
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^3.0.3",
+    "fastify": "^5.2.0",
+    "jsonwebtoken": "^9.0.3",
+    "redis": "^4.7.0",
+    "sharp": "^0.34.5",
+    "slugify": "^1.6.6"
+  },
+  "devDependencies": {
+    "pino-pretty": "^11.0.0",
+    "prisma": "^5.22.0"
+  }
+}

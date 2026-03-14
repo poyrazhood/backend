@@ -1,0 +1,460 @@
+[
+  {
+    "name": "Kafeler",
+    "slug": "kafeler",
+    "parent": {
+      "name": "Yeme & İçme",
+      "slug": "yeme-icme"
+    }
+  },
+  {
+    "name": "Restoranlar",
+    "slug": "restoranlar",
+    "parent": {
+      "name": "Yeme & İçme",
+      "slug": "yeme-icme"
+    }
+  },
+  {
+    "name": "Barlar & Gece Hayatı",
+    "slug": "barlar",
+    "parent": {
+      "name": "Yeme & İçme",
+      "slug": "yeme-icme"
+    }
+  },
+  {
+    "name": "Pastane & Fırın",
+    "slug": "pastane-firin",
+    "parent": {
+      "name": "Yeme & İçme",
+      "slug": "yeme-icme"
+    }
+  },
+  {
+    "name": "Fast Food & Paket Servis",
+    "slug": "fast-food",
+    "parent": {
+      "name": "Yeme & İçme",
+      "slug": "yeme-icme"
+    }
+  },
+  {
+    "name": "Kahve & Çay",
+    "slug": "kahve-cay",
+    "parent": {
+      "name": "Yeme & İçme",
+      "slug": "yeme-icme"
+    }
+  },
+  {
+    "name": "Restoran",
+    "slug": "restoran",
+    "parent": {
+      "name": "Yeme & İçme",
+      "slug": "yeme-icme"
+    }
+  },
+  {
+    "name": "Kafe",
+    "slug": "kafe",
+    "parent": {
+      "name": "Yeme & İçme",
+      "slug": "yeme-icme"
+    }
+  },
+  {
+    "name": "Eczane",
+    "slug": "eczane",
+    "parent": {
+      "name": "Sağlık & Medikal",
+      "slug": "saglik-medikal"
+    }
+  },
+  {
+    "name": "Hastane & Acil",
+    "slug": "hastane",
+    "parent": {
+      "name": "Sağlık & Medikal",
+      "slug": "saglik-medikal"
+    }
+  },
+  {
+    "name": "Spor & Fitness",
+    "slug": "spor-fitness",
+    "parent": {
+      "name": "Sağlık & Medikal",
+      "slug": "saglik-medikal"
+    }
+  },
+  {
+    "name": "Psikoloji & Terapi",
+    "slug": "psikoloji-terapi",
+    "parent": {
+      "name": "Sağlık & Medikal",
+      "slug": "saglik-medikal"
+    }
+  },
+  {
+    "name": "Diş Sağlığı",
+    "slug": "dis-sagligi",
+    "parent": {
+      "name": "Sağlık & Medikal",
+      "slug": "saglik-medikal"
+    }
+  },
+  {
+    "name": "Klinik & Poliklinik",
+    "slug": "klinik-poliklinik",
+    "parent": {
+      "name": "Sağlık & Medikal",
+      "slug": "saglik-medikal"
+    }
+  },
+  {
+    "name": "Spa & Masaj",
+    "slug": "spa-masaj",
+    "parent": {
+      "name": "Güzellik & Bakım",
+      "slug": "guzellik-bakim"
+    }
+  },
+  {
+    "name": "Kuaför & Berber",
+    "slug": "kuafor-berber",
+    "parent": {
+      "name": "Güzellik & Bakım",
+      "slug": "guzellik-bakim"
+    }
+  },
+  {
+    "name": "Güzellik Merkezi",
+    "slug": "guzellik-merkezi",
+    "parent": {
+      "name": "Güzellik & Bakım",
+      "slug": "guzellik-bakim"
+    }
+  },
+  {
+    "name": "Dövme & Piercing",
+    "slug": "dovme-piercing",
+    "parent": {
+      "name": "Güzellik & Bakım",
+      "slug": "guzellik-bakim"
+    }
+  },
+  {
+    "name": "Tırnak Stüdyo",
+    "slug": "tirnak-studio",
+    "parent": {
+      "name": "Güzellik & Bakım",
+      "slug": "guzellik-bakim"
+    }
+  },
+  {
+    "name": "Elektronik & Teknoloji",
+    "slug": "elektronik",
+    "parent": {
+      "name": "Alışveriş",
+      "slug": "alisveris"
+    }
+  },
+  {
+    "name": "AVM & Alışveriş Merkezi",
+    "slug": "avm",
+    "parent": {
+      "name": "Alışveriş",
+      "slug": "alisveris"
+    }
+  },
+  {
+    "name": "Kitap & Kırtasiye",
+    "slug": "kitap-kirtasiye",
+    "parent": {
+      "name": "Alışveriş",
+      "slug": "alisveris"
+    }
+  },
+  {
+    "name": "Ev & Mobilya",
+    "slug": "ev-mobilya",
+    "parent": {
+      "name": "Alışveriş",
+      "slug": "alisveris"
+    }
+  },
+  {
+    "name": "Market",
+    "slug": "market",
+    "parent": {
+      "name": "Alışveriş",
+      "slug": "alisveris"
+    }
+  },
+  {
+    "name": "Market & Süpermarket",
+    "slug": "market-supermarket",
+    "parent": {
+      "name": "Alışveriş",
+      "slug": "alisveris"
+    }
+  },
+  {
+    "name": "Giyim & Moda",
+    "slug": "giyim-moda",
+    "parent": {
+      "name": "Alışveriş",
+      "slug": "alisveris"
+    }
+  },
+  {
+    "name": "Temizlik Hizmetleri",
+    "slug": "temizlik",
+    "parent": {
+      "name": "Hizmetler",
+      "slug": "hizmetler"
+    }
+  },
+  {
+    "name": "Oto Servis & Yedek Parça",
+    "slug": "oto-servis",
+    "parent": {
+      "name": "Hizmetler",
+      "slug": "hizmetler"
+    }
+  },
+  {
+    "name": "Muhasebe & Finans",
+    "slug": "muhasebe-finans",
+    "parent": {
+      "name": "Hizmetler",
+      "slug": "hizmetler"
+    }
+  },
+  {
+    "name": "Hukuki Hizmetler",
+    "slug": "hukuk",
+    "parent": {
+      "name": "Hizmetler",
+      "slug": "hizmetler"
+    }
+  },
+  {
+    "name": "Tadilat & İnşaat",
+    "slug": "tadilat-insaat",
+    "parent": {
+      "name": "Hizmetler",
+      "slug": "hizmetler"
+    }
+  },
+  {
+    "name": "Nakliyat & Taşımacılık",
+    "slug": "nakliyat",
+    "parent": {
+      "name": "Hizmetler",
+      "slug": "hizmetler"
+    }
+  },
+  {
+    "name": "Kurs & Dershane",
+    "slug": "kurs-dershane",
+    "parent": {
+      "name": "Eğitim",
+      "slug": "egitim"
+    }
+  },
+  {
+    "name": "Dil Okulu",
+    "slug": "dil-okulu",
+    "parent": {
+      "name": "Eğitim",
+      "slug": "egitim"
+    }
+  },
+  {
+    "name": "Müzik & Sanat Kursları",
+    "slug": "muzik-sanat",
+    "parent": {
+      "name": "Eğitim",
+      "slug": "egitim"
+    }
+  },
+  {
+    "name": "Okul & Lise",
+    "slug": "okul",
+    "parent": {
+      "name": "Eğitim",
+      "slug": "egitim"
+    }
+  },
+  {
+    "name": "Üniversite",
+    "slug": "universite",
+    "parent": {
+      "name": "Eğitim",
+      "slug": "egitim"
+    }
+  },
+  {
+    "name": "Düğün & Organizasyon",
+    "slug": "dugun-organizasyon",
+    "parent": {
+      "name": "Eğlence & Kültür",
+      "slug": "eglence-kultur"
+    }
+  },
+  {
+    "name": "Park & Doğa",
+    "slug": "parklar",
+    "parent": {
+      "name": "Eğlence & Kültür",
+      "slug": "eglence-kultur"
+    }
+  },
+  {
+    "name": "Müze & Galeri",
+    "slug": "muzeler",
+    "parent": {
+      "name": "Eğlence & Kültür",
+      "slug": "eglence-kultur"
+    }
+  },
+  {
+    "name": "Sinema",
+    "slug": "sinema",
+    "parent": {
+      "name": "Eğlence & Kültür",
+      "slug": "eglence-kultur"
+    }
+  },
+  {
+    "name": "Oyun & Eğlence Merkezi",
+    "slug": "oyun-eglence",
+    "parent": {
+      "name": "Eğlence & Kültür",
+      "slug": "eglence-kultur"
+    }
+  },
+  {
+    "name": "Pansiyon & Hostel",
+    "slug": "pansiyon-hostel",
+    "parent": {
+      "name": "Konaklama",
+      "slug": "konaklama"
+    }
+  },
+  {
+    "name": "Otel",
+    "slug": "otel",
+    "parent": {
+      "name": "Konaklama",
+      "slug": "konaklama"
+    }
+  },
+  {
+    "name": "Apart & Kiralık",
+    "slug": "apart-kiralik",
+    "parent": {
+      "name": "Konaklama",
+      "slug": "konaklama"
+    }
+  },
+  {
+    "name": "Veteriner",
+    "slug": "veteriner",
+    "parent": {
+      "name": "Evcil Hayvan",
+      "slug": "evcil-hayvan"
+    }
+  },
+  {
+    "name": "Pet Shop",
+    "slug": "pet-shop",
+    "parent": {
+      "name": "Evcil Hayvan",
+      "slug": "evcil-hayvan"
+    }
+  },
+  {
+    "name": "Hayvan Bakımevi",
+    "slug": "hayvan-bakimevi",
+    "parent": {
+      "name": "Evcil Hayvan",
+      "slug": "evcil-hayvan"
+    }
+  },
+  {
+    "name": "Araç Kiralama",
+    "slug": "oto-kiralama",
+    "parent": {
+      "name": "Ulaşım & Araç",
+      "slug": "ulasim"
+    }
+  },
+  {
+    "name": "Oto Galeri",
+    "slug": "oto-galeri",
+    "parent": {
+      "name": "Ulaşım & Araç",
+      "slug": "ulasim"
+    }
+  },
+  {
+    "name": "Taksi & Servis",
+    "slug": "taksi-servis",
+    "parent": {
+      "name": "Ulaşım & Araç",
+      "slug": "ulasim"
+    }
+  },
+  {
+    "name": "Alışveriş",
+    "slug": "alisveris",
+    "parent": null
+  },
+  {
+    "name": "Güzellik & Bakım",
+    "slug": "guzellik-bakim",
+    "parent": null
+  },
+  {
+    "name": "Ulaşım & Araç",
+    "slug": "ulasim",
+    "parent": null
+  },
+  {
+    "name": "Evcil Hayvan",
+    "slug": "evcil-hayvan",
+    "parent": null
+  },
+  {
+    "name": "Sağlık & Medikal",
+    "slug": "saglik-medikal",
+    "parent": null
+  },
+  {
+    "name": "Konaklama",
+    "slug": "konaklama",
+    "parent": null
+  },
+  {
+    "name": "Eğlence & Kültür",
+    "slug": "eglence-kultur",
+    "parent": null
+  },
+  {
+    "name": "Yeme & İçme",
+    "slug": "yeme-icme",
+    "parent": null
+  },
+  {
+    "name": "Eğitim",
+    "slug": "egitim",
+    "parent": null
+  },
+  {
+    "name": "Hizmetler",
+    "slug": "hizmetler",
+    "parent": null
+  }
+]

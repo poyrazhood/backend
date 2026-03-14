@@ -1,0 +1,1 @@
+﻿DELETE FROM "OpeningHours" a USING "OpeningHours" b WHERE a.ctid > b.ctid AND a.id = b.id; DELETE FROM "ExternalReview" a USING "ExternalReview" b WHERE a.ctid > b.ctid AND a.id = b.id;

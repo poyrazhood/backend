@@ -1,0 +1,376 @@
+- generic [ref=e1]:
+  - generic "Google Haritalar" [ref=e2]:
+    - generic [ref=e3]:
+      - application "Harita·Haritayı kaydırmak için ok tuşlarını kullanın.·Bir yerin ilişkili sayısını tuşlayarak bu yer hakkındaki ayrıntıları görün." [ref=e5]
+      - generic [ref=e8]:
+        - search [ref=e11]:
+          - button "Geri" [ref=e182] [cursor=pointer]:
+            - generic [ref=e14]: 
+          - generic [ref=e15]:
+            - combobox [ref=e17]: Kayalar Pastanesi Aladağ İstanbul
+            - button "Ara" [ref=e19] [cursor=pointer]:
+              - generic [ref=e20]: 
+            - button "Kapat" [ref=e22] [cursor=pointer]:
+              - generic [ref=e23]: 
+        - generic [ref=e26]:
+          - generic:
+            - button [ref=e27] [cursor=pointer]
+            - button "Show the Input Tools menu" [ref=e29] [cursor=pointer]
+      - generic [ref=e31]:
+        - main "Kayalar Pastanesi" [ref=e190]:
+          - tablist [ref=e240]:
+            - tab "Kayalar Pastanesi adlı yere genel bakış" [ref=e241]:
+              - generic [ref=e243]: Genel Bakış
+            - tab "Menü" [ref=e245]:
+              - generic [ref=e247]: Menü
+            - tab "Kayalar Pastanesi ile ilgili yorumlar" [selected] [ref=e249]:
+              - generic [ref=e251]: Yorumlar
+            - tab "Kayalar Pastanesi hakkında" [ref=e253]:
+              - generic [ref=e255]: Hakkında
+          - generic [ref=e803]:
+            - generic [ref=e805]:
+              - table [ref=e807]:
+                - rowgroup [ref=e808]:
+                  - img "5 yıldızlı,57 yorum" [ref=e809]: "5"
+                  - img "4 yıldızlı,7 yorum" [ref=e812]: "4"
+                  - img "3 yıldızlı,8 yorum" [ref=e815]: "3"
+                  - img "2 yıldızlı,4 yorum" [ref=e818]: "2"
+                  - img "1 yıldızlı,5 yorum" [ref=e821]: "1"
+              - generic [ref=e824]:
+                - generic [ref=e825]: 4,3
+                - img "4,3 yıldızlı" [ref=e826]
+                - generic [ref=e832]: 81 yorum
+            - generic [ref=e834]:
+              - generic [ref=e835]: Yorumlar doğrulanmamıştır
+              - button "Google Haritalar'daki herkese açık yorumlara ilişkin yasal açıklama hakkında daha fazla bilgi edinin" [ref=e839]:
+                - generic [ref=e843]: 
+            - button "Yorum yazın" [ref=e847] [cursor=pointer]:
+              - generic [ref=e848]:
+                - generic [ref=e849]: 
+                - generic [ref=e850]: Yorum yazın
+            - generic [ref=e854]:
+              - textbox "Yorumlarda arayın" [ref=e855]
+              - generic: Yorumlarda arayın
+            - button "En yeni" [active] [ref=e1299] [cursor=pointer]:
+              - generic [ref=e858]: En yeni
+              - generic [ref=e859]: 
+            - generic [ref=e1300]:
+              - generic "Jakklin" [ref=e1301]:
+                - generic [ref=e1303]:
+                  - button "Jakklin adlı kullanıcının fotoğrafı" [ref=e1304]
+                  - generic [ref=e1306]:
+                    - button "Jakklin 1 yorum" [ref=e1308]:
+                      - generic [ref=e1309]: Jakklin
+                      - generic [ref=e1310]: 1 yorum
+                    - button "Jakklin adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1311] [cursor=pointer]:
+                      - generic [ref=e1313]: 
+                  - generic [ref=e1314]:
+                    - generic [ref=e1315]:
+                      - img "2 yıldız" [ref=e1316]:
+                        - generic [ref=e1317]: 
+                        - generic [ref=e1318]: 
+                        - generic [ref=e1319]: 
+                        - generic [ref=e1320]: 
+                        - generic [ref=e1321]: 
+                      - generic [ref=e1322]: 5 ay önce
+                    - generic [ref=e1324]: Geçtiğimiz günlerde buradaydık ve soğuk tatlılar ve pasta yedik. Kısa boylu, sarışın bir adam bize pek dikkat etmedi, bizimle sohbet etmeye çalıştı ve masamıza oturdu.
+                    - switch "Google tarafından çevrildi ・ Orijinal içeriği göster (Ukraynaca)" [checked] [ref=e1326] [cursor=pointer]:
+                      - generic [ref=e1327]: Google tarafından çevrildi ・
+                      - text: Orijinal içeriği göster (Ukraynaca)
+                    - generic [ref=e1328]:
+                      - button "Beğenme" [ref=e1329]:
+                        - generic [ref=e1330] [cursor=pointer]:
+                          - generic [ref=e1331]: 
+                          - generic [ref=e1333]: Beğen
+                      - button "Jakklin adlı kullanıcının yorumunu paylaşın." [ref=e1334]:
+                        - generic [ref=e1335] [cursor=pointer]:
+                          - generic [ref=e1336]: 
+                          - generic [ref=e1337]: Paylaş
+              - generic "Ismail Evren" [ref=e1341]:
+                - generic [ref=e1343]:
+                  - button "Ismail Evren adlı kullanıcının fotoğrafı" [ref=e1344]
+                  - generic [ref=e1346]:
+                    - button "Ismail Evren Yerel Rehber · 199 yorum · 228 fotoğraf" [ref=e1348]:
+                      - generic [ref=e1349]: Ismail Evren
+                      - generic [ref=e1350]: Yerel Rehber · 199 yorum · 228 fotoğraf
+                    - button "Ismail Evren adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1351] [cursor=pointer]:
+                      - generic [ref=e1353]: 
+                  - generic [ref=e1354]:
+                    - generic [ref=e1355]:
+                      - img "5 yıldız" [ref=e1356]:
+                        - generic [ref=e1357]: 
+                        - generic [ref=e1358]: 
+                        - generic [ref=e1359]: 
+                        - generic [ref=e1360]: 
+                        - generic [ref=e1361]: 
+                      - generic [ref=e1362]: 9 ay önce
+                    - generic [ref=e1364]: Meraklı gözlemci
+                    - switch "Google tarafından çevrildi ・ Orijinal içeriği göster (Özbekçe)" [checked] [ref=e1366] [cursor=pointer]:
+                      - generic [ref=e1367]: Google tarafından çevrildi ・
+                      - text: Orijinal içeriği göster (Özbekçe)
+                    - generic [ref=e1368]:
+                      - button "Beğenme" [ref=e1369]:
+                        - generic [ref=e1370] [cursor=pointer]:
+                          - generic [ref=e1371]: 
+                          - generic [ref=e1373]: Beğen
+                      - button "Ismail Evren adlı kullanıcının yorumunu paylaşın." [ref=e1374]:
+                        - generic [ref=e1375] [cursor=pointer]:
+                          - generic [ref=e1376]: 
+                          - generic [ref=e1377]: Paylaş
+              - generic "Yasir ERDOĞAN" [ref=e1381]:
+                - generic [ref=e1383]:
+                  - button "Yasir ERDOĞAN adlı kullanıcının fotoğrafı" [ref=e1384]
+                  - generic [ref=e1386]:
+                    - button "Yasir ERDOĞAN Yerel Rehber · 8 fotoğraf" [ref=e1388]:
+                      - generic [ref=e1389]: Yasir ERDOĞAN
+                      - generic [ref=e1390]: Yerel Rehber · 8 fotoğraf
+                    - button "Yasir ERDOĞAN adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1391] [cursor=pointer]:
+                      - generic [ref=e1393]: 
+                  - generic [ref=e1395]:
+                    - img "3 yıldız" [ref=e1396]:
+                      - generic [ref=e1397]: 
+                      - generic [ref=e1398]: 
+                      - generic [ref=e1399]: 
+                      - generic [ref=e1400]: 
+                      - generic [ref=e1401]: 
+                    - generic [ref=e1402]: 10 ay önce
+              - generic "Ezgi nur Kar" [ref=e1406]:
+                - generic [ref=e1408]:
+                  - button "Ezgi nur Kar adlı kullanıcının fotoğrafı" [ref=e1409]
+                  - generic [ref=e1411]:
+                    - button "Ezgi nur Kar 2 yorum" [ref=e1413]:
+                      - generic [ref=e1414]: Ezgi nur Kar
+                      - generic [ref=e1415]: 2 yorum
+                    - button "Ezgi nur Kar adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1416] [cursor=pointer]:
+                      - generic [ref=e1418]: 
+                  - generic [ref=e1419]:
+                    - generic [ref=e1420]:
+                      - img "5 yıldız" [ref=e1421]:
+                        - generic [ref=e1422]: 
+                        - generic [ref=e1423]: 
+                        - generic [ref=e1424]: 
+                        - generic [ref=e1425]: 
+                        - generic [ref=e1426]: 
+                      - generic [ref=e1427]: bir yıl önce
+                    - generic [ref=e1429]:
+                      - text: Pastane ekibi, tatlıları, pastaları, hoşgürü ve sevgileriyle mükemmel hizmet vermekte ✨🥰 …
+                      - generic [ref=e1434]: Yiyecek:…
+                      - button "Daha fazla göster" [ref=e1436] [cursor=pointer]: Diğer
+                    - generic [ref=e1437]:
+                      - button "Beğenme" [ref=e1438]:
+                        - generic [ref=e1439] [cursor=pointer]:
+                          - generic [ref=e1440]: 
+                          - generic [ref=e1442]: Beğen
+                      - button "Ezgi nur Kar adlı kullanıcının yorumunu paylaşın." [ref=e1443]:
+                        - generic [ref=e1444] [cursor=pointer]:
+                          - generic [ref=e1445]: 
+                          - generic [ref=e1446]: Paylaş
+              - generic "Kadir Kartal" [ref=e1450]:
+                - generic [ref=e1452]:
+                  - button "Kadir Kartal adlı kullanıcının fotoğrafı" [ref=e1453]
+                  - generic [ref=e1455]:
+                    - button "Kadir Kartal 1 yorum" [ref=e1457]:
+                      - generic [ref=e1458]: Kadir Kartal
+                      - generic [ref=e1459]: 1 yorum
+                    - button "Kadir Kartal adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1460] [cursor=pointer]:
+                      - generic [ref=e1462]: 
+                  - generic [ref=e1463]:
+                    - generic [ref=e1464]:
+                      - img "5 yıldız" [ref=e1465]:
+                        - generic [ref=e1466]: 
+                        - generic [ref=e1467]: 
+                        - generic [ref=e1468]: 
+                        - generic [ref=e1469]: 
+                        - generic [ref=e1470]: 
+                      - generic [ref=e1471]: bir yıl önce
+                    - generic [ref=e1473]: Öğrenciler için güzel ortam fazla çeşit var ❤
+                    - generic [ref=e1474]:
+                      - button "Beğenme" [ref=e1475]:
+                        - generic [ref=e1476] [cursor=pointer]:
+                          - generic [ref=e1477]: 
+                          - generic [ref=e1479]: Beğen
+                      - button "Kadir Kartal adlı kullanıcının yorumunu paylaşın." [ref=e1480]:
+                        - generic [ref=e1481] [cursor=pointer]:
+                          - generic [ref=e1482]: 
+                          - generic [ref=e1483]: Paylaş
+              - generic "Ceyda 00" [ref=e1487]:
+                - generic [ref=e1489]:
+                  - button "Ceyda 00 adlı kullanıcının fotoğrafı" [ref=e1490]
+                  - generic [ref=e1492]:
+                    - button "Ceyda 00 1 yorum" [ref=e1494]:
+                      - generic [ref=e1495]: Ceyda 00
+                      - generic [ref=e1496]: 1 yorum
+                    - button "Ceyda 00 adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1497] [cursor=pointer]:
+                      - generic [ref=e1499]: 
+                  - generic [ref=e1500]:
+                    - generic [ref=e1501]:
+                      - img "5 yıldız" [ref=e1502]:
+                        - generic [ref=e1503]: 
+                        - generic [ref=e1504]: 
+                        - generic [ref=e1505]: 
+                        - generic [ref=e1506]: 
+                        - generic [ref=e1507]: 
+                      - generic [ref=e1508]: bir yıl önce
+                    - generic [ref=e1510]:
+                      - text: Öğrencilerin 1 numaralı tercihi sıcak ve güzel ortam pastaları güzeldir
+                      - generic [ref=e1515]: "Yiyecek: 5…"
+                      - button "Daha fazla göster" [ref=e1517] [cursor=pointer]: Diğer
+                    - generic [ref=e1518]:
+                      - button "Beğenme" [ref=e1519]:
+                        - generic [ref=e1520] [cursor=pointer]:
+                          - generic [ref=e1521]: 
+                          - generic [ref=e1523]: Beğen
+                      - button "Ceyda 00 adlı kullanıcının yorumunu paylaşın." [ref=e1524]:
+                        - generic [ref=e1525] [cursor=pointer]:
+                          - generic [ref=e1526]: 
+                          - generic [ref=e1527]: Paylaş
+              - generic "Kürşat Cingöz" [ref=e1531]:
+                - generic [ref=e1533]:
+                  - button "Kürşat Cingöz adlı kullanıcının fotoğrafı" [ref=e1534]
+                  - generic [ref=e1536]:
+                    - button "Kürşat Cingöz 1 yorum" [ref=e1538]:
+                      - generic [ref=e1539]: Kürşat Cingöz
+                      - generic [ref=e1540]: 1 yorum
+                    - button "Kürşat Cingöz adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1541] [cursor=pointer]:
+                      - generic [ref=e1543]: 
+                  - generic [ref=e1544]:
+                    - generic [ref=e1545]:
+                      - img "5 yıldız" [ref=e1546]:
+                        - generic [ref=e1547]: 
+                        - generic [ref=e1548]: 
+                        - generic [ref=e1549]: 
+                        - generic [ref=e1550]: 
+                        - generic [ref=e1551]: 
+                      - generic [ref=e1552]: bir yıl önce
+                    - generic [ref=e1554]: Rahatlıkla çay içip ders çalışabileceğiniz sıcak bir kafe ortamı gitmenizi tavsiye ederim
+                    - generic [ref=e1555]:
+                      - button "Beğenme" [ref=e1556]:
+                        - generic [ref=e1557] [cursor=pointer]:
+                          - generic [ref=e1558]: 
+                          - generic [ref=e1560]: Beğen
+                      - button "Kürşat Cingöz adlı kullanıcının yorumunu paylaşın." [ref=e1561]:
+                        - generic [ref=e1562] [cursor=pointer]:
+                          - generic [ref=e1563]: 
+                          - generic [ref=e1564]: Paylaş
+              - generic "Şaban Eren Bolat" [ref=e1568]:
+                - generic [ref=e1570]:
+                  - button "Şaban Eren Bolat adlı kullanıcının fotoğrafı" [ref=e1571]
+                  - generic [ref=e1573]:
+                    - button "Şaban Eren Bolat 2 yorum" [ref=e1575]:
+                      - generic [ref=e1576]: Şaban Eren Bolat
+                      - generic [ref=e1577]: 2 yorum
+                    - button "Şaban Eren Bolat adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1578] [cursor=pointer]:
+                      - generic [ref=e1580]: 
+                  - generic [ref=e1581]:
+                    - generic [ref=e1582]:
+                      - img "5 yıldız" [ref=e1583]:
+                        - generic [ref=e1584]: 
+                        - generic [ref=e1585]: 
+                        - generic [ref=e1586]: 
+                        - generic [ref=e1587]: 
+                        - generic [ref=e1588]: 
+                      - generic [ref=e1589]: bir yıl önce
+                    - generic [ref=e1591]:
+                      - text: Öğrencilerin rahatlıkla çay icebilegi sıcak bir mekan çalışanlar çok ilgili tavsiye ederim gitmenizi
+                      - button "Daha fazla göster" [ref=e1593] [cursor=pointer]: Diğer
+                    - generic [ref=e1594]:
+                      - button "Beğenme" [ref=e1595]:
+                        - generic [ref=e1596] [cursor=pointer]:
+                          - generic [ref=e1597]: 
+                          - generic [ref=e1599]: Beğen
+                      - button "Şaban Eren Bolat adlı kullanıcının yorumunu paylaşın." [ref=e1600]:
+                        - generic [ref=e1601] [cursor=pointer]:
+                          - generic [ref=e1602]: 
+                          - generic [ref=e1603]: Paylaş
+              - generic "Semih Gürlek" [ref=e1607]:
+                - generic [ref=e1609]:
+                  - button "Semih Gürlek adlı kullanıcının fotoğrafı" [ref=e1610]
+                  - generic [ref=e1612]:
+                    - button "Semih Gürlek 1 yorum" [ref=e1614]:
+                      - generic [ref=e1615]: Semih Gürlek
+                      - generic [ref=e1616]: 1 yorum
+                    - button "Semih Gürlek adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1617] [cursor=pointer]:
+                      - generic [ref=e1619]: 
+                  - generic [ref=e1620]:
+                    - generic [ref=e1621]:
+                      - img "5 yıldız" [ref=e1622]:
+                        - generic [ref=e1623]: 
+                        - generic [ref=e1624]: 
+                        - generic [ref=e1625]: 
+                        - generic [ref=e1626]: 
+                        - generic [ref=e1627]: 
+                      - generic [ref=e1628]: bir yıl önce
+                    - generic [ref=e1630]:
+                      - text: Hemen her gün müdavimi olduğum, sıcak ve güzel bir pastane ortamı, öğrencilerin 1.numaralı tercihi 👏👏 …
+                      - button "Daha fazla göster" [ref=e1632] [cursor=pointer]: Diğer
+                    - generic [ref=e1633]:
+                      - button "Beğenme" [ref=e1634]:
+                        - generic [ref=e1635] [cursor=pointer]:
+                          - generic [ref=e1636]: 
+                          - generic [ref=e1638]: Beğen
+                      - button "Semih Gürlek adlı kullanıcının yorumunu paylaşın." [ref=e1639]:
+                        - generic [ref=e1640] [cursor=pointer]:
+                          - generic [ref=e1641]: 
+                          - generic [ref=e1642]: Paylaş
+              - generic "Yakup Mustafa Çiçek" [ref=e1646]:
+                - generic [ref=e1648]:
+                  - button "Yakup Mustafa Çiçek adlı kullanıcının fotoğrafı" [ref=e1649]
+                  - generic [ref=e1651]:
+                    - button "Yakup Mustafa Çiçek 1 yorum" [ref=e1653]:
+                      - generic [ref=e1654]: Yakup Mustafa Çiçek
+                      - generic [ref=e1655]: 1 yorum
+                    - button "Yakup Mustafa Çiçek adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1656] [cursor=pointer]:
+                      - generic [ref=e1658]: 
+                  - generic [ref=e1659]:
+                    - generic [ref=e1660]:
+                      - img "4 yıldız" [ref=e1661]:
+                        - generic [ref=e1662]: 
+                        - generic [ref=e1663]: 
+                        - generic [ref=e1664]: 
+                        - generic [ref=e1665]: 
+                        - generic [ref=e1666]: 
+                      - generic [ref=e1667]: bir yıl önce
+                    - generic [ref=e1668]:
+                      - generic [ref=e1670]:
+                        - generic [ref=e1672]: Hizmet
+                        - generic [ref=e1674]: İçeride servis…
+                      - button "Daha fazla göster" [ref=e1676] [cursor=pointer]: Diğer
+                    - generic [ref=e1677]:
+                      - button "Beğenme" [ref=e1678]:
+                        - generic [ref=e1679] [cursor=pointer]:
+                          - generic [ref=e1680]: 
+                          - generic [ref=e1682]: Beğen
+                      - button "Yakup Mustafa Çiçek adlı kullanıcının yorumunu paylaşın." [ref=e1683]:
+                        - generic [ref=e1684] [cursor=pointer]:
+                          - generic [ref=e1685]: 
+                          - generic [ref=e1686]: Paylaş
+        - button "Yan paneli daralt" [ref=e119] [cursor=pointer]:
+          - generic [ref=e120]: 
+      - generic [ref=e124]:
+        - button "Google uygulamaları" [ref=e128] [cursor=pointer]:
+          - img [ref=e129]
+        - link "Oturum açın" [ref=e132] [cursor=pointer]:
+          - /url: https://accounts.google.com/ServiceLogin?hl=tr&passive=true&continue=https%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2FKayalar%2520Pastanesi%2520Alada%25C4%259F%2520%25C4%25B0stanbul&service=local&ec=GAZAcQ
+      - generic [ref=e133]:
+        - generic:
+          - button "Konumunuzu Gösterin" [ref=e136] [cursor=pointer]:
+            - generic [ref=e138]: 
+          - generic [ref=e140] [cursor=pointer]:
+            - button "Yakınlaştır" [ref=e141]
+            - button "Uzaklaştır" [ref=e144]
+        - button "Street View resimlerine göz atın" [ref=e152]
+        - generic [ref=e158]:
+          - generic "Etkileşimli harita" [ref=e159]
+          - generic [ref=e163] [cursor=pointer]:
+            - generic [ref=e164]: 
+            - generic [ref=e165]: Katmanlar
+          - button "Katmanlar" [ref=e166] [cursor=pointer]
+      - generic [ref=e168]:
+        - contentinfo [ref=e171]:
+          - text: Görüntüler ©2026 ,Harita verileri ©2026 Google
+          - button "Türkiye" [ref=e172] [cursor=pointer]
+          - button "Şartlar" [ref=e173] [cursor=pointer]
+          - button "Gizlilik" [ref=e174] [cursor=pointer]
+          - button "Ürün Geri Bildirimi Gönder" [ref=e175] [cursor=pointer]
+        - button "100 km" [ref=e177] [cursor=pointer]: 100 km
+  - generic [ref=e1720]: Yorumlar en yeniden en eskiye doğru sıralandı.

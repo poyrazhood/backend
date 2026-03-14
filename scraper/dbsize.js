@@ -1,0 +1,1 @@
+"const {PrismaClient}=require('@prisma/client');const p=new PrismaClient();p['$queryRaw']`SELECT pg_size_pretty(pg_database_size(current_database())) as size`.then(r=>console.log('DB:',r[0].size)).finally(()=>p.disconnect())"  

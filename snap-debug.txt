@@ -1,0 +1,94 @@
+- generic "Google Haritalar" [ref=e2]:
+  - generic [ref=e3]:
+    - application "Harita·Haritayı kaydırmak için ok tuşlarını kullanın.·Bir yerin ilişkili sayısını tuşlayarak bu yer hakkındaki ayrıntıları görün." [ref=e5]
+    - generic [ref=e8]:
+      - search [ref=e11]:
+        - button "Menü" [ref=e13] [cursor=pointer]:
+          - generic [ref=e14]: 
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e17]: Google Haritalar'da ara
+            - combobox "Google Haritalar'da ara" [active] [ref=e18]
+          - button "Ara" [ref=e20] [cursor=pointer]:
+            - generic [ref=e21]: 
+          - button "Yol tarifi" [ref=e23] [cursor=pointer]:
+            - generic [ref=e24]: 
+      - region "Konya" [ref=e29]:
+        - generic [ref=e30]:
+          - heading "Konya" [level=1] [ref=e32]
+          - group "Konya için hava durumu" [ref=e33]:
+            - generic [ref=e34]: 2°
+            - img "Çok bulutlu" [ref=e35]
+        - region "Trafik" [ref=e36]:
+          - button "Bu bölgede hafif trafik var Yakınlarda gecikme yok" [ref=e37] [cursor=pointer]:
+            - img [ref=e39]
+            - generic [ref=e40]:
+              - generic [ref=e41]: Bu bölgede hafif trafik var
+              - generic [ref=e42]: Yakınlarda gecikme yok
+            - generic [ref=e43]: 
+      - generic [ref=e46]:
+        - generic:
+          - button [ref=e47] [cursor=pointer]
+          - button "Show the Input Tools menu" [ref=e49] [cursor=pointer]
+    - region "Bu bölge için kullanılabilir arama seçenekleri" [ref=e57]:
+      - generic [ref=e60]:
+        - button "Restoranlar" [ref=e62] [cursor=pointer]:
+          - generic [ref=e63]:
+            - generic [ref=e65]: 
+            - generic [ref=e66]: Restoranlar
+        - button "Oteller" [ref=e68] [cursor=pointer]:
+          - generic [ref=e69]:
+            - generic [ref=e71]: 
+            - generic [ref=e72]: Oteller
+        - button "Yapılacaklar" [ref=e74] [cursor=pointer]:
+          - generic [ref=e75]:
+            - generic [ref=e77]: 
+            - generic [ref=e78]: Yapılacaklar
+        - button "Müzeler" [ref=e80] [cursor=pointer]:
+          - generic [ref=e81]:
+            - generic [ref=e83]: 
+            - generic [ref=e84]: Müzeler
+        - button "Toplu Taşıma" [ref=e86] [cursor=pointer]:
+          - generic [ref=e87]:
+            - generic [ref=e89]: 
+            - generic [ref=e90]: Toplu Taşıma
+        - button "Eczaneler" [ref=e92] [cursor=pointer]:
+          - generic [ref=e93]:
+            - generic [ref=e95]: 
+            - generic [ref=e96]: Eczaneler
+        - button "ATM'ler" [ref=e98] [cursor=pointer]:
+          - generic [ref=e99]:
+            - generic [ref=e101]: 
+            - generic [ref=e102]: ATM'ler
+      - button "Sonraki sayfa" [ref=e103] [cursor=pointer]:
+        - generic [ref=e104]: 
+    - generic [ref=e108]:
+      - button "Google uygulamaları" [ref=e112] [cursor=pointer]:
+        - img [ref=e113]
+      - link "Oturum açın" [ref=e116] [cursor=pointer]:
+        - /url: https://accounts.google.com/ServiceLogin?hl=tr&passive=true&continue=https%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2F%3Fapi%3D1&service=local&ec=GAZAcQ
+    - generic:
+      - generic:
+        - button "Konumunuzu Gösterin" [ref=e119] [cursor=pointer]:
+          - generic [ref=e121]: 
+        - generic [ref=e123] [cursor=pointer]:
+          - button "Yakınlaştır" [ref=e124]
+          - button "Uzaklaştır" [ref=e127]
+      - generic [ref=e134] [cursor=pointer]:
+        - button "Street View resimlerine göz atın" [ref=e135]
+        - button "Görüntüleri görün" [ref=e137]:
+          - generic [ref=e140]: 
+      - generic [ref=e141]:
+        - generic "Etkileşimli harita" [ref=e142]
+        - generic [ref=e146] [cursor=pointer]:
+          - generic [ref=e147]: 
+          - generic [ref=e148]: Katmanlar
+        - button "Katmanlar" [ref=e149] [cursor=pointer]
+    - generic [ref=e151]:
+      - contentinfo [ref=e154]:
+        - text: Görüntüler ©2026 ,Harita verileri ©2026 Google
+        - button "Türkiye" [ref=e155] [cursor=pointer]
+        - button "Şartlar" [ref=e156] [cursor=pointer]
+        - button "Gizlilik" [ref=e157] [cursor=pointer]
+        - button "Ürün Geri Bildirimi Gönder" [ref=e158] [cursor=pointer]
+      - button "1 km" [ref=e160] [cursor=pointer]: 1 km

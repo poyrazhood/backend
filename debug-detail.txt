@@ -1,0 +1,331 @@
+- generic "Google Haritalar" [ref=e2]:
+  - generic [ref=e3]:
+    - application "Harita·Haritayı kaydırmak için ok tuşlarını kullanın.·Bir yerin ilişkili sayısını tuşlayarak bu yer hakkındaki ayrıntıları görün." [ref=e5]
+    - generic [ref=e8]:
+      - search [ref=e11]:
+        - button "Geri" [ref=e259] [cursor=pointer]:
+          - generic [ref=e14]: 
+        - generic [ref=e15]:
+          - combobox [ref=e17]: Alada─ş teras cafe İstanbul
+          - button "Ara" [ref=e19] [cursor=pointer]:
+            - generic [ref=e20]: 
+          - button "Kapat" [ref=e22] [cursor=pointer]:
+            - generic [ref=e23]: 
+      - generic [ref=e26]:
+        - generic:
+          - button [ref=e27] [cursor=pointer]
+          - button "Show the Input Tools menu" [ref=e29] [cursor=pointer]
+    - button "Bu bölgede arayın" [ref=e263]:
+      - generic [ref=e264] [cursor=pointer]:
+        - generic [ref=e265]: 
+        - generic [ref=e266]: Bu bölgede arayın
+    - generic [ref=e31]:
+      - main "Teras Cafe" [ref=e267]:
+        - generic [ref=e268]:
+          - button "Teras Cafe fotoğrafı" [active] [ref=e270] [cursor=pointer]:
+            - img [ref=e271]
+          - button "Fotoğrafları göster" [ref=e272] [cursor=pointer]:
+            - generic [ref=e273]: 
+            - generic [ref=e274]: Fotoğrafları göster
+        - generic [ref=e277]:
+          - heading "Teras Cafe" [level=1] [ref=e279]: Teras Cafe
+          - generic [ref=e281]:
+            - generic [ref=e282]:
+              - generic [ref=e283]:
+                - generic [ref=e284]:
+                  - text: 4,6
+                  - img "4,6 yıldızlı" [ref=e285]
+                - img "52 yorum" [ref=e293]: (52)
+              - button "Google Haritalar'daki herkese açık yorumlara ilişkin yasal açıklama hakkında daha fazla bilgi edinin" [ref=e299]:
+                - generic [ref=e303]: 
+              - generic [ref=e306]:
+                - text: ·
+                - generic [ref=e308]: ₺1–100
+            - button "Geleneksel Çay Evi" [ref=e312]
+        - tablist [ref=e315]:
+          - tab "Teras Cafe adlı yere genel bakış" [selected] [ref=e316]:
+            - generic [ref=e318]: Genel Bakış
+          - tab "Teras Cafe ile ilgili yorumlar" [ref=e320]:
+            - generic [ref=e322]: Yorumlar
+          - tab "Teras Cafe hakkında" [ref=e324]:
+            - generic [ref=e326]: Hakkında
+        - region "Teras Cafe ile ilgili yapılabilecek işlemler" [ref=e328]:
+          - button "Yol tarifi" [ref=e330] [cursor=pointer]:
+            - generic [ref=e332]: 
+            - generic [ref=e333]: Yol tarifi
+          - button "Kaydet" [ref=e335] [cursor=pointer]:
+            - generic [ref=e337]: 
+            - generic [ref=e338]: Kaydet
+          - button "Yakınında" [ref=e340] [cursor=pointer]:
+            - generic [ref=e342]: 
+            - generic [ref=e343]: Yakınında
+          - button "Telefona gönder" [ref=e345] [cursor=pointer]:
+            - generic [ref=e347]: 
+            - generic [ref=e348]: Telefona gönder
+          - button "Paylaş" [ref=e350] [cursor=pointer]:
+            - generic [ref=e352]: 
+            - generic [ref=e353]: Paylaş
+        - region "Teras Cafe ile ilgili bilgiler" [ref=e356]:
+          - generic [ref=e357]:
+            - 'button "Adres: Hamidiye, Fazilet Cd No: 26A, 34408 Kağıthane/İstanbul" [ref=e358] [cursor=pointer]':
+              - generic [ref=e359]:
+                - generic [ref=e361]: 
+                - generic [ref=e363]: "Hamidiye, Fazilet Cd No: 26A, 34408 Kağıthane/İstanbul"
+            - button "Adresi kopyala" [ref=e366] [cursor=pointer]:
+              - generic [ref=e368]: 
+          - button "Kişi başı ₺1–100 9 kullanıcı bildirdi" [ref=e371]:
+            - img [ref=e373]
+            - generic [ref=e376]:
+              - text: Kişi başı ₺1–100
+              - generic [ref=e377]: 9 kullanıcı bildirdi
+            - img [ref=e379]
+          - generic [ref=e381]:
+            - 'button "Telefon: 0536 515 36 58" [ref=e382] [cursor=pointer]':
+              - generic [ref=e383]:
+                - generic [ref=e385]: 
+                - generic [ref=e387]: 0536 515 36 58
+            - generic [ref=e388]:
+              - button "Telefon numarasını kopyala" [ref=e390] [cursor=pointer]:
+                - generic [ref=e392]: 
+              - link "Telefon numarasını ara" [ref=e394] [cursor=pointer]:
+                - /url: tel:05365153658
+                - generic [ref=e396]: 
+          - generic [ref=e397]:
+            - 'button "Plus code: 3XXG+35 Kağıthane, İstanbul" [ref=e398] [cursor=pointer]':
+              - generic [ref=e399]:
+                - generic [ref=e401]: 
+                - generic [ref=e403]: 3XXG+35 Kağıthane, İstanbul
+            - generic [ref=e404]:
+              - button "Plus code'u kopyalayın" [ref=e406] [cursor=pointer]:
+                - generic [ref=e408]: 
+              - button "Artı kodları hakkında daha fazla bilgi edinin" [ref=e410] [cursor=pointer]:
+                - generic [ref=e412]: 
+        - button "Düzenleme önerin" [ref=e416] [cursor=pointer]:
+          - generic [ref=e417]:
+            - generic [ref=e418]: 
+            - generic [ref=e419]: Düzenleme önerin
+        - generic [ref=e422]:
+          - heading "Eksik bilgileri ekleyin" [level=2] [ref=e423]
+          - button "Daha fazla bilgi" [ref=e424] [cursor=pointer]:
+            - generic [ref=e425]: 
+        - button "Çalışma saati ekleyin" [ref=e427]:
+          - generic [ref=e428]:
+            - generic [ref=e429]: 
+            - generic [ref=e430]: Çalışma saati ekleyin
+        - button "Web sitesi ekleyin" [ref=e432]:
+          - generic [ref=e433]:
+            - generic [ref=e434]: 
+            - generic [ref=e435]: Web sitesi ekleyin
+        - generic [ref=e438]:
+          - heading "Fotoğraflar ve videolar" [level=2] [ref=e440]
+          - region "Teras Cafe adlı kişinin fotoğrafları" [ref=e441]:
+            - generic [ref=e444]:
+              - generic [ref=e445] [cursor=pointer]:
+                - button "Tümü" [ref=e446]
+                - generic:
+                  - generic: Tümü
+              - generic [ref=e447] [cursor=pointer]:
+                - button "Street View ve 360°" [ref=e448]
+                - generic:
+                  - generic: Street View ve 360°
+        - button "Fotoğraf ve video ekle" [ref=e453] [cursor=pointer]:
+          - generic [ref=e454]:
+            - generic [ref=e455]: 
+            - generic [ref=e456]: Fotoğraf ve video ekle
+        - heading "Yorum özeti" [level=2] [ref=e460]
+        - generic [ref=e462] [cursor=pointer]:
+          - table [ref=e464]:
+            - rowgroup [ref=e465]:
+              - img "5 yıldızlı,42 yorum" [ref=e466]: "5"
+              - img "4 yıldızlı,3 yorum" [ref=e469]: "4"
+              - img "3 yıldızlı,4 yorum" [ref=e472]: "3"
+              - img "2 yıldızlı,2 yorum" [ref=e475]: "2"
+              - img "1 yıldızlı,1 yorum" [ref=e478]: "1"
+          - generic [ref=e481]:
+            - generic [ref=e482]: 4,6
+            - img "4,6 yıldızlı" [ref=e483]
+            - button "52 yorum" [ref=e489]:
+              - generic [ref=e491]: 52 yorum
+        - generic [ref=e493]:
+          - generic [ref=e494]: Yorumlar doğrulanmamıştır
+          - button "Google Haritalar'daki herkese açık yorumlara ilişkin yasal açıklama hakkında daha fazla bilgi edinin" [ref=e498]:
+            - generic [ref=e502]: 
+        - button "Yorum yazın" [ref=e506] [cursor=pointer]:
+          - generic [ref=e507]:
+            - generic [ref=e508]: 
+            - generic [ref=e509]: Yorum yazın
+        - generic [ref=e512]:
+          - heading "Tüm yorumlar" [level=2] [ref=e514]
+          - button "Yorumlarda arayın" [ref=e516] [cursor=pointer]:
+            - generic [ref=e518]: 
+        - generic "Melike Ayar" [ref=e519]:
+          - generic [ref=e521]:
+            - button "Melike Ayar adlı kullanıcının fotoğrafı" [ref=e522]
+            - generic [ref=e524]:
+              - button "Melike Ayar 2 yorum" [ref=e526]:
+                - generic [ref=e527]: Melike Ayar
+                - generic [ref=e528]: 2 yorum
+              - button "Melike Ayar adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e529] [cursor=pointer]:
+                - generic [ref=e531]: 
+            - generic [ref=e532]:
+              - generic [ref=e533]:
+                - img "3 yıldız" [ref=e534]:
+                  - generic [ref=e535]: 
+                  - generic [ref=e536]: 
+                  - generic [ref=e537]: 
+                  - generic [ref=e538]: 
+                  - generic [ref=e539]: 
+                - generic [ref=e540]: bir ay önce
+              - generic [ref=e542]:
+                - text: Türk kahveleri gayet güzeldi, servisi yapan kişi de çok güleryüzlüydü ama mekan cami avlusunda (dolayısıyla abdestsiz gelmeyin;) ya da hemen yanındaki şadırvanda abdest alabilirsiniz)
+                - button "Daha fazla göster" [ref=e544] [cursor=pointer]: Diğer
+              - generic [ref=e545]:
+                - button "Beğenme" [ref=e546]:
+                  - generic [ref=e547] [cursor=pointer]:
+                    - generic [ref=e548]: 
+                    - generic [ref=e550]: Beğen
+                - button "Melike Ayar adlı kullanıcının yorumunu paylaşın." [ref=e551]:
+                  - generic [ref=e552] [cursor=pointer]:
+                    - generic [ref=e553]: 
+                    - generic [ref=e554]: Paylaş
+        - generic "1 r" [ref=e558]:
+          - generic [ref=e560]:
+            - button "1 r adlı kullanıcının fotoğrafı" [ref=e561]
+            - generic [ref=e563]:
+              - button "1 r 3 yorum" [ref=e565]:
+                - generic [ref=e566]: 1 r
+                - generic [ref=e567]: 3 yorum
+              - button "1 r adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e568] [cursor=pointer]:
+                - generic [ref=e570]: 
+            - generic [ref=e571]:
+              - generic [ref=e572]:
+                - img "5 yıldız" [ref=e573]:
+                  - generic [ref=e574]: 
+                  - generic [ref=e575]: 
+                  - generic [ref=e576]: 
+                  - generic [ref=e577]: 
+                  - generic [ref=e578]: 
+                - generic [ref=e579]: 2 yıl önce
+              - generic [ref=e581]:
+                - text: Mekan çok temiz ve güvenli. Hizmet çok güzel. Akşamları yemekten sonra Anadolu usulü stres atmak isterseniz çayı doyumsuz. Mutlaka uğrayın zamanla tanımadığnız insanlarla gayet güvenli ve kaliteli sohbet edip sosyalleşiyorsunız. Fakat çay konusu gürültüye gitmesin. Gerçekten denenmeli özellikle bahçesinde manzara eşliğinde yaz kış.
+                - button "Daha fazla göster" [ref=e583] [cursor=pointer]: Diğer
+              - generic [ref=e584]:
+                - button "4 beğenme" [ref=e585]:
+                  - generic [ref=e586] [cursor=pointer]:
+                    - generic [ref=e587]: 
+                    - generic [ref=e589]: "4"
+                - button "1 r adlı kullanıcının yorumunu paylaşın." [ref=e590]:
+                  - generic [ref=e591] [cursor=pointer]:
+                    - generic [ref=e592]: 
+                    - generic [ref=e593]: Paylaş
+        - generic "İbrahim Ethem Deniz" [ref=e597]:
+          - generic [ref=e599]:
+            - button "İbrahim Ethem Deniz adlı kullanıcının fotoğrafı" [ref=e600]
+            - generic [ref=e602]:
+              - button "İbrahim Ethem Deniz 2 yorum · 2 fotoğraf" [ref=e604]:
+                - generic [ref=e605]: İbrahim Ethem Deniz
+                - generic [ref=e606]: 2 yorum · 2 fotoğraf
+              - button "İbrahim Ethem Deniz adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e607] [cursor=pointer]:
+                - generic [ref=e609]: 
+            - generic [ref=e610]:
+              - generic [ref=e611]:
+                - img "5 yıldız" [ref=e612]:
+                  - generic [ref=e613]: 
+                  - generic [ref=e614]: 
+                  - generic [ref=e615]: 
+                  - generic [ref=e616]: 
+                  - generic [ref=e617]: 
+                - generic [ref=e618]: bir yıl önce
+              - generic [ref=e620]:
+                - text: Muzaffer beyin Güler yüzü samimiyeti çayın güzelliğine lezzetine ihlasina muhabbetine yansımış hali gerçekten bizim erzurumda bile böyle güzel çay içmedim ben teşekkürler abicim. 🌹 …
+                - button "Daha fazla göster" [ref=e622] [cursor=pointer]: Diğer
+              - generic [ref=e623]:
+                - button "Beğenme" [ref=e624]:
+                  - generic [ref=e625] [cursor=pointer]:
+                    - generic [ref=e626]: 
+                    - generic [ref=e628]: Beğen
+                - button "İbrahim Ethem Deniz adlı kullanıcının yorumunu paylaşın." [ref=e629]:
+                  - generic [ref=e630] [cursor=pointer]:
+                    - generic [ref=e631]: 
+                    - generic [ref=e632]: Paylaş
+        - button "Diğer yorumlar (49)" [ref=e636]:
+          - generic [ref=e638] [cursor=pointer]: Diğer yorumlar (49)
+        - heading "Kullanıcıların yaptığı diğer aramalar" [level=2] [ref=e642]
+        - generic [ref=e646]:
+          - link "Terasevler Kahvesi·4,4 yıldızlı·155 yorum·Kafe" [ref=e647] [cursor=pointer]:
+            - generic [ref=e650]:
+              - generic [ref=e652]: Terasevler Kahvesi
+              - img "4,4 yıldızlı 155 Yorum" [ref=e655]:
+                - text: 4,4
+                - text: (155)
+                - img "Google Haritalar'daki herkese açık yorumlarla ilgili yasal açıklama hakkında daha fazla bilgi edinin" [ref=e657]
+              - generic [ref=e658]: Kafe
+          - link "Hamidiye Cafe·4,8 yıldızlı·5 yorum·Kafe" [ref=e659] [cursor=pointer]:
+            - generic [ref=e662]:
+              - generic [ref=e664]: Hamidiye Cafe
+              - img "4,8 yıldızlı 5 Yorum" [ref=e667]:
+                - text: 4,8
+                - text: (5)
+                - img "Google Haritalar'daki herkese açık yorumlarla ilgili yasal açıklama hakkında daha fazla bilgi edinin" [ref=e669]
+              - generic [ref=e670]: Kafe
+          - link "Han Cafe·5,0 yıldızlı·3 yorum·Kafe" [ref=e671] [cursor=pointer]:
+            - generic [ref=e674]:
+              - generic [ref=e676]: Han Cafe
+              - img "5,0 yıldızlı 3 Yorum" [ref=e679]:
+                - text: 5,0
+                - text: (3)
+                - img "Google Haritalar'daki herkese açık yorumlarla ilgili yasal açıklama hakkında daha fazla bilgi edinin" [ref=e681]
+              - generic [ref=e682]: Kafe
+          - link "Atlas Cafe·0,0 yıldızlı·Sanat Kafe" [ref=e683] [cursor=pointer]:
+            - generic [ref=e686]:
+              - generic [ref=e688]: Atlas Cafe
+              - generic [ref=e689]: Yorum yok
+              - generic [ref=e690]: Sanat Kafe
+          - link "Mütemadiyen Cafe & Lounge·4,3 yıldızlı·37 yorum·Kafe" [ref=e691] [cursor=pointer]:
+            - generic [ref=e694]:
+              - generic [ref=e696]: Mütemadiyen Cafe & Lounge
+              - img "4,3 yıldızlı 37 Yorum" [ref=e699]:
+                - text: 4,3
+                - text: (37)
+                - img "Google Haritalar'daki herkese açık yorumlarla ilgili yasal açıklama hakkında daha fazla bilgi edinin" [ref=e701]
+              - generic [ref=e702]: Kafe
+        - heading "Web sonuçları" [level=2] [ref=e707]
+        - region [ref=e710]
+        - link "Bu veriler hakkında" [ref=e749] [cursor=pointer]:
+          - /url: https://support.google.com/local-listings?p=how_google_sources&authuser=0&hl=tr
+          - generic [ref=e751]: Bu veriler hakkında
+        - heading "Google Haritalar'dan en iyi şekilde yararlanın Oturum aç" [level=2] [ref=e755]:
+          - generic [ref=e756]: Google Haritalar'dan en iyi şekilde yararlanın
+          - button "Oturum aç" [ref=e759] [cursor=pointer]:
+            - generic [ref=e761]: Oturum aç
+      - button "Yan paneli daralt" [ref=e196] [cursor=pointer]:
+        - generic [ref=e197]: 
+    - generic [ref=e201]:
+      - button "Google uygulamaları" [ref=e205] [cursor=pointer]:
+        - img [ref=e206]
+      - link "Oturum açın" [ref=e209] [cursor=pointer]:
+        - /url: https://accounts.google.com/ServiceLogin?hl=tr&passive=true&continue=https%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2FAlada%25E2%2594%2580%25C5%259F%2520teras%2520cafe%2520%25C4%25B0stanbul&service=local&ec=GAZAcQ
+    - generic [ref=e210]:
+      - generic:
+        - button "Konumunuzu Gösterin" [ref=e213] [cursor=pointer]:
+          - generic [ref=e215]: 
+        - generic [ref=e217] [cursor=pointer]:
+          - button "Yakınlaştır" [ref=e218]
+          - button "Uzaklaştır" [ref=e221]
+      - generic [ref=e227]:
+        - button "Street View resimlerine göz atın" [ref=e229]
+        - button "Street View" [ref=e762] [cursor=pointer]
+      - generic [ref=e235]:
+        - generic "Etkileşimli harita" [ref=e236]
+        - generic [ref=e240] [cursor=pointer]:
+          - generic [ref=e241]: 
+          - generic [ref=e242]: Katmanlar
+        - button "Katmanlar" [ref=e243] [cursor=pointer]
+    - generic [ref=e245]:
+      - contentinfo [ref=e248]:
+        - text: Görüntüler ©2026 ,Harita verileri ©2026 Google
+        - button "Türkiye" [ref=e249] [cursor=pointer]
+        - button "Şartlar" [ref=e250] [cursor=pointer]
+        - button "Gizlilik" [ref=e251] [cursor=pointer]
+        - button "Ürün Geri Bildirimi Gönder" [ref=e252] [cursor=pointer]
+      - button "100 km" [ref=e254] [cursor=pointer]: 100 km

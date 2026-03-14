@@ -1,0 +1,312 @@
+- generic "Google Haritalar" [ref=e2]:
+  - generic [ref=e3]:
+    - application "Harita·Haritayı kaydırmak için ok tuşlarını kullanın.·Bir yerin ilişkili sayısını tuşlayarak bu yer hakkındaki ayrıntıları görün." [ref=e8]
+    - generic [ref=e11]:
+      - search [ref=e14]:
+        - button "Menü" [ref=e16] [cursor=pointer]:
+          - generic [ref=e17]: 
+        - generic [ref=e18]:
+          - combobox [ref=e20]: Klinik Feneryolu Ağız ve Diş Polikliniği
+          - button "Ara" [ref=e22] [cursor=pointer]:
+            - generic [ref=e23]: 
+          - button "Kapat" [ref=e25] [cursor=pointer]:
+            - generic [ref=e26]: 
+      - generic [ref=e29]:
+        - generic:
+          - button [ref=e30] [cursor=pointer]
+          - button "Show the Input Tools menu" [ref=e32] [cursor=pointer]
+    - generic [ref=e34]:
+      - main "Klinik Feneryolu Ağız ve Diş Polikliniği" [ref=e40]:
+        - generic [ref=e41]:
+          - button "Klinik Feneryolu Ağız ve Diş Polikliniği fotoğrafı" [active] [ref=e43] [cursor=pointer]:
+            - img [ref=e44]
+          - button "Fotoğrafları göster" [ref=e45] [cursor=pointer]:
+            - generic [ref=e46]: 
+            - generic [ref=e47]: Fotoğrafları göster
+        - generic [ref=e50]:
+          - heading "Klinik Feneryolu Ağız ve Diş Polikliniği" [level=1] [ref=e52]: Klinik Feneryolu Ağız ve Diş Polikliniği
+          - generic [ref=e54]:
+            - generic [ref=e55]:
+              - generic [ref=e56]:
+                - generic [ref=e57]:
+                  - text: 4,8
+                  - img "4,8 yıldızlı" [ref=e58]
+                - img "86 yorum" [ref=e66]: (86)
+              - button "Google Haritalar'daki herkese açık yorumlara ilişkin yasal açıklama hakkında daha fazla bilgi edinin" [ref=e72]:
+                - generic [ref=e76]: 
+            - generic [ref=e77]:
+              - button "Diş Kliniği" [ref=e80]
+              - text: ·
+              - img "Tekerlekli sandalye kullanıcılarına uygun giriş" [ref=e81]: 
+        - tablist [ref=e84]:
+          - tab "Klinik Feneryolu Ağız ve Diş Polikliniği adlı yere genel bakış" [selected] [ref=e85]:
+            - generic [ref=e87]: Genel Bakış
+          - tab "Klinik Feneryolu Ağız ve Diş Polikliniği ile ilgili yorumlar" [ref=e89]:
+            - generic [ref=e91]: Yorumlar
+          - tab "Klinik Feneryolu Ağız ve Diş Polikliniği hakkında" [ref=e93]:
+            - generic [ref=e95]: Hakkında
+        - region "Klinik Feneryolu Ağız ve Diş Polikliniği ile ilgili yapılabilecek işlemler" [ref=e97]:
+          - button "Yol tarifi" [ref=e99] [cursor=pointer]:
+            - generic [ref=e101]: 
+            - generic [ref=e102]: Yol tarifi
+          - button "Kaydet" [ref=e104] [cursor=pointer]:
+            - generic [ref=e106]: 
+            - generic [ref=e107]: Kaydet
+          - button "Yakınında" [ref=e109] [cursor=pointer]:
+            - generic [ref=e111]: 
+            - generic [ref=e112]: Yakınında
+          - button "Telefona gönder" [ref=e114] [cursor=pointer]:
+            - generic [ref=e116]: 
+            - generic [ref=e117]: Telefona gönder
+          - button "Paylaş" [ref=e119] [cursor=pointer]:
+            - generic [ref=e121]: 
+            - generic [ref=e122]: Paylaş
+        - region "Klinik Feneryolu Ağız ve Diş Polikliniği ile ilgili bilgiler" [ref=e125]:
+          - generic [ref=e126]:
+            - 'button "Adres: Feneryolu, Gazi Muhtarpaşa Sokağı No:6A, 34724 Kadıköy/İstanbul" [ref=e127] [cursor=pointer]':
+              - generic [ref=e128]:
+                - generic [ref=e130]: 
+                - generic [ref=e132]: Feneryolu, Gazi Muhtarpaşa Sokağı No:6A, 34724 Kadıköy/İstanbul
+            - button "Adresi kopyala" [ref=e135] [cursor=pointer]:
+              - generic [ref=e137]: 
+          - 'button "Çalışma saatleri Kapalı ⋅ Açılış zamanı: Per 10:00 Haftalık çalışma saatlerini göster" [ref=e139] [cursor=pointer]':
+            - img "Çalışma saatleri" [ref=e140]: 
+            - generic [ref=e142]:
+              - generic [ref=e144]: "Kapalı ⋅ Açılış zamanı: Per 10:00"
+              - img "Haftalık çalışma saatlerini göster" [ref=e145]: 
+          - generic [ref=e146]:
+            - link "wa.me" [ref=e147] [cursor=pointer]:
+              - /url: https://wa.me/905075955359
+              - generic [ref=e148]:
+                - generic [ref=e150]: 
+                - generic [ref=e152]: wa.me
+            - link "Rezervasyon bağlantısını aç" [ref=e155] [cursor=pointer]:
+              - /url: https://wa.me/905075955359
+              - generic [ref=e157]: 
+          - generic [ref=e158]:
+            - 'link "Web sitesi: klinikfeneryolu.com" [ref=e159] [cursor=pointer]':
+              - /url: http://klinikfeneryolu.com/
+              - generic [ref=e160]:
+                - generic [ref=e162]: 
+                - generic [ref=e164]: klinikfeneryolu.com
+            - generic [ref=e165]:
+              - link "Web sitesini aç" [ref=e167] [cursor=pointer]:
+                - /url: http://klinikfeneryolu.com/
+                - generic [ref=e169]: 
+              - button "Web sitesini kopyala" [ref=e171] [cursor=pointer]:
+                - generic [ref=e173]: 
+          - generic [ref=e174]:
+            - 'button "Telefon: 0507 595 53 59" [ref=e175] [cursor=pointer]':
+              - generic [ref=e176]:
+                - generic [ref=e178]: 
+                - generic [ref=e180]: 0507 595 53 59
+            - generic [ref=e181]:
+              - button "Telefon numarasını kopyala" [ref=e183] [cursor=pointer]:
+                - generic [ref=e185]: 
+              - link "Telefon numarasını ara" [ref=e187] [cursor=pointer]:
+                - /url: tel:05075955359
+                - generic [ref=e189]: 
+          - generic [ref=e190]:
+            - 'button "Plus code: X3M3+G4 Kadıköy, İstanbul" [ref=e191] [cursor=pointer]':
+              - generic [ref=e192]:
+                - generic [ref=e194]: 
+                - generic [ref=e196]: X3M3+G4 Kadıköy, İstanbul
+            - generic [ref=e197]:
+              - button "Plus code'u kopyalayın" [ref=e199] [cursor=pointer]:
+                - generic [ref=e201]: 
+              - button "Artı kodları hakkında daha fazla bilgi edinin" [ref=e203] [cursor=pointer]:
+                - generic [ref=e205]: 
+        - button "Düzenleme önerin" [ref=e209] [cursor=pointer]:
+          - generic [ref=e210]:
+            - generic [ref=e211]: 
+            - generic [ref=e212]: Düzenleme önerin
+        - generic [ref=e215]:
+          - heading "Fotoğraflar ve videolar" [level=2] [ref=e217]
+          - region "Klinik Feneryolu Ağız ve Diş Polikliniği adlı kişinin fotoğrafları" [ref=e218]:
+            - generic [ref=e221]:
+              - generic [ref=e222] [cursor=pointer]:
+                - button "Tümü" [ref=e223]
+                - generic:
+                  - generic: Tümü
+              - generic [ref=e224] [cursor=pointer]:
+                - button "Sahibinin seçtikleri" [ref=e225]
+                - generic:
+                  - generic: Sahibinin seçtikleri
+              - generic [ref=e226] [cursor=pointer]:
+                - button "Videolar" [ref=e227]
+                - generic:
+                  - generic: Videolar
+              - generic [ref=e228] [cursor=pointer]:
+                - button "Street View ve 360°" [ref=e229]
+                - generic:
+                  - generic: Street View ve 360°
+        - button "Fotoğraf ve video ekle" [ref=e234] [cursor=pointer]:
+          - generic [ref=e235]:
+            - generic [ref=e236]: 
+            - generic [ref=e237]: Fotoğraf ve video ekle
+        - heading "Yorum özeti" [level=2] [ref=e241]
+        - generic [ref=e243] [cursor=pointer]:
+          - table [ref=e245]:
+            - rowgroup [ref=e246]:
+              - img "5 yıldızlı,81 yorum" [ref=e247]: "5"
+              - img "4 yıldızlı,0 yorum" [ref=e250]: "4"
+              - img "3 yıldızlı,0 yorum" [ref=e253]: "3"
+              - img "2 yıldızlı,1 yorum" [ref=e256]: "2"
+              - img "1 yıldızlı,4 yorum" [ref=e259]: "1"
+          - generic [ref=e262]:
+            - generic [ref=e263]: 4,8
+            - img "4,8 yıldızlı" [ref=e264]
+            - button "86 yorum" [ref=e270]:
+              - generic [ref=e272]: 86 yorum
+        - generic [ref=e274]:
+          - generic [ref=e275]: Yorumlar doğrulanmamıştır
+          - button "Google Haritalar'daki herkese açık yorumlara ilişkin yasal açıklama hakkında daha fazla bilgi edinin" [ref=e279]:
+            - generic [ref=e283]: 
+        - button "Yorum yazın" [ref=e287] [cursor=pointer]:
+          - generic [ref=e288]:
+            - generic [ref=e289]: 
+            - generic [ref=e290]: Yorum yazın
+        - generic [ref=e293]:
+          - heading "Tüm yorumlar" [level=2] [ref=e295]
+          - button "Yorumlarda arayın" [ref=e297] [cursor=pointer]:
+            - generic [ref=e299]: 
+        - generic "Duygu Özdoğan" [ref=e300]:
+          - generic [ref=e302]:
+            - button "Duygu Özdoğan adlı kullanıcının fotoğrafı" [ref=e303]
+            - generic [ref=e305]:
+              - button "Duygu Özdoğan 5 yorum" [ref=e307]:
+                - generic [ref=e308]: Duygu Özdoğan
+                - generic [ref=e309]: 5 yorum
+              - button "Duygu Özdoğan adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e310] [cursor=pointer]:
+                - generic [ref=e312]: 
+            - generic [ref=e313]:
+              - generic [ref=e314]:
+                - img "5 yıldız" [ref=e315]:
+                  - generic [ref=e316]: 
+                  - generic [ref=e317]: 
+                  - generic [ref=e318]: 
+                  - generic [ref=e319]: 
+                  - generic [ref=e320]: 
+                - generic [ref=e321]: bir hafta önce
+                - generic [ref=e322]: Yeni
+              - generic [ref=e324]:
+                - text: Yıllardır gittiğim harika bir klinik.. Hem hekimim Meral Hanım, hem de tüm ekip oldukça güleryüzlü ve yardımsever. Dolgu işlemleri, diş taşı temizliği-beyazlatma, maseter botox dahil farklı işlemler yaptırdım ve hepsinden oldukça memnun …
+                - button "Daha fazla göster" [ref=e326] [cursor=pointer]: Diğer
+              - generic [ref=e327]:
+                - button "Beğenme" [ref=e328]:
+                  - generic [ref=e329] [cursor=pointer]:
+                    - generic [ref=e330]: 
+                    - generic [ref=e332]: Beğen
+                - button "Duygu Özdoğan adlı kullanıcının yorumunu paylaşın." [ref=e333]:
+                  - generic [ref=e334] [cursor=pointer]:
+                    - generic [ref=e335]: 
+                    - generic [ref=e336]: Paylaş
+        - generic "Evrim Ö." [ref=e340]:
+          - generic [ref=e342]:
+            - button "Evrim Ö. adlı kullanıcının fotoğrafı" [ref=e343]
+            - generic [ref=e345]:
+              - button "Evrim Ö. 7 yorum · 1 fotoğraf" [ref=e347]:
+                - generic [ref=e348]: Evrim Ö.
+                - generic [ref=e349]: 7 yorum · 1 fotoğraf
+              - button "Evrim Ö. adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e350] [cursor=pointer]:
+                - generic [ref=e352]: 
+            - generic [ref=e353]:
+              - generic [ref=e354]:
+                - img "5 yıldız" [ref=e355]:
+                  - generic [ref=e356]: 
+                  - generic [ref=e357]: 
+                  - generic [ref=e358]: 
+                  - generic [ref=e359]: 
+                  - generic [ref=e360]: 
+                - generic [ref=e361]: bir ay önce
+              - generic [ref=e363]: Meral hanım ve ekibine hiç tavsiye almadan bilgi almak üzere uğradım. Diş tedavisi konusundaki korkularım yerle bir oldu tek kelimeyle aldığım en iyi sağlık hizmeti 2o yıllık porselen kaplamalarım ve yapılan kanal tedavileriyle beraber gülüşümü yeniden yarattılar. Tedavi esnasındaki hassasiyetlerini de unutamam anlatılmaz yaşanır.
+              - generic [ref=e364]:
+                - button "Beğenme" [ref=e365]:
+                  - generic [ref=e366] [cursor=pointer]:
+                    - generic [ref=e367]: 
+                    - generic [ref=e369]: Beğen
+                - button "Evrim Ö. adlı kullanıcının yorumunu paylaşın." [ref=e370]:
+                  - generic [ref=e371] [cursor=pointer]:
+                    - generic [ref=e372]: 
+                    - generic [ref=e373]: Paylaş
+              - generic [ref=e374]:
+                - generic [ref=e375]: İşletme sahibinin yanıtı bir ay önce
+                - generic [ref=e376]: Güzel geri bildiriminiz için çok teşekkür ederiz. Meral Hanım ve ekibimiz adına bu memnuniyeti duymak bizim için çok değerli. Gülüşünüze katkı sağlayabildiysek ne mutlu bize 😊 Her zaman aynı özenle yanınızdayız. …
+        - generic "murat civelek" [ref=e380]:
+          - generic [ref=e382]:
+            - button "murat civelek adlı kullanıcının fotoğrafı" [ref=e383]
+            - generic [ref=e385]:
+              - button "murat civelek 1 yorum · 1 fotoğraf" [ref=e387]:
+                - generic [ref=e388]: murat civelek
+                - generic [ref=e389]: 1 yorum · 1 fotoğraf
+              - button "murat civelek adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e390] [cursor=pointer]:
+                - generic [ref=e392]: 
+            - generic [ref=e393]:
+              - generic [ref=e394]:
+                - img "5 yıldız" [ref=e395]:
+                  - generic [ref=e396]: 
+                  - generic [ref=e397]: 
+                  - generic [ref=e398]: 
+                  - generic [ref=e399]: 
+                  - generic [ref=e400]: 
+                - generic [ref=e401]: 4 ay önce
+              - generic [ref=e403]: Yaklaşık iki yıldır dişlerimin tüm tedavisini Klinik Feneryolu'da yaptırıyorum. Gerek güleryüzleri gerek diş tedavilerim olsun her açıdan dört dörtlük bir klinik herkese tavsiye ederim.
+              - button "murat civelek adlı kullanıcının yorumundaki 1. fotoğraf" [ref=e405] [cursor=pointer]
+              - generic [ref=e406]:
+                - button "Beğenme" [ref=e407]:
+                  - generic [ref=e408] [cursor=pointer]:
+                    - generic [ref=e409]: 
+                    - generic [ref=e411]: Beğen
+                - button "murat civelek adlı kullanıcının yorumunu paylaşın." [ref=e412]:
+                  - generic [ref=e413] [cursor=pointer]:
+                    - generic [ref=e414]: 
+                    - generic [ref=e415]: Paylaş
+        - button "Diğer yorumlar (83)" [ref=e419]:
+          - generic [ref=e421] [cursor=pointer]: Diğer yorumlar (83)
+        - heading "Kullanıcıların yaptığı diğer aramalar" [level=2] [ref=e425]
+        - generic [ref=e429]:
+          - link "ENDODENT·4,8 yıldızlı·44 yorum·Diş Kliniği" [ref=e430] [cursor=pointer]:
+            - generic [ref=e433]:
+              - generic [ref=e435]: ENDODENT
+              - img "4,8 yıldızlı 44 Yorum" [ref=e438]:
+                - text: 4,8
+                - text: (44)
+                - img "Google Haritalar'daki herkese açık yorumlarla ilgili yasal açıklama hakkında daha fazla bilgi edinin" [ref=e440]
+              - generic [ref=e441]: Diş Kliniği
+          - link "KLİNİK·5,0 yıldızlı·1 yorum·Diş Kliniği" [ref=e442] [cursor=pointer]:
+            - generic [ref=e445]:
+              - generic [ref=e447]: KLİNİK
+              - img "5,0 yıldızlı 1 Yorum" [ref=e450]:
+                - text: 5,0
+                - text: (1)
+                - img "Google Haritalar'daki herkese açık yorumlarla ilgili yasal açıklama hakkında daha fazla bilgi edinin" [ref=e452]
+              - generic [ref=e453]: Diş Kliniği
+          - link "Diş klinik·0,0 yıldızlı·Diş Hekimi" [ref=e454] [cursor=pointer]:
+            - generic [ref=e457]:
+              - generic [ref=e459]: Diş klinik
+              - generic [ref=e460]: Yorum yok
+              - generic [ref=e461]: Diş Hekimi
+          - link "Özel Dentev Ağız ve Diş Sağlığı Polikniği·0,0 yıldızlı·Diş Kliniği" [ref=e462] [cursor=pointer]:
+            - generic [ref=e465]:
+              - generic [ref=e467]: Özel Dentev Ağız ve Diş Sağlığı Polikniği
+              - generic [ref=e468]: Yorum yok
+              - generic [ref=e469]: Diş Kliniği
+          - link "Dişkent Ağız ve Diş Sağlığı Polikliniği·5,0 yıldızlı·24 yorum·Diş Kliniği" [ref=e470] [cursor=pointer]:
+            - generic [ref=e473]:
+              - generic [ref=e475]: Dişkent Ağız ve Diş Sağlığı Polikliniği
+              - img "5,0 yıldızlı 24 Yorum" [ref=e478]:
+                - text: 5,0
+                - text: (24)
+                - img "Google Haritalar'daki herkese açık yorumlarla ilgili yasal açıklama hakkında daha fazla bilgi edinin" [ref=e480]
+              - generic [ref=e481]: Diş Kliniği
+        - heading "Web sonuçları" [level=2] [ref=e486]
+        - region [ref=e489]
+        - link "Bu veriler hakkında" [ref=e528] [cursor=pointer]:
+          - /url: https://support.google.com/local-listings?p=how_google_sources&authuser=0&hl=tr
+          - generic [ref=e530]: Bu veriler hakkında
+        - heading "Google Haritalar'dan en iyi şekilde yararlanın Oturum aç" [level=2] [ref=e534]:
+          - generic [ref=e535]: Google Haritalar'dan en iyi şekilde yararlanın
+          - button "Oturum aç" [ref=e538] [cursor=pointer]:
+            - generic [ref=e540]: Oturum aç
+      - button "Yan paneli daralt" [ref=e542] [cursor=pointer]:
+        - generic [ref=e543]: 

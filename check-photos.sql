@@ -1,0 +1,1 @@
+﻿SELECT b.name, COUNT(p.id) as photo_count FROM "Business" b LEFT JOIN "BusinessPhoto" p ON p."businessId" = b.id GROUP BY b.id, b.name HAVING COUNT(p.id) > 0 LIMIT 5;

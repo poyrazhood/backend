@@ -1,0 +1,112 @@
+- generic "Google Haritalar" [ref=e2]:
+  - generic [ref=e3]:
+    - application "Harita·Haritayı kaydırmak için ok tuşlarını kullanın.·Bir yerin ilişkili sayısını tuşlayarak bu yer hakkındaki ayrıntıları görün." [ref=e5]
+    - generic [ref=e8]:
+      - search [ref=e11]:
+        - button "Geri" [ref=e259] [cursor=pointer]:
+          - generic [ref=e14]: 
+        - generic [ref=e15]:
+          - combobox [ref=e17]: Alada─ş teras cafe İstanbul
+          - button "Ara" [ref=e19] [cursor=pointer]:
+            - generic [ref=e20]: 
+          - button "Kapat" [ref=e22] [cursor=pointer]:
+            - generic [ref=e23]: 
+      - generic [ref=e26]:
+        - generic:
+          - button [ref=e27] [cursor=pointer]
+          - button "Show the Input Tools menu" [ref=e29] [cursor=pointer]
+    - generic [ref=e31]:
+      - main "Teras Cafe" [ref=e267]:
+        - tablist [ref=e315]:
+          - tab "Teras Cafe adlı yere genel bakış" [ref=e316]:
+            - generic [ref=e318]: Genel Bakış
+          - tab "Teras Cafe ile ilgili yorumlar" [ref=e320]:
+            - generic [ref=e322]: Yorumlar
+          - tab "Teras Cafe hakkında" [active] [selected] [ref=e324]:
+            - generic [ref=e326]: Hakkında
+        - region "Teras Cafe hakkında" [ref=e767]:
+          - generic [ref=e769]:
+            - heading "Öne çıkanlar" [level=2] [ref=e770]
+            - list [ref=e771]:
+              - listitem [ref=e772]:
+                - generic [ref=e773]:
+                  - generic [ref=e774]: 
+                  - generic "Harika kahveler sunuyor" [ref=e775]: Harika kahveler
+              - listitem [ref=e776]:
+                - generic [ref=e777]:
+                  - generic [ref=e778]: 
+                  - generic "Zengin çay menüsü var" [ref=e779]: Zengin çay menüsü
+          - generic [ref=e783]:
+            - heading "Sunulanlar" [level=2] [ref=e784]
+            - list [ref=e785]:
+              - listitem [ref=e786]:
+                - generic [ref=e787]:
+                  - generic [ref=e788]: 
+                  - generic "Kahve servisi var" [ref=e789]: Kahve
+          - generic [ref=e793]:
+            - heading "Yemek seçenekleri" [level=2] [ref=e794]
+            - list [ref=e795]:
+              - listitem [ref=e796]:
+                - generic [ref=e797]:
+                  - generic [ref=e798]: 
+                  - generic "Masaya servis var" [ref=e799]: Masaya servis
+          - generic [ref=e803]:
+            - heading "Sunulan olanaklar" [level=2] [ref=e804]
+            - list [ref=e805]:
+              - listitem [ref=e806]:
+                - generic [ref=e807]:
+                  - generic [ref=e808]: 
+                  - generic "Tuvalet var" [ref=e809]: Tuvalet
+          - generic [ref=e813]:
+            - heading "Atmosfer" [level=2] [ref=e814]
+            - list [ref=e815]:
+              - listitem [ref=e816]:
+                - generic [ref=e817]:
+                  - generic [ref=e818]: 
+                  - generic "Gündelik" [ref=e819]
+              - listitem [ref=e820]:
+                - generic [ref=e821]:
+                  - generic [ref=e822]: 
+                  - generic "Rahat" [ref=e823]
+              - listitem [ref=e824]:
+                - generic [ref=e825]:
+                  - generic [ref=e826]: 
+                  - generic "Sessiz" [ref=e827]
+          - generic [ref=e831]:
+            - heading "Kitle" [level=2] [ref=e832]
+            - list [ref=e833]:
+              - listitem [ref=e834]:
+                - generic [ref=e835]:
+                  - generic [ref=e836]: 
+                  - generic "Gruplar için uygun" [ref=e837]: Gruplar
+      - button "Yan paneli daralt" [ref=e196] [cursor=pointer]:
+        - generic [ref=e197]: 
+    - generic [ref=e201]:
+      - button "Google uygulamaları" [ref=e205] [cursor=pointer]:
+        - img [ref=e206]
+      - link "Oturum açın" [ref=e209] [cursor=pointer]:
+        - /url: https://accounts.google.com/ServiceLogin?hl=tr&passive=true&continue=https%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2FAlada%25E2%2594%2580%25C5%259F%2520teras%2520cafe%2520%25C4%25B0stanbul&service=local&ec=GAZAcQ
+    - generic [ref=e210]:
+      - generic:
+        - button "Konumunuzu Gösterin" [ref=e213] [cursor=pointer]:
+          - generic [ref=e215]: 
+        - generic [ref=e217] [cursor=pointer]:
+          - button "Yakınlaştır" [ref=e218]
+          - button "Uzaklaştır" [ref=e221]
+      - generic [ref=e227]:
+        - button "Street View resimlerine göz atın" [ref=e229]
+        - button "Street View" [ref=e762] [cursor=pointer]
+      - generic [ref=e235]:
+        - generic "Etkileşimli harita" [ref=e236]
+        - generic [ref=e240] [cursor=pointer]:
+          - generic [ref=e241]: 
+          - generic [ref=e242]: Katmanlar
+        - button "Katmanlar" [ref=e243] [cursor=pointer]
+    - generic [ref=e245]:
+      - contentinfo [ref=e248]:
+        - text: Görüntüler ©2026 ,Harita verileri ©2026 Google
+        - button "Türkiye" [ref=e249] [cursor=pointer]
+        - button "Şartlar" [ref=e250] [cursor=pointer]
+        - button "Gizlilik" [ref=e251] [cursor=pointer]
+        - button "Ürün Geri Bildirimi Gönder" [ref=e252] [cursor=pointer]
+      - button "100 km" [ref=e254] [cursor=pointer]: 100 km

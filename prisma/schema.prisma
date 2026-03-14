@@ -1,0 +1,578 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pg_trgm, vector]
+}
+
+model User {
+  id                   String                 @id @default(cuid())
+  email                String                 @unique
+  username             String                 @unique
+  passwordHash         String
+  fullName             String?
+  avatarUrl            String?
+  phoneNumber          String?
+  phoneVerified        Boolean                @default(false)
+  emailVerified        Boolean                @default(false)
+  trustScore           Int                    @default(50)
+  trustLevel           TrustLevel             @default(NEWCOMER)
+  badgeLevel           BadgeLevel             @default(NONE)
+  totalReviews         Int                    @default(0)
+  helpfulVotes         Int                    @default(0)
+  verifiedReviews      Int                    @default(0)
+  profileViews         Int                    @default(0)
+  followersCount       Int                    @default(0)
+  followingCount       Int                    @default(0)
+  isActive             Boolean                @default(true)
+  isBanned             Boolean                @default(false)
+  banReason            String?
+  lastLoginAt          DateTime?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  dataRetentionPolicy  String?
+  consentGivenAt       DateTime?
+  lastConsentUpdateAt  DateTime?
+  isAnonymized         Boolean                @default(false)
+  bio                  String?
+  businesses           Business[]
+  muhtarApplications   MuhtarApplication[]
+  businessClaimHistory BusinessClaimHistory[]
+  notifications        Notification[]
+  reportsReceived      Report[]               @relation("Reported")
+  reportsMade          Report[]               @relation("Reporter")
+  reviews              Review[]
+  reviewVotes          ReviewVote[]
+  savedBusinesses      SavedBusiness[]
+  trustScoreHistory    TrustScoreHistory[]
+  userFollowing        UserFollow[]           @relation("Followers")
+  userFollowers        UserFollow[]           @relation("Following")
+
+  @@index([email])
+  @@index([username])
+  @@index([trustScore])
+  @@index([badgeLevel])
+  @@index([createdAt])
+}
+
+model TrustScoreHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  oldScore  Int
+  newScore  Int
+  reason    String
+  metadata  Json?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+model UserFollow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  follower    User     @relation("Followers", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  content   String
+  isRead    Boolean          @default(false)
+  metadata  Json?
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([userId, createdAt])
+}
+
+model Business {
+  id                 String                 @id @default(cuid())
+  name               String
+  slug               String                 @unique
+  description        String?
+  address            String
+  city               String
+  district           String?
+  postalCode         String?
+  latitude           Float?
+  longitude          Float?
+  phoneNumber        String?
+  email              String?
+  website            String?
+  googlePlaceId      String?                @unique
+  categoryId         String
+  attributes         Json                   @default("{}")
+  averageRating      Float                  @default(0)
+  totalReviews       Int                    @default(0)
+  totalViews         Int                    @default(0)
+  claimStatus        ClaimStatus            @default(UNCLAIMED)
+  isVerified         Boolean                @default(false)
+  verifiedAt         DateTime?
+  verificationLevel      Int                    @default(0)
+  verifiedPhone          String?
+  verifiedEmail          String?
+  ownerId            String?
+  isActive           Boolean                @default(true)
+  isDeleted          Boolean                @default(false)
+  verifiedBusiness   Boolean                @default(false)
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  subscriptionPlan   String                 @default("FREE")
+  subscriptionEndsAt DateTime?
+  businessAttributes Attribute[]
+  category           Category               @relation(fields: [categoryId], references: [id])
+  owner              User?                  @relation(fields: [ownerId], references: [id])
+  claimHistory       BusinessClaimHistory[]
+  embedding          BusinessEmbedding?
+  photos             BusinessPhoto[]
+  qaEntries          BusinessQA[]
+  subscriptions      BusinessSubscription[]
+  externalReviews    ExternalReview[]
+  openingHours       OpeningHours[]
+  reviews            Review[]
+  autoServiceProfile    AutoServiceProfile?
+  verificationRequests  VerificationRequest[]
+  savedBy            SavedBusiness[]
+  badges             BusinessBadge[]
+  sources            Source[]
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([city, district])
+  @@index([averageRating])
+  @@index([isActive, isDeleted])
+  @@index([latitude, longitude])
+  @@index([googlePlaceId])
+}
+
+model OpeningHours {
+  id         String   @id @default(cuid())
+  day        String
+  openTime   String
+  closeTime  String
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+}
+
+model Attribute {
+  id         String   @id @default(cuid())
+  name       String
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+model Source {
+  id         String   @id @default(cuid())
+  name       String
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+model BusinessClaimHistory {
+  id         String      @id @default(cuid())
+  businessId String
+  userId     String
+  status     ClaimStatus
+  documents  Json        @default("[]")
+  reviewedBy String?
+  reviewedAt DateTime?
+  notes      String?
+  createdAt  DateTime    @default(now())
+  business   Business    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+  @@index([userId])
+  @@index([status, createdAt])
+}
+
+model Category {
+  id              String             @id @default(cuid())
+  name            String
+  slug            String             @unique
+  description     String?
+  icon            String?
+  parentId        String?
+  attributeSchema Json               @default("[]")
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  businesses      Business[]
+  parent          Category?          @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children        Category[]         @relation("CategoryHierarchy")
+  embedding       CategoryEmbedding?
+
+  @@index([slug])
+  @@index([parentId])
+}
+
+model Review {
+  id                     String        @id @default(cuid())
+  userId                 String
+  businessId             String
+  rating                 Int
+  title                  String?
+  content                String
+  helpfulCount           Int           @default(0)
+  notHelpfulCount        Int           @default(0)
+  viewCount              Int           @default(0)
+  isVerified             Boolean       @default(false)
+  verifiedPurchase       Boolean       @default(false)
+  isPublished            Boolean       @default(true)
+  isFlagged              Boolean       @default(false)
+  flagReason             String?
+  fraudDetectionMetadata Json?
+  ownerReply             String?
+  ownerReplyDate         DateTime?
+  sentiment              String?
+  sentimentScore         Float?
+  sentimentKeywords      String[]
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+  reports                Report[]
+  business               Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user                   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photos                 ReviewPhoto[]
+  votes                  ReviewVote[]
+
+  @@unique([userId, businessId])
+  @@index([businessId, createdAt])
+  @@index([userId, createdAt])
+  @@index([rating])
+  @@index([isPublished, isFlagged])
+}
+
+model ReviewVote {
+  id        String   @id @default(cuid())
+  reviewId  String
+  userId    String
+  isHelpful Boolean
+  createdAt DateTime @default(now())
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, userId])
+  @@index([reviewId])
+  @@index([userId])
+}
+
+model ReviewPhoto {
+  id        String   @id @default(cuid())
+  reviewId  String
+  url       String
+  caption   String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@index([reviewId])
+}
+
+model BusinessPhoto {
+  id         String   @id @default(cuid())
+  businessId String
+  url        String
+  caption    String?
+  order      Int      @default(0)
+  isPrimary  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+}
+
+model ExternalReview {
+  id                String           @id @default(cuid())
+  businessId        String
+  source            ReviewSource
+  sourceId          String?
+  sourceUrl         String?
+  authorName        String?
+  authorPhoto       String?
+  authorProfileUrl  String?
+  authorReviewCount Int?
+  authorLevel       String?
+  rating            Float?
+  content           String?
+  photos            Json?            @default("[]")
+  ownerReply        String?
+  ownerReplyDate    DateTime?
+  publishedAt       DateTime?
+  scrapedAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  isVisible         Boolean          @default(true)
+  language          String?          @default("tr")
+  business          Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  embedding         ReviewEmbedding?
+
+  @@unique([source, sourceId])
+  @@index([businessId, source])
+  @@index([businessId, publishedAt(sort: Desc)])
+  @@index([scrapedAt(sort: Desc)])
+}
+
+model ReviewEmbedding {
+  id        String                @id @default(cuid())
+  reviewId  String                @unique
+  model     String
+  embedding Unsupported("vector")
+  createdAt DateTime              @default(now())
+  review    ExternalReview        @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@index([reviewId])
+}
+
+model BusinessEmbedding {
+  id         String                @id @default(cuid())
+  businessId String                @unique
+  model      String
+  embedding  Unsupported("vector")
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
+  business   Business              @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+}
+
+model Report {
+  id               String       @id @default(cuid())
+  reporterId       String
+  reportedUserId   String?
+  reportedReviewId String?
+  reason           ReportReason
+  description      String?
+  status           ReportStatus @default(PENDING)
+  resolvedAt       DateTime?
+  resolvedBy       String?
+  resolution       String?
+  createdAt        DateTime     @default(now())
+  reportedReview   Review?      @relation(fields: [reportedReviewId], references: [id], onDelete: Cascade)
+  reportedUser     User?        @relation("Reported", fields: [reportedUserId], references: [id], onDelete: Cascade)
+  reporter         User         @relation("Reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@index([reporterId])
+}
+
+model BusinessQA {
+  id         String   @id @default(cuid())
+  businessId String
+  question   String
+  answer     String
+  category   String?
+  confidence Float?
+  createdAt  DateTime @default(now())
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+  @@index([category])
+}
+
+model CategoryEmbedding {
+  id         String                 @id @default(cuid())
+  categoryId String                 @unique
+  embedding  Unsupported("vector")?
+  createdAt  DateTime               @default(now())
+  category   Category               @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId])
+}
+
+model SavedBusiness {
+  id         String   @id @default(cuid())
+  userId     String
+  businessId String
+  createdAt  DateTime @default(now())
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, businessId])
+  @@index([userId])
+}
+
+
+model MuhtarApplication {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  neighborhood String
+  district    String
+  city        String
+  reason      String
+  status      String   @default("PENDING")
+  adminNote   String?
+  reviewedBy  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+enum TrustLevel {
+  NEWCOMER
+  DEVELOPING
+  TRUSTED
+  HIGHLY_TRUSTED
+  VERIFIED
+  MUHTAR
+}
+
+enum BadgeLevel {
+  NONE
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+}
+
+enum NotificationType {
+  NEW_FOLLOWER
+  REVIEW_REPLY
+  REVIEW_HELPFUL
+  BADGE_EARNED
+  TRUST_LEVEL_UP
+  BUSINESS_CLAIMED
+  CLAIM_APPROVED
+  CLAIM_REJECTED
+  OWNER_REPLY
+  SYSTEM
+}
+
+enum ClaimStatus {
+  UNCLAIMED
+  PENDING
+  CLAIMED
+  REJECTED
+}
+
+enum ReviewSource {
+  GOOGLE
+  SIKAYETVAR
+  TRIPADVISOR
+  FOURSQUARE
+  YELP
+  FACEBOOK
+  OTHER
+  YANDEX
+}
+
+enum ReportReason {
+  SPAM
+  INAPPROPRIATE
+  FAKE_REVIEW
+  HARASSMENT
+  COPYRIGHT
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWING
+  RESOLVED
+  DISMISSED
+}
+
+enum BusinessBadgeType {
+  VERIFIED
+  NEIGHBORHOOD_FAVORITE
+  FEATURED
+  PREMIUM
+  TOP_RATED
+  HIGHLY_REVIEWED
+  NEW_BUSINESS
+  TRUSTED
+}
+model BusinessBadge {
+  id         String            @id @default(cuid())
+  businessId String
+  type       BusinessBadgeType
+  awardedBy  String?
+  awardedAt  DateTime          @default(now())
+  expiresAt  DateTime?
+  isActive   Boolean           @default(true)
+  business   Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, type])
+  @@index([businessId])
+  @@index([type])
+}
+
+
+
+
+
+
+
+model BusinessSubscription {
+  id           String           @id @default(cuid())
+  businessId   String
+  business     Business         @relation(fields: [businessId], references: [id])
+  plan         String
+  startsAt     DateTime         @default(now())
+  endsAt       DateTime
+  price        Float
+  currency     String           @default("TRY")
+  status       String           @default("ACTIVE")
+  createdBy    String?
+  notes        String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model AutoServiceProfile {
+  id                    String   @id @default(cuid())
+  businessId            String   @unique
+  business              Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  // Radar skorlari (0-100)
+  scoreTecrube          Float    @default(0)
+  scoreFiyatSeffafligi  Float    @default(0)
+  scoreTeknikYetkinlik  Float    @default(0)
+  scoreMusteriIliskileri Float   @default(0)
+  scoreEkipman          Float    @default(0)
+  scoreGaranti          Float    @default(0)
+
+  // Sahip tarafindan girilen bilgiler
+  ustaSicili            Int?     // Kac yillik
+  liftSayisi            Int?
+  garantiSuresiAy       Int?
+  sertifikalar          String[]
+  uzmanlikAlanlari      String[]
+
+  // Otomatik hesaplama meta
+  totalRatings          Int      @default(0)
+  lastCalculatedAt      DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model VerificationRequest {
+  id           String   @id @default(cuid())
+  businessId   String
+  business     Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  type         String   // sms, email, address
+  code         String?  // OTP kodu
+  token        String?  // email token
+  phone        String?
+  email        String?
+  status       String   @default("pending") // pending, verified, expired, rejected
+  attempts     Int      @default(0)
+  expiresAt    DateTime?
+  documentUrl  String?  // adres belgesi
+  adminNote    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

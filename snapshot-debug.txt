@@ -1,0 +1,304 @@
+- generic "Google Haritalar" [ref=e2]:
+  - generic [ref=e3]:
+    - application "Harita·Haritayı kaydırmak için ok tuşlarını kullanın.·Bir yerin ilişkili sayısını tuşlayarak bu yer hakkındaki ayrıntıları görün." [ref=e5]
+    - generic [ref=e8]:
+      - search [ref=e11]:
+        - button "Menü" [ref=e13] [cursor=pointer]:
+          - generic [ref=e14]: 
+        - generic [ref=e15]:
+          - combobox [ref=e17]: Coffee Manifesto Istanbul
+          - button "Ara" [ref=e19] [cursor=pointer]:
+            - generic [ref=e20]: 
+          - button "Kapat" [ref=e22] [cursor=pointer]:
+            - generic [ref=e23]: 
+      - generic [ref=e26]:
+        - generic:
+          - button [ref=e27] [cursor=pointer]
+          - button "Show the Input Tools menu" [ref=e29] [cursor=pointer]
+    - generic [ref=e31]:
+      - main [ref=e37]:
+        - generic [ref=e38]:
+          - feed "Coffee Manifesto Istanbul için sonuçlar" [ref=e39]:
+            - region "Bu arama için kullanılabilecek filtreler" [ref=e41]:
+              - generic [ref=e44]:
+                - button "Çalışma saatleri" [active] [ref=e46] [cursor=pointer]:
+                  - generic [ref=e47]:
+                    - generic [ref=e49]: Çalışma saatleri
+                    - generic [ref=e50]: 
+                - button "Tüm filtreler" [ref=e52] [cursor=pointer]:
+                  - generic [ref=e53]:
+                    - generic [ref=e55]: 
+                    - generic [ref=e56]: Tüm filtreler
+            - generic [ref=e57]:
+              - generic [ref=e59]:
+                - heading "Sonuçlar" [level=1] [ref=e60]
+                - button "Google Haritalar'daki herkese açık yorumlara ilişkin yasal açıklama hakkında daha fazla bilgi edinin" [ref=e64]:
+                  - generic [ref=e68]: 
+              - button "Paylaş" [ref=e72]:
+                - generic [ref=e73] [cursor=pointer]:
+                  - generic [ref=e74]: 
+                  - generic [ref=e75]: Paylaş
+            - article "Peritus Otomasyon Sistemleri" [ref=e77]:
+              - link "Peritus Otomasyon Sistemleri" [ref=e78] [cursor=pointer]:
+                - /url: https://www.google.com/maps/place/Peritus+Otomasyon+Sistemleri/data=!4m7!3m6!1s0x14cab87ac3cf6909:0xfd2f78a0692d416d!8m2!3d40.972799!4d29.094208!16s%2Fg%2F1pv2bytjy!19sChIJCWnPw3q4yhQRbUEtaaB4L_0?authuser=0&hl=tr&rclk=1
+              - generic:
+                - generic:
+                  - generic:
+                    - heading "Sponsorlu" [level=1]:
+                      - generic: Sponsorlu
+                      - button "Neden bu reklam?" [ref=e79] [cursor=pointer]:
+                        - generic [ref=e80]: 
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: Peritus Otomasyon Sistemleri
+                          - generic:
+                            - generic:
+                              - generic:
+                                - img "3,5 yıldızlı 2 Yorum":
+                                  - text: 3,5
+                                  - text: (2)
+                                  - img "Google Haritalar'daki herkese açık yorumlarla ilgili yasal açıklama hakkında daha fazla bilgi edinin"
+                          - generic:
+                            - generic:
+                              - generic: Yazılım Şirketi
+                              - generic: "· Kozyatağı Hilmi Paşa Sokak No: 42 D:G"
+                            - generic:
+                              - generic:
+                                - generic: "Kapalı · Açılış zamanı: 10:00"
+                              - generic: · 0850 321 9090
+                  - generic:
+                    - link "Peritus Otomasyon Sistemleri adlı yerin web sitesini ziyaret et" [ref=e81] [cursor=pointer]:
+                      - /url: /aclk?sa=L&ai=DChsSEwiukueRqPOSAxVjnYMHHevsB70YACICCAEQAhoCZWY&co=1&ase=2&gclid=EAIaIQobChMIrpLnkajzkgMVY52DBx3r7Ae9EBAYASAAEgKHN_D_BwE&cid=CAASugHkaGVKq-W-RGe0e-47iwiry1m0OAA4C9_F8MKvb3t9pZqO7qimyv9RtWu1jZYwEDSNXiygSKZ6gP_Rhfm0JEEJ9WIYgNzu-DXftjsY6nP5cZECCtXq-8fhvA9bDBcKv-kviVU1tYM8PkEV14szqhj0eIu7i9qkdRMC87_ICwREjMOd6R_9h9NiI-J7WVBnRUsApB6rxCO8L7n7Vt08rkF1HCWBp8a3QaK-NQz26NQFpXm5rW7um43lj9s&cce=2&category=acrcp_v1_32&sig=AOD64_1I9pY6-LCrZFZlK6kMv8rF_8Ajrg&adurl&q&ctype=99&nis=6
+                      - generic [ref=e83]: 
+                      - generic [ref=e84]: Web sitesi
+                    - button "Peritus Otomasyon Sistemleri adlı yer için yol tarifi al" [ref=e85] [cursor=pointer]:
+                      - generic [ref=e87]: 
+                      - generic [ref=e88]: Yol tarifi
+                - link "Reklam·İtalya'nın Ödüllü Kahvesi·Tarihi İtalyan Kahve Kültürü ve Bilgi Birikimi Işığında Özenle Seçilmiş Kahve Çekirdekleri·Site·italyankahve.com/caffe-cartapani/cinquestelle" [ref=e93] [cursor=pointer]:
+                  - /url: /aclk?sa=L&ai=DChsSEwiukueRqPOSAxVjnYMHHevsB70YACICCAEQAhoCZWY&co=1&ase=2&gclid=EAIaIQobChMIrpLnkajzkgMVY52DBx3r7Ae9EBAYASAAEgKHN_D_BwE&cid=CAASugHkaGVKq-W-RGe0e-47iwiry1m0OAA4C9_F8MKvb3t9pZqO7qimyv9RtWu1jZYwEDSNXiygSKZ6gP_Rhfm0JEEJ9WIYgNzu-DXftjsY6nP5cZECCtXq-8fhvA9bDBcKv-kviVU1tYM8PkEV14szqhj0eIu7i9qkdRMC87_ICwREjMOd6R_9h9NiI-J7WVBnRUsApB6rxCO8L7n7Vt08rkF1HCWBp8a3QaK-NQz26NQFpXm5rW7um43lj9s&cce=2&category=acrcp_v1_32&sig=AOD64_1I9pY6-LCrZFZlK6kMv8rF_8Ajrg&adurl=&rct=j&nis=6
+                  - generic [ref=e95]:
+                    - generic [ref=e96]:
+                      - generic [ref=e97]: İtalya'nın Ödüllü Kahvesi
+                      - generic [ref=e98]: Tarihi İtalyan Kahve Kültürü ve Bilgi Birikimi Işığında Özenle Seçilmiş Kahve Çekirdekleri
+                    - generic [ref=e101]: Site
+            - article "Coffee Manifesto" [ref=e104]:
+              - link "Coffee Manifesto" [ref=e105] [cursor=pointer]:
+                - /url: https://www.google.com/maps/place/Coffee+Manifesto/data=!4m7!3m6!1s0x14cab86771a9d5ff:0x7d6a34afe642b2e1!8m2!3d40.9892178!4d29.0241073!16s%2Fg%2F11ckr5fnd2!19sChIJ_9WpcWe4yhQR4bJC5q80an0?authuser=0&hl=tr&rclk=1
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: Coffee Manifesto
+                          - generic:
+                            - generic:
+                              - generic:
+                                - img "4,5 yıldızlı 600 Yorum":
+                                  - text: 4,5
+                                  - text: (600)
+                                  - img "Google Haritalar'daki herkese açık yorumlarla ilgili yasal açıklama hakkında daha fazla bilgi edinin"
+                              - generic: · ₺200–400
+                          - generic:
+                            - generic:
+                              - generic: Kahve dükkanı
+                              - generic: · Güneşlibahçe Sok. No:40A
+                            - generic:
+                              - generic:
+                                - generic: "Kapalı · Açılış zamanı: 08:30"
+                              - generic: · (0216) 550 00 36
+                  - generic:
+                    - link "Coffee Manifesto adlı yerin web sitesini ziyaret et" [ref=e106] [cursor=pointer]:
+                      - /url: http://www.coffeemanifesto.com/
+                      - generic [ref=e108]: 
+                      - generic [ref=e109]: Web sitesi
+                    - button "Coffee Manifesto adlı yer için yol tarifi al" [ref=e110] [cursor=pointer]:
+                      - generic [ref=e112]: 
+                      - generic [ref=e113]: Yol tarifi
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: Gerçek mekanda hizmet
+            - article "Coffee Manifesto Moda" [ref=e116]:
+              - link "Coffee Manifesto Moda" [ref=e117] [cursor=pointer]:
+                - /url: https://www.google.com/maps/place/Coffee+Manifesto+Moda/data=!4m7!3m6!1s0x14cab8612e791185:0x51486691331c9850!8m2!3d40.9855855!4d29.0261344!16s%2Fg%2F11c60crwqs!19sChIJhRF5LmG4yhQRUJgcM5FmSFE?authuser=0&hl=tr&rclk=1
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: Coffee Manifesto Moda
+                          - generic:
+                            - generic:
+                              - generic:
+                                - img "4,3 yıldızlı 445 Yorum":
+                                  - text: 4,3
+                                  - text: (445)
+                                  - img "Google Haritalar'daki herkese açık yorumlarla ilgili yasal açıklama hakkında daha fazla bilgi edinin"
+                              - generic: · ₺100–200
+                          - generic:
+                            - generic:
+                              - generic: Kafe
+                              - generic:
+                                - text: ·
+                                - img "Tekerlekli sandalye kullanıcılarına uygun giriş yok" [ref=e118] [cursor=pointer]:
+                                  - generic [ref=e119]: 
+                              - generic: · Dr. Esat Işık Cd. 22b
+                            - generic:
+                              - generic:
+                                - generic: "Kapalı · Açılış zamanı: 08:00"
+                              - generic: · (0216) 349 20 22
+                  - generic:
+                    - link "Coffee Manifesto Moda adlı yerin web sitesini ziyaret et" [ref=e120] [cursor=pointer]:
+                      - /url: http://www.coffeemanifesto.com/
+                      - generic [ref=e122]: 
+                      - generic [ref=e123]: Web sitesi
+                    - button "Coffee Manifesto Moda adlı yer için yol tarifi al" [ref=e124] [cursor=pointer]:
+                      - generic [ref=e126]: 
+                      - generic [ref=e127]: Yol tarifi
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: İçeride servis
+                        - generic: ·
+                      - generic:
+                        - generic: Paket servisi
+                        - generic: ·
+                      - generic:
+                        - generic: Paket servis hizmeti yok
+            - article "Coffee Manifesto Yeldeğirmeni" [ref=e130]:
+              - link "Coffee Manifesto Yeldeğirmeni" [ref=e131] [cursor=pointer]:
+                - /url: https://www.google.com/maps/place/Coffee+Manifesto+Yelde%C4%9Firmeni/data=!4m7!3m6!1s0x14cab95b1794343d:0xc7dce7bf3e5a22bb!8m2!3d40.9956997!4d29.0283318!16s%2Fg%2F11h2c2sn3w!19sChIJPTSUF1u5yhQRuyJaPr_n3Mc?authuser=0&hl=tr&rclk=1
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: Coffee Manifesto Yeldeğirmeni
+                          - generic:
+                            - generic:
+                              - generic:
+                                - img "4,5 yıldızlı 621 Yorum":
+                                  - text: 4,5
+                                  - text: (621)
+                                  - img "Google Haritalar'daki herkese açık yorumlarla ilgili yasal açıklama hakkında daha fazla bilgi edinin"
+                              - generic: · ₺200–400
+                          - generic:
+                            - generic:
+                              - generic: Kahve dükkanı
+                              - generic:
+                                - text: ·
+                                - img "Tekerlekli sandalye kullanıcılarına uygun giriş" [ref=e132] [cursor=pointer]:
+                                  - generic [ref=e133]: 
+                              - generic: · Duatepe Sk. no:15
+                            - generic:
+                              - generic:
+                                - generic: "Kapalı · Açılış zamanı: 08:00"
+                              - generic: · (0216) 515 95 29
+                  - generic:
+                    - link "Coffee Manifesto Yeldeğirmeni adlı yerin web sitesini ziyaret et" [ref=e134] [cursor=pointer]:
+                      - /url: http://www.coffeemanifesto.com/
+                      - generic [ref=e136]: 
+                      - generic [ref=e137]: Web sitesi
+                    - button "Coffee Manifesto Yeldeğirmeni adlı yer için yol tarifi al" [ref=e138] [cursor=pointer]:
+                      - generic [ref=e140]: 
+                      - generic [ref=e141]: Yol tarifi
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: İçeride servis
+                        - generic: ·
+                      - generic:
+                        - generic: Paket servisi
+                        - generic: ·
+                      - generic:
+                        - generic: Paket servis hizmeti yok
+                  - link "İnternetten sipariş ver" [ref=e142] [cursor=pointer]:
+                    - /url: https://www.google.com/viewer/chooseprovider?mid=/g/11h2c2sn3w&g2lbs=AIBNGdVVpSPvJyeuGgnTt9yodqgSkj4Vjpud7S19FkuCOT4eFeLLwne3uclv6wrbq3rt2SlAHA44mfi-xHB6y4i_qc7YUgky4TnNM3W-1UY5PJtkifLcb8U%3D&hl=tr-TR&gl=tr&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=ijieaZZxx5HFzw_qmvD5Bg&ei=ijieaZZxx5HFzw_qmvD5Bg&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp
+                    - generic [ref=e143]:
+                      - generic [ref=e144]: 
+                      - text: İnternetten sipariş ver
+            - article "Coffee Manifesto Coffe Lab" [ref=e147]:
+              - link "Coffee Manifesto Coffe Lab" [ref=e148] [cursor=pointer]:
+                - /url: https://www.google.com/maps/place/Coffee+Manifesto+Coffe+Lab/data=!4m7!3m6!1s0x14cab966259889ab:0x4b280cd1e34cf515!8m2!3d40.9957914!4d29.0283148!16s%2Fg%2F11rxrm0q7w!19sChIJq4mYJWa5yhQRFfVM49EMKEs?authuser=0&hl=tr&rclk=1
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: Coffee Manifesto Coffe Lab
+                          - generic:
+                            - generic:
+                              - generic:
+                                - img "5,0 yıldızlı 13 Yorum":
+                                  - text: 5,0
+                                  - text: (13)
+                                  - img "Google Haritalar'daki herkese açık yorumlarla ilgili yasal açıklama hakkında daha fazla bilgi edinin"
+                          - generic:
+                            - generic:
+                              - generic: Kahve Kavurma Şirketi
+                              - generic: · Taşlıbayır Sok. No:9/A
+                            - generic:
+                              - generic:
+                                - generic: "Kapalı · Açılış zamanı: 08:30"
+                              - generic: · (0216) 471 34 21
+                  - generic:
+                    - link "Coffee Manifesto Coffe Lab adlı yerin web sitesini ziyaret et" [ref=e149] [cursor=pointer]:
+                      - /url: http://www.coffeemanifesto.com/
+                      - generic [ref=e151]: 
+                      - generic [ref=e152]: Web sitesi
+                    - button "Coffee Manifesto Coffe Lab adlı yer için yol tarifi al" [ref=e153] [cursor=pointer]:
+                      - generic [ref=e155]: 
+                      - generic [ref=e156]: Yol tarifi
+            - paragraph [ref=e159]:
+              - generic [ref=e160]: Listenin sonuna ulaştınız.
+          - heading "Google Haritalar'dan en iyi şekilde yararlanın Oturum aç" [level=2] [ref=e165]:
+            - generic [ref=e166]: Google Haritalar'dan en iyi şekilde yararlanın
+            - button "Oturum aç" [ref=e169] [cursor=pointer]:
+              - generic [ref=e171]: Oturum aç
+          - checkbox "Harita hareket ettiğinde sonuçları güncelle" [ref=e173] [cursor=pointer]:
+            - generic [ref=e175]: 
+            - text: Harita hareket ettiğinde sonuçları güncelle
+      - button "Yan paneli daralt" [ref=e177] [cursor=pointer]:
+        - generic [ref=e178]: 
+    - generic [ref=e182]:
+      - button "Google uygulamaları" [ref=e186] [cursor=pointer]:
+        - img [ref=e187]
+      - link "Oturum açın" [ref=e190] [cursor=pointer]:
+        - /url: https://accounts.google.com/ServiceLogin?hl=tr&passive=true&continue=https%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2FCoffee%2BManifesto%2BIstanbul&service=local&ec=GAZAcQ
+    - generic [ref=e191]:
+      - generic:
+        - button "Konumunuzu Gösterin" [ref=e194] [cursor=pointer]:
+          - generic [ref=e196]: 
+        - generic [ref=e198] [cursor=pointer]:
+          - button "Yakınlaştır" [ref=e199]
+          - button "Uzaklaştır" [ref=e202]
+      - button "Street View resimlerine göz atın" [ref=e210]
+      - generic [ref=e216]:
+        - generic "Etkileşimli harita" [ref=e217]
+        - generic [ref=e221] [cursor=pointer]:
+          - generic [ref=e222]: 
+          - generic [ref=e223]: Katmanlar
+        - button "Katmanlar" [ref=e224] [cursor=pointer]
+    - generic [ref=e226]:
+      - contentinfo [ref=e229]:
+        - text: Görüntüler ©2026 ,Harita verileri ©2026
+        - button "Türkiye" [ref=e230] [cursor=pointer]
+        - button "Şartlar" [ref=e231] [cursor=pointer]
+        - button "Gizlilik" [ref=e232] [cursor=pointer]
+        - button "Ürün Geri Bildirimi Gönder" [ref=e233] [cursor=pointer]
+      - button "200 m" [ref=e235] [cursor=pointer]: 200 m

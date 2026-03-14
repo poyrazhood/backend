@@ -1,0 +1,477 @@
+- generic "Google Haritalar" [ref=e2]:
+  - generic [ref=e3]:
+    - application "Harita·Haritayı kaydırmak için ok tuşlarını kullanın.·Bir yerin ilişkili sayısını tuşlayarak bu yer hakkındaki ayrıntıları görün." [ref=e5]
+    - generic [ref=e8]:
+      - search [ref=e11]:
+        - button "Geri" [ref=e213] [cursor=pointer]:
+          - generic [ref=e14]: 
+        - generic [ref=e15]:
+          - combobox [ref=e17]: Coffee Manifesto İstanbul
+          - button "Ara" [ref=e19] [cursor=pointer]:
+            - generic [ref=e20]: 
+          - button "Kapat" [ref=e22] [cursor=pointer]:
+            - generic [ref=e23]: 
+      - generic [ref=e26]:
+        - generic:
+          - button [ref=e27] [cursor=pointer]
+          - button "Show the Input Tools menu" [ref=e29] [cursor=pointer]
+    - generic [ref=e31]:
+      - main "Coffee Manifesto" [ref=e221]:
+        - tablist [ref=e269]:
+          - tab "Coffee Manifesto adlı yere genel bakış" [ref=e270]:
+            - generic [ref=e272]: Genel Bakış
+          - tab "Menü" [ref=e274]:
+            - generic [ref=e276]: Menü
+          - tab "Coffee Manifesto ile ilgili yorumlar" [selected] [ref=e278]:
+            - generic [ref=e280]: Yorumlar
+          - tab "Coffee Manifesto hakkında" [ref=e282]:
+            - generic [ref=e284]: Hakkında
+        - generic [ref=e862]:
+          - generic [ref=e864]:
+            - table [ref=e866]:
+              - rowgroup [ref=e867]:
+                - img "5 yıldızlı,436 yorum" [ref=e868]: "5"
+                - img "4 yıldızlı,96 yorum" [ref=e871]: "4"
+                - img "3 yıldızlı,43 yorum" [ref=e874]: "3"
+                - img "2 yıldızlı,10 yorum" [ref=e877]: "2"
+                - img "1 yıldızlı,15 yorum" [ref=e880]: "1"
+            - generic [ref=e883]:
+              - generic [ref=e884]: 4,5
+              - img "4,5 yıldızlı" [ref=e885]
+              - generic [ref=e891]: 600 yorum
+          - generic [ref=e893]:
+            - generic [ref=e894]: Yorumlar doğrulanmamıştır
+            - button "Google Haritalar'daki herkese açık yorumlara ilişkin yasal açıklama hakkında daha fazla bilgi edinin" [ref=e898]:
+              - generic [ref=e902]: 
+          - button "Yorum yazın" [ref=e906] [cursor=pointer]:
+            - generic [ref=e907]:
+              - generic [ref=e908]: 
+              - generic [ref=e909]: Yorum yazın
+          - generic [ref=e913]:
+            - textbox "Yorumlarda arayın" [ref=e914]
+            - generic: Yorumlarda arayın
+          - button "En alakalı" [ref=e916] [cursor=pointer]:
+            - generic [ref=e917]: En alakalı
+            - generic [ref=e918]: 
+          - generic [ref=e921]:
+            - generic "Aybike Yanık Çavdar" [ref=e922]:
+              - generic [ref=e924]:
+                - button "Aybike Yanık Çavdar adlı kullanıcının fotoğrafı" [ref=e925]
+                - generic [ref=e927]:
+                  - button "Aybike Yanık Çavdar Yerel Rehber · 87 yorum · 87 fotoğraf" [ref=e929]:
+                    - generic [ref=e930]: Aybike Yanık Çavdar
+                    - generic [ref=e931]: Yerel Rehber · 87 yorum · 87 fotoğraf
+                  - button "Aybike Yanık Çavdar adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e932] [cursor=pointer]:
+                    - generic [ref=e934]: 
+                - generic [ref=e935]:
+                  - generic [ref=e936]:
+                    - img "5 yıldız" [ref=e937]:
+                      - generic [ref=e938]: 
+                      - generic [ref=e939]: 
+                      - generic [ref=e940]: 
+                      - generic [ref=e941]: 
+                      - generic [ref=e942]: 
+                    - generic [ref=e943]: 4 ay önce
+                  - generic [ref=e945]:
+                    - text: Mekan oldukça şirin Çiya'nın hemen yanında. Kahveler çok başarılı ben latte tercih ettim gerçekten çok lezzetliydi. İşlek bir caddede kahve keyfi yapmak için ideal bir seçim
+                    - generic [ref=e1384]:
+                      - generic [ref=e1388]: "Yiyecek: 5"
+                      - generic [ref=e1392]: "Hizmet: 5"
+                      - generic [ref=e1396]: "Atmosfer: 5"
+                  - button "Aybike Yanık Çavdar adlı kullanıcının yorumundaki 1. fotoğraf" [ref=e949] [cursor=pointer]
+                  - generic [ref=e950]:
+                    - button "Beğenme" [ref=e951]:
+                      - generic [ref=e952] [cursor=pointer]:
+                        - generic [ref=e953]: 
+                        - generic [ref=e955]: Beğen
+                    - button "Aybike Yanık Çavdar adlı kullanıcının yorumunu paylaşın." [ref=e956]:
+                      - generic [ref=e957] [cursor=pointer]:
+                        - generic [ref=e958]: 
+                        - generic [ref=e959]: Paylaş
+            - generic "Büşra U" [ref=e963]:
+              - generic [ref=e965]:
+                - button "Büşra U adlı kullanıcının fotoğrafı" [ref=e966]
+                - generic [ref=e968]:
+                  - button "Büşra U Yerel Rehber · 227 yorum · 1.151 fotoğraf" [ref=e970]:
+                    - generic [ref=e971]: Büşra U
+                    - generic [ref=e972]: Yerel Rehber · 227 yorum · 1.151 fotoğraf
+                  - button "Büşra U adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e973] [cursor=pointer]:
+                    - generic [ref=e975]: 
+                - generic [ref=e976]:
+                  - generic [ref=e977]:
+                    - img "4 yıldız" [ref=e978]:
+                      - generic [ref=e979]: 
+                      - generic [ref=e980]: 
+                      - generic [ref=e981]: 
+                      - generic [ref=e982]: 
+                      - generic [ref=e983]: 
+                    - generic [ref=e984]: bir yıl önce
+                  - generic [ref=e986]:
+                    - text: Kadıköy’de akşam üstü online bir görüşme için sessiz sakin bir mekan arayışında denk geldiğim kafe oldu Manifesto. Oldukça sevimli bir mekan. Kahveleri de lezzetliydi, çalışanlar da ilgili ve kibardı. Tekrardan tercih edebileceğim mekanlar arasında yerini aldı.
+                    - generic [ref=e1397]:
+                      - generic [ref=e1398]:
+                        - generic [ref=e1400]: Hizmet
+                        - generic [ref=e1402]: İçeride servis
+                      - generic [ref=e1403]:
+                        - generic [ref=e1405]: Öğün
+                        - generic [ref=e1407]: Diğer
+                      - generic [ref=e1408]:
+                        - generic [ref=e1410]: Kişi başı fiyat
+                        - generic [ref=e1412]: ₺100–200
+                      - generic [ref=e1416]: "Yiyecek: 4"
+                      - generic [ref=e1420]: "Hizmet: 4"
+                      - generic [ref=e1424]: "Atmosfer: 4"
+                  - generic [ref=e989]:
+                    - button "Mekan" [ref=e990] [cursor=pointer]
+                    - button "Mekan" [ref=e991] [cursor=pointer]
+                    - button "Mekan" [ref=e992] [cursor=pointer]
+                    - button "Büşra U adlı kullanıcının yorumundan 7 fotoğraf daha" [ref=e993] [cursor=pointer]:
+                      - generic [ref=e994]: "+7"
+                  - generic [ref=e995]:
+                    - button "1 beğenme" [ref=e996]:
+                      - generic [ref=e997] [cursor=pointer]:
+                        - generic [ref=e998]: 
+                        - generic [ref=e1000]: "1"
+                    - button "Büşra U adlı kullanıcının yorumunu paylaşın." [ref=e1001]:
+                      - generic [ref=e1002] [cursor=pointer]:
+                        - generic [ref=e1003]: 
+                        - generic [ref=e1004]: Paylaş
+            - generic "Onur Tokgöz" [ref=e1008]:
+              - generic [ref=e1010]:
+                - button "Onur Tokgöz adlı kullanıcının fotoğrafı" [ref=e1011]
+                - generic [ref=e1013]:
+                  - button "Onur Tokgöz Yerel Rehber · 170 yorum · 579 fotoğraf" [ref=e1015]:
+                    - generic [ref=e1016]: Onur Tokgöz
+                    - generic [ref=e1017]: Yerel Rehber · 170 yorum · 579 fotoğraf
+                  - button "Onur Tokgöz adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1018] [cursor=pointer]:
+                    - generic [ref=e1020]: 
+                - generic [ref=e1021]:
+                  - generic [ref=e1022]:
+                    - img "5 yıldız" [ref=e1023]:
+                      - generic [ref=e1024]: 
+                      - generic [ref=e1025]: 
+                      - generic [ref=e1026]: 
+                      - generic [ref=e1027]: 
+                      - generic [ref=e1028]: 
+                    - generic [ref=e1029]: 4 yıl önce
+                  - generic [ref=e1031]: Açıldığı günden beri Kadıköy de gittiğim en güzel cafelerden birisi. Küçük ve şirin . Kahveleri güzel. Özenerek hazırlanıyorlar. Kahvenizin yanında ufak cookiede ikram ediliyor. Evde içmek içinde no:2 çekirdeklerini tercih ediyorum. İnternetden de sipariş edilebiliyor.
+                  - generic [ref=e1034]:
+                    - button "Onur Tokgöz adlı kullanıcının yorumundaki 1. fotoğraf" [ref=e1035] [cursor=pointer]
+                    - button "Onur Tokgöz adlı kullanıcının yorumundaki 2. fotoğraf" [ref=e1036] [cursor=pointer]
+                  - generic [ref=e1037]:
+                    - button "5 beğenme" [ref=e1038]:
+                      - generic [ref=e1039] [cursor=pointer]:
+                        - generic [ref=e1040]: 
+                        - generic [ref=e1042]: "5"
+                    - button "Onur Tokgöz adlı kullanıcının yorumunu paylaşın." [ref=e1043]:
+                      - generic [ref=e1044] [cursor=pointer]:
+                        - generic [ref=e1045]: 
+                        - generic [ref=e1046]: Paylaş
+            - generic "Selin Ardahan" [ref=e1050]:
+              - generic [ref=e1052]:
+                - button "Selin Ardahan adlı kullanıcının fotoğrafı" [ref=e1053]
+                - generic [ref=e1055]:
+                  - button "Selin Ardahan Yerel Rehber · 863 yorum · 9.901 fotoğraf" [ref=e1057]:
+                    - generic [ref=e1058]: Selin Ardahan
+                    - generic [ref=e1059]: Yerel Rehber · 863 yorum · 9.901 fotoğraf
+                  - button "Selin Ardahan adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1060] [cursor=pointer]:
+                    - generic [ref=e1062]: 
+                - generic [ref=e1063]:
+                  - generic [ref=e1064]:
+                    - img "4 yıldız" [ref=e1065]:
+                      - generic [ref=e1066]: 
+                      - generic [ref=e1067]: 
+                      - generic [ref=e1068]: 
+                      - generic [ref=e1069]: 
+                      - generic [ref=e1070]: 
+                    - generic [ref=e1071]: 6 yıl önce
+                  - generic [ref=e1073]: Bugun tesadufen deneme firsatim oldu. Sutlu kahveden sade kahvelere gecis yapmak istedigim bu donemde V60 i denedim:) oldukca yumusak ve lezzetliydi. Daha sonra digerlerini de denemek isterim. Ortam cok sicak, personeller cok iyi ve fiyat performansi da gayet iyi gorunuyordu. Hatta baska biyerden aldigimiz tatliyi da yememize musaade ettiler, ki bircok mekan reddediyor bilirsiniz:) deneyin memnun kalacaginiza eminim🥳
+                  - generic [ref=e1076]:
+                    - button "Selin Ardahan adlı kullanıcının yorumundaki 1. fotoğraf" [ref=e1077] [cursor=pointer]
+                    - button "Selin Ardahan adlı kullanıcının yorumundaki 2. fotoğraf" [ref=e1078] [cursor=pointer]
+                    - button "Selin Ardahan adlı kullanıcının yorumundaki 3. fotoğraf" [ref=e1079] [cursor=pointer]
+                  - generic [ref=e1080]:
+                    - button "1 beğenme" [ref=e1081]:
+                      - generic [ref=e1082] [cursor=pointer]:
+                        - generic [ref=e1083]: 
+                        - generic [ref=e1085]: "1"
+                    - button "Selin Ardahan adlı kullanıcının yorumunu paylaşın." [ref=e1086]:
+                      - generic [ref=e1087] [cursor=pointer]:
+                        - generic [ref=e1088]: 
+                        - generic [ref=e1089]: Paylaş
+            - generic "efkan basar" [ref=e1093]:
+              - generic [ref=e1095]:
+                - button "efkan basar adlı kullanıcının fotoğrafı" [ref=e1096]
+                - generic [ref=e1098]:
+                  - button "efkan basar Yerel Rehber · 191 yorum · 1.942 fotoğraf" [ref=e1100]:
+                    - generic [ref=e1101]: efkan basar
+                    - generic [ref=e1102]: Yerel Rehber · 191 yorum · 1.942 fotoğraf
+                  - button "efkan basar adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1103] [cursor=pointer]:
+                    - generic [ref=e1105]: 
+                - generic [ref=e1106]:
+                  - generic [ref=e1107]:
+                    - img "5 yıldız" [ref=e1108]:
+                      - generic [ref=e1109]: 
+                      - generic [ref=e1110]: 
+                      - generic [ref=e1111]: 
+                      - generic [ref=e1112]: 
+                      - generic [ref=e1113]: 
+                    - generic [ref=e1114]: 8 ay önce
+                  - generic [ref=e1116]:
+                    - text: filtresi gusel latte si gusel butik harika yer self servis, guleryüzlü hizmet bnm şehirdeki en yenin
+                    - generic [ref=e1425]:
+                      - generic [ref=e1426]:
+                        - generic [ref=e1428]: Kişi başı fiyat
+                        - generic [ref=e1430]: ₺600–700
+                      - generic [ref=e1434]: "Yiyecek: 5"
+                      - generic [ref=e1438]: "Hizmet: 5"
+                      - generic [ref=e1442]: "Atmosfer: 5"
+                      - generic [ref=e1443]:
+                        - generic [ref=e1445]: Grup büyüklüğü
+                        - generic [ref=e1447]: 3-4 kişi
+                      - generic [ref=e1448]:
+                        - generic [ref=e1450]: Bekleme süresi
+                        - generic [ref=e1452]: Beklemek gerekmiyor
+                  - button "efkan basar adlı kullanıcının yorumundaki 1. fotoğraf" [ref=e1120] [cursor=pointer]
+                  - generic [ref=e1121]:
+                    - button "Beğenme" [ref=e1122]:
+                      - generic [ref=e1123] [cursor=pointer]:
+                        - generic [ref=e1124]: 
+                        - generic [ref=e1126]: Beğen
+                    - button "efkan basar adlı kullanıcının yorumunu paylaşın." [ref=e1127]:
+                      - generic [ref=e1128] [cursor=pointer]:
+                        - generic [ref=e1129]: 
+                        - generic [ref=e1130]: Paylaş
+                  - generic [ref=e1131]:
+                    - generic [ref=e1132]: İşletme sahibinin yanıtı 8 ay önce
+                    - generic [ref=e1133]: Teşekkürler 🤩 …
+            - generic "Selinay Özen" [ref=e1137]:
+              - generic [ref=e1139]:
+                - button "Selinay Özen adlı kullanıcının fotoğrafı" [ref=e1140]
+                - generic [ref=e1142]:
+                  - button "Selinay Özen 4 yorum" [ref=e1144]:
+                    - generic [ref=e1145]: Selinay Özen
+                    - generic [ref=e1146]: 4 yorum
+                  - button "Selinay Özen adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1147] [cursor=pointer]:
+                    - generic [ref=e1149]: 
+                - generic [ref=e1150]:
+                  - generic [ref=e1151]:
+                    - img "5 yıldız" [ref=e1152]:
+                      - generic [ref=e1153]: 
+                      - generic [ref=e1154]: 
+                      - generic [ref=e1155]: 
+                      - generic [ref=e1156]: 
+                      - generic [ref=e1157]: 
+                    - generic [ref=e1158]: 2 ay önce
+                  - generic [ref=e1160]:
+                    - text: küçük tatli bir kafe çalışan hanımefendi ilgiliydi teşekkür ederiz kahvesi ve ürünleri çok kaliteli
+                    - generic [ref=e1161]:
+                      - generic [ref=e1162]:
+                        - generic [ref=e1164]: Kişi başı fiyat
+                        - generic [ref=e1454]: ₺200–400
+                      - generic [ref=e1458]: "Yiyecek: 5"
+                      - generic [ref=e1462]: "Hizmet: 5"
+                      - generic [ref=e1463]:
+                        - generic [ref=e1465]: Gürültü seviyesi
+                        - generic [ref=e1467]: Sessiz, konuşması kolay
+                      - generic [ref=e1468]:
+                        - generic [ref=e1470]: Bekleme süresi
+                        - generic [ref=e1472]: Beklemek gerekmiyor
+                  - generic [ref=e1167]:
+                    - button "Beğenme" [ref=e1168]:
+                      - generic [ref=e1169] [cursor=pointer]:
+                        - generic [ref=e1170]: 
+                        - generic [ref=e1172]: Beğen
+                    - button "Selinay Özen adlı kullanıcının yorumunu paylaşın." [ref=e1173]:
+                      - generic [ref=e1174] [cursor=pointer]:
+                        - generic [ref=e1175]: 
+                        - generic [ref=e1176]: Paylaş
+            - generic "Eda Sünnetcioğlu" [ref=e1180]:
+              - generic [ref=e1182]:
+                - button "Eda Sünnetcioğlu adlı kullanıcının fotoğrafı" [ref=e1183]
+                - generic [ref=e1185]:
+                  - button "Eda Sünnetcioğlu Yerel Rehber · 170 yorum · 333 fotoğraf" [ref=e1187]:
+                    - generic [ref=e1188]: Eda Sünnetcioğlu
+                    - generic [ref=e1189]: Yerel Rehber · 170 yorum · 333 fotoğraf
+                  - button "Eda Sünnetcioğlu adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1190] [cursor=pointer]:
+                    - generic [ref=e1192]: 
+                - generic [ref=e1193]:
+                  - generic [ref=e1194]:
+                    - img "3 yıldız" [ref=e1195]:
+                      - generic [ref=e1196]: 
+                      - generic [ref=e1197]: 
+                      - generic [ref=e1198]: 
+                      - generic [ref=e1199]: 
+                      - generic [ref=e1200]: 
+                    - generic [ref=e1201]: 3 yıl önce
+                  - generic [ref=e1203]:
+                    - text: Kahvesi gayet güzeldi. Sunumları da hoş. Fakat personel aşırı kaba ve geldiğinize pişman edebiliyor. Biraz daha kibar davransa kimseye zarar gelmez.
+                    - generic [ref=e1473]:
+                      - generic [ref=e1474]:
+                        - generic [ref=e1476]: Hizmet
+                        - generic [ref=e1478]: İçeride servis
+                      - generic [ref=e1479]:
+                        - generic [ref=e1481]: Öğün
+                        - generic [ref=e1483]: Diğer
+                      - generic [ref=e1484]:
+                        - generic [ref=e1486]: Kişi başı fiyat
+                        - generic [ref=e1488]: ₺40–60
+                  - generic [ref=e1206]:
+                    - button "Eda Sünnetcioğlu adlı kullanıcının yorumundaki 1. fotoğraf" [ref=e1207] [cursor=pointer]
+                    - button "Eda Sünnetcioğlu adlı kullanıcının yorumundaki 2. fotoğraf" [ref=e1208] [cursor=pointer]
+                    - button "Eda Sünnetcioğlu adlı kullanıcının yorumundaki 3. fotoğraf" [ref=e1209] [cursor=pointer]
+                  - generic [ref=e1210]:
+                    - button "1 beğenme" [ref=e1211]:
+                      - generic [ref=e1212] [cursor=pointer]:
+                        - generic [ref=e1213]: 
+                        - generic [ref=e1215]: "1"
+                    - button "Eda Sünnetcioğlu adlı kullanıcının yorumunu paylaşın." [ref=e1216]:
+                      - generic [ref=e1217] [cursor=pointer]:
+                        - generic [ref=e1218]: 
+                        - generic [ref=e1219]: Paylaş
+            - generic "Çağatay Kaan Malal" [ref=e1223]:
+              - generic [ref=e1225]:
+                - button "Çağatay Kaan Malal adlı kullanıcının fotoğrafı" [ref=e1226]
+                - generic [ref=e1228]:
+                  - button "Çağatay Kaan Malal Yerel Rehber · 38 yorum · 9 fotoğraf" [ref=e1230]:
+                    - generic [ref=e1231]: Çağatay Kaan Malal
+                    - generic [ref=e1232]: Yerel Rehber · 38 yorum · 9 fotoğraf
+                  - button "Çağatay Kaan Malal adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1233] [cursor=pointer]:
+                    - generic [ref=e1235]: 
+                - generic [ref=e1236]:
+                  - generic [ref=e1237]:
+                    - img "5 yıldız" [ref=e1238]:
+                      - generic [ref=e1239]: 
+                      - generic [ref=e1240]: 
+                      - generic [ref=e1241]: 
+                      - generic [ref=e1242]: 
+                      - generic [ref=e1243]: 
+                    - generic [ref=e1244]: 8 ay önce
+                  - generic [ref=e1246]:
+                    - text: kahvesi güzel, wc ler temiz. hizmet ve esnaflık kibar ve güler yüzlü.
+                    - generic [ref=e1247]:
+                      - generic [ref=e1248]:
+                        - generic [ref=e1250]: Kişi başı fiyat
+                        - generic [ref=e1490]: ₺100–200
+                      - generic [ref=e1494]: "Yiyecek: 5"
+                      - generic [ref=e1498]: "Hizmet: 5"
+                      - generic [ref=e1502]: "Atmosfer: 5"
+                      - generic [ref=e1503]:
+                        - generic [ref=e1505]: Gürültü seviyesi
+                        - generic [ref=e1507]: Orta düzeyde gürültülü
+                      - generic [ref=e1508]:
+                        - generic [ref=e1510]: Grup büyüklüğü
+                        - generic [ref=e1512]: 5-8 kişi
+                      - generic [ref=e1513]:
+                        - generic [ref=e1515]: Bekleme süresi
+                        - generic [ref=e1517]: Beklemek gerekmiyor
+                  - button "Çağatay Kaan Malal adlı kullanıcının yorumundaki 1. fotoğraf" [ref=e1254] [cursor=pointer]
+                  - generic [ref=e1255]:
+                    - button "Beğenme" [ref=e1256]:
+                      - generic [ref=e1257] [cursor=pointer]:
+                        - generic [ref=e1258]: 
+                        - generic [ref=e1260]: Beğen
+                    - button "Çağatay Kaan Malal adlı kullanıcının yorumunu paylaşın." [ref=e1261]:
+                      - generic [ref=e1262] [cursor=pointer]:
+                        - generic [ref=e1263]: 
+                        - generic [ref=e1264]: Paylaş
+                  - generic [ref=e1265]:
+                    - generic [ref=e1266]: İşletme sahibinin yanıtı 8 ay önce
+                    - generic [ref=e1267]: Çok teşekkürler!
+            - generic "H M S" [ref=e1271]:
+              - generic [ref=e1273]:
+                - button "H M S adlı kullanıcının fotoğrafı" [ref=e1274]
+                - generic [ref=e1276]:
+                  - button "H M S Yerel Rehber · 44 yorum · 1 fotoğraf" [ref=e1278]:
+                    - generic [ref=e1279]: H M S
+                    - generic [ref=e1280]: Yerel Rehber · 44 yorum · 1 fotoğraf
+                  - button "H M S adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1281] [cursor=pointer]:
+                    - generic [ref=e1283]: 
+                - generic [ref=e1284]:
+                  - generic [ref=e1285]:
+                    - img "5 yıldız" [ref=e1286]:
+                      - generic [ref=e1287]: 
+                      - generic [ref=e1288]: 
+                      - generic [ref=e1289]: 
+                      - generic [ref=e1290]: 
+                      - generic [ref=e1291]: 
+                    - generic [ref=e1292]: 4 yıl önce
+                  - generic [active] [ref=e1294]:
+                    - text: İlk kez ziyaret ettim ve çok beğendim. Kahve kalitesi güzel, demleme yöntemleri de tam yerinde olmuş. Guatemala kahvenin keyfini sürüyorum. Kahve tutkunlarının kesinlikle ziyaret etmesi gereken bir yer.
+                    - generic [ref=e1519]:
+                      - generic [ref=e1521]: Öğün
+                      - generic [ref=e1523]: Diğer
+                  - button "H M S adlı kullanıcının yorumundaki 1. fotoğraf" [ref=e1298] [cursor=pointer]
+                  - generic [ref=e1299]:
+                    - button "Beğenme" [ref=e1300]:
+                      - generic [ref=e1301] [cursor=pointer]:
+                        - generic [ref=e1302]: 
+                        - generic [ref=e1304]: Beğen
+                    - button "H M S adlı kullanıcının yorumunu paylaşın." [ref=e1305]:
+                      - generic [ref=e1306] [cursor=pointer]:
+                        - generic [ref=e1307]: 
+                        - generic [ref=e1308]: Paylaş
+            - generic "Kemal USTAOGLU" [ref=e1312]:
+              - generic [ref=e1314]:
+                - button "Kemal USTAOGLU adlı kullanıcının fotoğrafı" [ref=e1315]
+                - generic [ref=e1317]:
+                  - button "Kemal USTAOGLU Yerel Rehber · 655 yorum · 1.478 fotoğraf" [ref=e1319]:
+                    - generic [ref=e1320]: Kemal USTAOGLU
+                    - generic [ref=e1321]: Yerel Rehber · 655 yorum · 1.478 fotoğraf
+                  - button "Kemal USTAOGLU adlı kullanıcının yorumu üzerinde yapılacak işlemler" [ref=e1322] [cursor=pointer]:
+                    - generic [ref=e1324]: 
+                - generic [ref=e1325]:
+                  - generic [ref=e1326]:
+                    - img "5 yıldız" [ref=e1327]:
+                      - generic [ref=e1328]: 
+                      - generic [ref=e1329]: 
+                      - generic [ref=e1330]: 
+                      - generic [ref=e1331]: 
+                      - generic [ref=e1332]: 
+                    - generic [ref=e1333]: 5 yıl önce
+                  - generic [ref=e1335]: Gayet sıcak bir ortamda kahve keyfi.Elemanlar masaya servis yapıyorlar.Müzikler harika.Tam kafa dinlemelik.
+                  - generic [ref=e1336]:
+                    - button "Kemal USTAOGLU adlı kullanıcının yorumundaki 1. fotoğraf" [ref=e1337] [cursor=pointer]
+                    - button "Kemal USTAOGLU adlı kullanıcının yorumundaki 2. fotoğraf" [ref=e1338] [cursor=pointer]
+                    - button "Kemal USTAOGLU adlı kullanıcının yorumundaki 3. fotoğraf" [ref=e1339] [cursor=pointer]
+                    - button "Kemal USTAOGLU adlı kullanıcının yorumundaki 4. fotoğraf" [ref=e1340] [cursor=pointer]
+                  - generic [ref=e1341]:
+                    - button "Beğenme" [ref=e1342]:
+                      - generic [ref=e1343] [cursor=pointer]:
+                        - generic [ref=e1344]: 
+                        - generic [ref=e1346]: Beğen
+                    - button "Kemal USTAOGLU adlı kullanıcının yorumunu paylaşın." [ref=e1347]:
+                      - generic [ref=e1348] [cursor=pointer]:
+                        - generic [ref=e1349]: 
+                        - generic [ref=e1350]: Paylaş
+      - button "Yan paneli daralt" [ref=e150] [cursor=pointer]:
+        - generic [ref=e151]: 
+    - generic [ref=e155]:
+      - button "Google uygulamaları" [ref=e159] [cursor=pointer]:
+        - img [ref=e160]
+      - link "Oturum açın" [ref=e163] [cursor=pointer]:
+        - /url: https://accounts.google.com/ServiceLogin?hl=tr&passive=true&continue=https%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2FCoffee%2520Manifesto%2520%25C4%25B0stanbul&service=local&ec=GAZAcQ
+    - generic [ref=e164]:
+      - generic:
+        - button "Konumunuzu Gösterin" [ref=e167] [cursor=pointer]:
+          - generic [ref=e169]: 
+        - generic [ref=e171] [cursor=pointer]:
+          - button "Yakınlaştır" [ref=e172]
+          - button "Uzaklaştır" [ref=e175]
+      - generic [ref=e181]:
+        - button "Street View resimlerine göz atın" [ref=e183]
+        - button "Street View" [ref=e857] [cursor=pointer]
+      - generic [ref=e189]:
+        - generic "Etkileşimli harita" [ref=e190]
+        - generic [ref=e194] [cursor=pointer]:
+          - generic [ref=e195]: 
+          - generic [ref=e196]: Katmanlar
+        - button "Katmanlar" [ref=e197] [cursor=pointer]
+    - generic [ref=e199]:
+      - contentinfo [ref=e202]:
+        - text: Görüntüler ©2026 ,Harita verileri ©2026
+        - button "Türkiye" [ref=e203] [cursor=pointer]
+        - button "Şartlar" [ref=e204] [cursor=pointer]
+        - button "Gizlilik" [ref=e205] [cursor=pointer]
+        - button "Ürün Geri Bildirimi Gönder" [ref=e206] [cursor=pointer]
+      - button "200 m" [ref=e208] [cursor=pointer]: 200 m

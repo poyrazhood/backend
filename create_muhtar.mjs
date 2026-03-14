@@ -1,0 +1,8 @@
+﻿const { PrismaClient } = await import("@prisma/client")
+const prisma = new PrismaClient()
+await prisma.$connect()
+await prisma.$executeRawUnsafe(`CREATE TABLE IF NOT EXISTS "MuhtarApplication" ("id" TEXT NOT NULL, "userId" TEXT NOT NULL, "neighborhood" TEXT NOT NULL, "district" TEXT NOT NULL, "city" TEXT NOT NULL, "reason" TEXT NOT NULL, "status" TEXT NOT NULL DEFAULT 'PENDING', "adminNote" TEXT, "reviewedBy" TEXT, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT "MuhtarApplication_pkey" PRIMARY KEY ("id"), CONSTRAINT "MuhtarApplication_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE)`)
+await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "MuhtarApplication_userId_idx" ON "MuhtarApplication"("userId")`)
+await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "MuhtarApplication_status_idx" ON "MuhtarApplication"("status")`)
+console.log("Tablo olusturuldu!")
+await prisma.$disconnect()

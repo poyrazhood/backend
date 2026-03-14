@@ -1,0 +1,1 @@
+﻿SELECT "coverImage", "googleMapsUrl" FROM "Business" WHERE "coverImage" IS NOT NULL LIMIT 3;
