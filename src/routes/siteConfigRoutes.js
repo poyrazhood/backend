@@ -1,4 +1,4 @@
-import { prisma } from '../index.js'
+import prisma from '../lib/prisma.js'
 
 async function siteConfigRoutes(fastify) {
   fastify.get('/:key', async (request, reply) => {

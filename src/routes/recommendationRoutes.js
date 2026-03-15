@@ -2,7 +2,7 @@
 // "Bana GÃ¶re Ã–ner" â€” pgvector tabanlÄ± hibrit Ã¶neri sistemi
 // Skor = Semantik Benzerlik (%50) + Konum YakÄ±nlÄ±ÄŸÄ± (%30) + TrustScore (%20)
 
-import { prisma } from '../index.js'
+import prisma from '../lib/prisma.js'
 
 function haversine(lat1, lng1, lat2, lng2) {
   const R = 6371

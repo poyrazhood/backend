@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client'
+import prisma from '../lib/prisma.js'
 import { createClient } from 'redis'
-
-const prisma = new PrismaClient()
 
 // Mock SMS - gercek entegrasyon icin Twilio/Netgsm buraya
 async function sendSMS(phone, code) {

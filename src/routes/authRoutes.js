@@ -1,9 +1,10 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma.js'
+;
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { getUserProfile } from '../services/userService.js';
 
-const prisma = new PrismaClient();
+;
 
 async function authRoutes(fastify) {
 

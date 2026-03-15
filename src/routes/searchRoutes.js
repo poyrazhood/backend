@@ -1,8 +1,9 @@
-﻿import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma.js'
+﻿;
 import { fixTurkish } from '../utils/fixTurkish.js'
 import http from 'http';
 
-const prisma = new PrismaClient();
+;
 
 async function getEmbedding(text) {
   return new Promise((resolve, reject) => {

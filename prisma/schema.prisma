@@ -57,6 +57,7 @@ model User {
   trustScoreHistory    TrustScoreHistory[]
   userFollowing        UserFollow[]           @relation("Followers")
   userFollowers        UserFollow[]           @relation("Following")
+  referralUse          ReferralUse?
 
   @@index([email])
   @@index([username])
@@ -137,6 +138,12 @@ model Business {
   updatedAt            DateTime               @updatedAt
   subscriptionPlan     String                 @default("FREE")
   subscriptionEndsAt   DateTime?
+  trustScore         Float    @default(0)
+  trustGrade         String   @default("?")
+  trustCalcAt        DateTime?
+  recentTrend        Float    @default(0)
+  percentileRank     Float    @default(0)
+  isSuspicious       Boolean  @default(false)
   verificationLevel    Int                    @default(0)
   verifiedPhone        String?
   verifiedEmail        String?
@@ -668,4 +675,54 @@ model UserPreference {
   category    Category @relation(fields: [categoryId], references: [id])
 
   @@unique([userId, categoryId])
+}
+
+// ─── REFERRAL SİSTEMİ ───────────────────────────────────────────────────────
+
+model ReferralCampaign {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  codes       ReferralCode[]
+
+  @@index([isActive])
+}
+
+model ReferralCode {
+  id          String            @id @default(cuid())
+  code        String            @unique
+  campaignId  String?
+  maxUses     Int?
+  expiresAt   DateTime?
+  rewardBadge String?
+  rewardNote  String?
+  totalUses   Int               @default(0)
+  activeUsers Int               @default(0)
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  campaign    ReferralCampaign? @relation(fields: [campaignId], references: [id])
+  uses        ReferralUse[]
+
+  @@index([code])
+  @@index([campaignId])
+}
+
+model ReferralUse {
+  id             String       @id @default(cuid())
+  referralCodeId String
+  userId         String       @unique
+  rewardGiven    Boolean      @default(false)
+  usedAt         DateTime     @default(now())
+
+  referralCode   ReferralCode @relation(fields: [referralCodeId], references: [id])
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([referralCodeId])
 }

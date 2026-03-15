@@ -1,6 +1,5 @@
+import prisma from '../lib/prisma.js'
 import { PrismaClient } from "@prisma/client"
-const prisma = new PrismaClient()
-
 const PLANS = {
   FREE:         { price: 0,   durationDays: 36500, features: [] },
   PROFESSIONAL: { price: 99,  durationDays: 30,    features: ["analytics","badge","reply"] },

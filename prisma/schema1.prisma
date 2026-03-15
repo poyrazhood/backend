@@ -52,6 +52,8 @@ model User {
   currentPoints    Int      @default(0)
   totalEarnedPoints Int     @default(0)
   pointLogs         MarketPointLog[]
+  userEmbedding    UserEmbedding?
+  userPreferences  UserPreference[]
   trustScoreHistory    TrustScoreHistory[]
   userFollowing        UserFollow[]           @relation("Followers")
   userFollowers        UserFollow[]           @relation("Following")
@@ -135,6 +137,12 @@ model Business {
   updatedAt            DateTime               @updatedAt
   subscriptionPlan     String                 @default("FREE")
   subscriptionEndsAt   DateTime?
+  trustScore         Float    @default(0)
+  trustGrade         String   @default("?")
+  trustCalcAt        DateTime?
+  recentTrend        Float    @default(0)
+  percentileRank     Float    @default(0)
+  isSuspicious       Boolean  @default(false)
   verificationLevel    Int                    @default(0)
   verifiedPhone        String?
   verifiedEmail        String?
@@ -219,6 +227,7 @@ model Category {
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
   businesses      Business[]
+  userPreferences  UserPreference[]
   parent          Category?          @relation("CategoryHierarchy", fields: [parentId], references: [id])
   children        Category[]         @relation("CategoryHierarchy")
   embedding       CategoryEmbedding?
@@ -625,7 +634,8 @@ model MarketPurchase {
   id           String     @id @default(cuid())
   userId       String
   itemId       String
-    deliveryInfo  Json?
+  pointsSpent  Int        @default(0)
+  deliveryInfo Json?
   status       String     @default("COMPLETED")
   createdAt    DateTime   @default(now())
   user         User       @relation(fields: [userId], references: [id])
@@ -641,4 +651,27 @@ model MarketPointLog {
   description String?
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id])
+}
+
+model UserEmbedding {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  vector       Float[]
+  reviewCount  Int      @default(0)
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model UserPreference {
+  id          String   @id @default(cuid())
+  userId      String
+  categoryId  String
+  avgRating   Float    @default(0)
+  reviewCount Int      @default(0)
+  isBlocked   Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
+
+  @@unique([userId, categoryId])
 }

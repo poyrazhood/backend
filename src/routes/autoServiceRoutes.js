@@ -1,8 +1,7 @@
+import prisma from '../lib/prisma.js'
 
-import { PrismaClient } from '@prisma/client'
 import { analyzeSentiment } from '../services/sentimentService.js'
 
-const prisma = new PrismaClient()
 const AUTO_SERVICE_CATEGORY_ID = 'cmm1c5s5x002110hucciownsa'
 
 // Yorumlardan otomatik radar skoru hesapla

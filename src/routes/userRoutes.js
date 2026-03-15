@@ -1,7 +1,8 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma.js'
+;
 import { getUserProfile } from '../services/userService.js';
 
-const prisma = new PrismaClient();
+;
 
 async function userRoutes(fastify) {
 

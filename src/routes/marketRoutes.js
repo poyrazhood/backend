@@ -1,7 +1,5 @@
+import prisma from '../lib/prisma.js'
 // marketRoutes.js â€“ TecrÃ¼be PazarÄ± API
-
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
 
 const ADMIN_SECRET = process.env.ADMIN_SECRET || 'tecrube_admin_2026'
 function isAdmin(req) {

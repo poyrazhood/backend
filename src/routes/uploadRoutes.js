@@ -1,3 +1,4 @@
+import prisma from '../lib/prisma.js'
 ﻿import path from 'path'
 import fs from 'fs'
 import { fileURLToPath } from 'url'
@@ -61,7 +62,6 @@ async function uploadRoutes(fastify) {
 
       const url = `http://localhost:3001/api/upload/avatars/${filename}`
       const { PrismaClient } = await import('@prisma/client')
-      const prisma = new PrismaClient()
       await prisma.user.update({ where: { id: request.user.userId }, data: { avatarUrl: url } })
       await prisma.$disconnect()
 
@@ -97,8 +97,6 @@ async function uploadRoutes(fastify) {
       // +5 TP: Fotoğraf yükleme ödülü (günlük max 3 fotoğraf)
       try {
         const { PrismaClient } = await import('@prisma/client')
-        const prisma = new PrismaClient()
-
         const today = new Date()
         today.setHours(0, 0, 0, 0)
 

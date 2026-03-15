@@ -1,6 +1,5 @@
+import prisma from '../lib/prisma.js'
 import { PrismaClient } from "@prisma/client"
-const prisma = new PrismaClient()
-
 async function muhtarRoutes(fastify, options) {
 
   // POST /api/muhtar/apply — Basvuru olustur

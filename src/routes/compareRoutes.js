@@ -1,9 +1,7 @@
+import prisma from '../lib/prisma.js'
 // src/routes/compareRoutes.js
 // İşletme karşılaştırma ve AI analiz endpoint'leri
 
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
 const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434'
 
 // TrustScore hesapla (0-100)

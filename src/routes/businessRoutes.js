@@ -1,6 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma.js'
+;
 
-const prisma = new PrismaClient();
+;
 
 async function awardPoints(userId, points, reason, refId = '') {
   try {
@@ -138,6 +139,7 @@ async function businessRoutes(fastify) {
               photos: true,
             },
           },
+          openingHours: { orderBy: { day: "asc" } },
           externalReviews: {
             where: { isVisible: true },
             orderBy: { publishedAt: 'desc' },

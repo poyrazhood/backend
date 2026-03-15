@@ -1,4 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma.js'
+;
 import { fixTurkish } from '../utils/fixTurkish.js'
 import { notifyNewReview, notifyOwnerReply } from '../services/notificationService.js'
 import { updateTrustScore, calculateBadgeLevel } from '../services/userService.js';
@@ -6,7 +7,7 @@ import { recalculateTrustLevel } from '../services/trustService.js'
 import { recalculateUserVector } from '../services/userVectorService.js'
 import { analyzeSentiment } from '../services/sentimentService.js'
 
-const prisma = new PrismaClient();
+;
 
 // ─── Puan Kazanma Helper ──────────────────────────────────────────────────────
 const REASON_LABELS = {
