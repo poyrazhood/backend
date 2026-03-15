@@ -1,11 +1,64 @@
-﻿import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { fixTurkish } from '../utils/fixTurkish.js'
 import { notifyNewReview, notifyOwnerReply } from '../services/notificationService.js'
 import { updateTrustScore, calculateBadgeLevel } from '../services/userService.js';
 import { recalculateTrustLevel } from '../services/trustService.js'
+import { recalculateUserVector } from '../services/userVectorService.js'
 import { analyzeSentiment } from '../services/sentimentService.js'
 
 const prisma = new PrismaClient();
+
+// ─── Puan Kazanma Helper ──────────────────────────────────────────────────────
+const REASON_LABELS = {
+  review_written:  'Yorum yazma ödülü (+20 TP)',
+  helpful_vote:    'Faydalı oy ödülü (+5 TP)',
+  photo_upload:    'Fotoğraf yükleme ödülü (+5 TP)',
+  business_added:  'İşletme ekleme ödülü (+50 TP)',
+}
+
+async function awardPoints(userId, points, reason) {
+  try {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    // Günlük limitler
+    if (reason === 'review_written') {
+      const todayCount = await prisma.marketPointLog.count({
+        where: { userId, reason: 'REVIEW_WRITTEN', createdAt: { gte: today } }
+      })
+      if (todayCount >= 3) return  // Günde max 3 yorumdan puan
+    }
+
+    if (reason === 'helpful_vote') {
+      const todayCount = await prisma.marketPointLog.count({
+        where: { userId, reason: 'HELPFUL_VOTE', createdAt: { gte: today } }
+      })
+      if (todayCount >= 10) return  // Günde max 10 faydalı oy puanı
+    }
+
+    const reasonKey = reason.toUpperCase()
+
+    await prisma.$transaction([
+      prisma.user.update({
+        where: { id: userId },
+        data: {
+          currentPoints:     { increment: points },
+          totalEarnedPoints: { increment: points },
+        }
+      }),
+      prisma.marketPointLog.create({
+        data: {
+          userId,
+          points,
+          reason: reasonKey,
+          description: REASON_LABELS[reason] ?? reason,
+        }
+      })
+    ])
+  } catch (e) {
+    console.error('awardPoints error:', e.message)
+  }
+}
 
 // â”€â”€â”€ Fraud Detection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -396,6 +449,15 @@ async function reviewRoutes(fastify) {
         await calculateBadgeLevel(request.user.userId).catch(() => {});
         await recalculateTrustLevel(request.user.userId).catch(() => {})
 
+        // Tecrübe Puanı: yorum +20 TP, fotoğraf varsa +5 TP
+        await awardPoints(request.user.userId, 20, 'review_written').catch(() => {})
+        if (photoUrls.length > 0) {
+          await awardPoints(request.user.userId, 5, 'photo_uploaded').catch(() => {})
+        }
+
+        // Kullanıcı zevk vektörünü arka planda güncelle
+        recalculateUserVector(request.user.userId).catch(() => {})
+
 
 // Radar skorlarini yorumlardan otomatik hesapla
 async function recalculateRadar(businessId) {
@@ -603,6 +665,8 @@ async function recalculateRadar(businessId) {
         await prisma.user.update({ where: { id: review.userId }, data: { helpfulVotes: { increment: 1 } } });
         await updateTrustScore(review.userId, 'helpful_vote', { reviewId, votedBy: request.user.userId }).catch(() => {});
         await calculateBadgeLevel(review.userId).catch(() => {});
+        // Tecrübe Puanı: faydalı oy +5 TP (yorum sahibine)
+        await awardPoints(review.userId, 5, 'helpful_vote').catch(() => {})
       }
 
       return reply.code(200).send({ voted: isHelpful, message: 'Oy kaydedildi.' });

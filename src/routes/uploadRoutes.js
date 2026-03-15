@@ -93,7 +93,50 @@ async function uploadRoutes(fastify) {
       }
 
       const url = `/api/upload/reviews/${filename}`
-      return reply.code(200).send({ url })
+
+      // +5 TP: Fotoğraf yükleme ödülü (günlük max 3 fotoğraf)
+      try {
+        const { PrismaClient } = await import('@prisma/client')
+        const prisma = new PrismaClient()
+
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+
+        // Bugün kaç fotoğraf yüklendiğini kontrol et
+        const todayPhotoCount = await prisma.marketPointLog.count({
+          where: {
+            userId: request.user.userId,
+            reason: 'PHOTO_UPLOAD',
+            createdAt: { gte: today }
+          }
+        }).catch(() => 0) // Tablo yoksa 0 döndür
+
+        if (todayPhotoCount < 3) {
+          await prisma.user.update({
+            where: { id: request.user.userId },
+            data: {
+              currentPoints:    { increment: 5 },
+              totalEarnedPoints: { increment: 5 }
+            }
+          })
+
+          // Log kaydı (tablo varsa)
+          await prisma.marketPointLog.create({
+            data: {
+              userId: request.user.userId,
+              points: 5,
+              reason: 'PHOTO_UPLOAD',
+              description: 'Fotoğraf yükleme ödülü'
+            }
+          }).catch(() => {})
+        }
+
+        await prisma.$disconnect()
+      } catch (pointErr) {
+        fastify.log.warn('Puan güncellenemedi:', pointErr.message)
+      }
+
+      return reply.code(200).send({ url, pointsEarned: 5 })
     } catch (err) {
       fastify.log.error(err)
       return reply.code(500).send({ error: 'Upload basarisiz.' })

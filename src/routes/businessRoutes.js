@@ -1,7 +1,34 @@
-﻿import { PrismaClient } from '@prisma/client';
-import { generateSlug, generateUniqueSlug } from '../utils/slugify.js';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
+
+async function awardPoints(userId, points, reason, refId = '') {
+  try {
+    await prisma.$transaction([
+      prisma.user.update({
+        where: { id: userId },
+        data: {
+          currentPoints:     { increment: points },
+          totalEarnedPoints: { increment: points },
+        }
+      }),
+      prisma.marketPointLog.create({
+        data: {
+          userId,
+          points,
+          reason: reason.toUpperCase(),
+          description: reason === 'business_added'
+            ? `İşletme ekleme ödülü (+50 TP)${refId ? ' [' + refId + ']' : ''}`
+            : reason,
+        }
+      })
+    ])
+  } catch (e) {
+    console.error('awardPoints error:', e.message)
+  }
+}
+import { generateSlug, generateUniqueSlug } from '../utils/slugify.js';
+
 
 async function businessRoutes(fastify) {
   fastify.get('/count', async (request, reply) => {
@@ -165,13 +192,16 @@ async function businessRoutes(fastify) {
           name, slug, address, city, district, categoryId,
           description, phoneNumber, email, website,
           attributes: attributes || {},
-          isActive: isActive === false ? false : true,
-          isVerified: isVerified === false ? false : true,
+          isActive: false,       // Admin onayına kadar pasif
+          isVerified: false,     // Admin onayına kadar doğrulanmamış
+          ownerId: request.user.userId, // Kimin eklediğini tut
         },
         include: { category: true },
       });
 
-      return reply.code(201).send({ message: 'İşletme oluşturuldu.', business });
+      // Puan onay sonrası verilecek — şimdi VERİLMİYOR
+
+      return reply.code(201).send({ message: 'İşletmeniz incelemeye alındı. Onaylandıktan sonra yayınlanacak.', business });
     } catch (err) {
       fastify.log.error(err);
       return reply.code(500).send({ error: 'İşletme oluşturulamadı.' });
@@ -204,7 +234,21 @@ async function businessRoutes(fastify) {
       const business = await prisma.business.update({
         where: { id: request.params.id },
         data: { isActive: true, isVerified: true },
+        select: { id: true, name: true, ownerId: true },
       });
+
+      // Onay sonrası +50 TP ver (ownerId varsa ve daha önce verilmemişse)
+      if (business.ownerId) {
+        const alreadyAwarded = await prisma.marketPointLog.findFirst({
+          where: { userId: business.ownerId, reason: 'BUSINESS_ADDED',
+                   description: { contains: business.id } }
+        }).catch(() => null)
+
+        if (!alreadyAwarded) {
+          await awardPoints(business.ownerId, 50, 'business_added', business.id).catch(() => {})
+        }
+      }
+
       return reply.code(200).send({ message: 'Onaylandı', business });
     } catch (err) {
       return reply.code(500).send({ error: 'Hata' });

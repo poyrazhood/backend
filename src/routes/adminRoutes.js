@@ -11,13 +11,14 @@ async function adminRoutes(fastify) {
   }
 
   fastify.get('/stats', { preHandler: [adminAuth] }, async (request, reply) => {
-    const [users, businesses, reviews, pendingClaims] = await Promise.all([
+    const [users, businesses, reviews, pendingClaims, pendingBusinesses] = await Promise.all([
       prisma.user.count(),
       prisma.business.count({ where: { isDeleted: false } }),
       prisma.review.count(),
-      prisma.businessClaimHistory.count({ where: { status: 'PENDING' } })
+      prisma.businessClaimHistory.count({ where: { status: 'PENDING' } }),
+      prisma.business.count({ where: { isVerified: false, isDeleted: false, ownerId: { not: null } } }),
     ])
-    return reply.send({ users, businesses, reviews, pendingClaims })
+    return reply.send({ users, businesses, reviews, pendingClaims, pendingBusinesses })
   })
 
   fastify.get('/moderation-stats', { preHandler: [adminAuth] }, async (request, reply) => {
@@ -64,6 +65,88 @@ async function adminRoutes(fastify) {
       ])
     }
     return reply.send({ ok: true })
+  })
+
+  // ─── GET /pending-businesses — Onay Bekleyen İşletmeler ──────────────────
+  fastify.get('/pending-businesses', { preHandler: [adminAuth] }, async (request, reply) => {
+    const { page = 1 } = request.query
+    const skip = (parseInt(page) - 1) * 20
+    const [businesses, total] = await Promise.all([
+      prisma.business.findMany({
+        where: { isVerified: false, isDeleted: false, ownerId: { not: null } },
+        select: {
+          id: true, name: true, slug: true, city: true, district: true,
+          address: true, phoneNumber: true, email: true, website: true,
+          createdAt: true, isActive: true, isVerified: true,
+          category: { select: { name: true, icon: true } },
+          owner: { select: { id: true, username: true, fullName: true, email: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip, take: 20,
+      }),
+      prisma.business.count({ where: { isVerified: false, isDeleted: false, ownerId: { not: null } } })
+    ])
+    return reply.send({ businesses, total })
+  })
+
+  // ─── PATCH /pending-businesses/:id — Onayla veya Reddet ───────────────────
+  fastify.patch('/pending-businesses/:id', { preHandler: [adminAuth] }, async (request, reply) => {
+    const { action } = request.body  // 'approve' | 'reject'
+    if (!['approve', 'reject'].includes(action)) {
+      return reply.code(400).send({ error: 'Geçersiz action' })
+    }
+
+    try {
+      if (action === 'approve') {
+        const business = await prisma.business.update({
+          where: { id: request.params.id },
+          data: { isActive: true, isVerified: true },
+          select: { id: true, name: true, ownerId: true },
+        })
+
+        // +50 TP ver (daha önce verilmemişse)
+        if (business.ownerId) {
+          const alreadyAwarded = await prisma.marketPointLog.findFirst({
+            where: {
+              userId: business.ownerId,
+              reason: 'BUSINESS_ADDED',
+              description: { contains: business.id }
+            }
+          }).catch(() => null)
+
+          if (!alreadyAwarded) {
+            await prisma.$transaction([
+              prisma.user.update({
+                where: { id: business.ownerId },
+                data: {
+                  currentPoints:     { increment: 50 },
+                  totalEarnedPoints: { increment: 50 },
+                }
+              }),
+              prisma.marketPointLog.create({
+                data: {
+                  userId:      business.ownerId,
+                  points:      50,
+                  reason:      'BUSINESS_ADDED',
+                  description: `İşletme ekleme ödülü (+50 TP) [${business.id}]`,
+                }
+              })
+            ])
+          }
+        }
+
+        return reply.send({ ok: true, action: 'approved', business })
+      } else {
+        await prisma.business.update({
+          where: { id: request.params.id },
+          data: { isDeleted: true, isActive: false },
+        })
+        return reply.send({ ok: true, action: 'rejected' })
+      }
+    } catch (err) {
+      fastify.log.error(err)
+      return reply.code(500).send({ error: 'İşlem başarısız.' })
+    }
   })
 
   fastify.get('/businesses', { preHandler: [adminAuth] }, async (request, reply) => {
