@@ -105,7 +105,7 @@ fastify.register(categoryRoutes,     { prefix: '/api/categories' });
 fastify.register(uploadRoutes,       { prefix: '/api/upload' });
 fastify.register(adminRoutes,        { prefix: '/api/admin' });
 fastify.register(siteConfigRoutes,   { prefix: '/api/site-config' });
-fastify.register(muhtarRoutes,       { prefix: '/api/muhtar' });
+fastify.get('/api/muhtarlar', async (req, reply) => reply.send({ data: [], total: 0 }))
 fastify.register(subscriptionRoutes, { prefix: '/api/subscriptions' });
 fastify.register(autoServiceRoutes,   { prefix: '/api/auto-service' });
 fastify.register(verificationRoutes,   { prefix: '/api/verification' });
