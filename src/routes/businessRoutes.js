@@ -49,7 +49,7 @@ async function businessRoutes(fastify) {
     } = request.query;
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
-    const take = Math.min(parseInt(limit), 50);
+    const take = Math.min(parseInt(limit), request.query._sitemap ? 10000 : 50);
 
     const where = {
       isActive: true,
@@ -361,7 +361,7 @@ async function businessRoutes(fastify) {
     const { page = 1, limit = 10, sort = 'newest', rating } = request.query;
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
-    const take = Math.min(parseInt(limit), 50);
+    const take = Math.min(parseInt(limit), request.query._sitemap ? 10000 : 50);
 
     const orderBy =
       sort === 'helpful'     ? { helpfulCount: 'desc' } :
