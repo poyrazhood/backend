@@ -66,12 +66,44 @@ async function businessRoutes(fastify) {
 
   // ─── GET /count ──────────────────────────────────────────────────────────────
   fastify.get('/count', async (request, reply) => {
+    const { city } = request.query
+
+    if (city) {
+      const cacheKey = `business:count:${city.toLowerCase()}`
+      const cached = getCache(cacheKey)
+      if (cached !== null) return reply.send(cached)
+
+      const total = await prisma.business.count({
+        where: { isDeleted: false, city: { contains: city, mode: 'insensitive' } },
+      })
+      setCache(cacheKey, { total }, 300) // 5 dakika
+      return reply.send({ total })
+    }
+
     const cached = getCache('business:count')
     if (cached !== null) return reply.send(cached)
 
     const total = await prisma.business.count({ where: { isDeleted: false } })
-    setCache('business:count', { total }, 120) // 2 dakika
+    setCache('business:count', { total }, 120)
     return reply.send({ total })
+  })
+
+  // ─── GET /cities-stats — Tüm şehirlerin işletme sayısı ──────────────────────
+  fastify.get('/cities-stats', async (request, reply) => {
+    const cacheKey = 'business:cities-stats'
+    const cached = getCache(cacheKey)
+    if (cached !== null) return reply.send(cached)
+
+    const rows = await prisma.business.groupBy({
+      by: ['city'],
+      where: { isDeleted: false, isActive: true },
+      _count: { id: true },
+      orderBy: { _count: { id: 'desc' } },
+    })
+
+    const data = rows.map(r => ({ city: r.city, count: r._count.id }))
+    setCache(cacheKey, { data }, 300) // 5 dakika
+    return reply.send({ data })
   })
 
   // ─── GET / — İşletme Listesi (FEED) ─────────────────────────────────────────
