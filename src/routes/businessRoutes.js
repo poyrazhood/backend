@@ -145,9 +145,8 @@ async function businessRoutes(fastify) {
       ...(minRating    && { averageRating: { gte: parseFloat(minRating) } }),
       ...(search && {
         OR: [
-          { name:        { contains: search, mode: 'insensitive' } },
-          { description: { contains: search, mode: 'insensitive' } },
-          { district:    { contains: search, mode: 'insensitive' } },
+          { name:     { contains: search, mode: 'insensitive' } },
+          { district: { contains: search, mode: 'insensitive' } },
         ],
       }),
     }
@@ -170,14 +169,70 @@ async function businessRoutes(fastify) {
     const regularWhere = { ...where, subscriptionPlan: { notIn: ['PREMIUM', 'ENTERPRISE'] } }
 
     try {
-      const [boosted, regular, total] = await Promise.all([
-        prisma.business.findMany({ where: boostedWhere, orderBy, take: 5, select: FEED_SELECT }),
-        prisma.business.findMany({ where: regularWhere, orderBy, skip, take, select: FEED_SELECT }),
-        prisma.business.count({ where }),
-      ])
+      let businesses, total
 
-      const boostedIds = new Set(boosted.map((b) => b.id))
-      const businesses = [...boosted, ...regular.filter((b) => !boostedIds.has(b.id))]
+      if (search) {
+        // Search: raw SQL — GIN trigram index kullanır (~100ms)
+        const orderByClause =
+          sort === 'newest'       ? 'b."createdAt" DESC' :
+          sort === 'mostReviewed' ? 'b."totalReviews" DESC' :
+          'b."averageRating" DESC'
+
+        // Ek filtreler (city, categorySlug vb. arama ile birlikte gelebilir)
+        const extraWhere = []
+        const extraParams = [`%${search}%`, take, skip]
+        let pIdx = 4
+
+        if (city) { extraWhere.push(`AND b.city ILIKE $${pIdx}`); extraParams.push(`%${city}%`); pIdx++ }
+        if (categorySlug) { extraWhere.push(`AND c.slug = $${pIdx}`); extraParams.push(categorySlug); pIdx++ }
+        if (minRating) { extraWhere.push(`AND b."averageRating" >= $${pIdx}`); extraParams.push(parseFloat(minRating)); pIdx++ }
+
+        const rawRows = await prisma.$queryRawUnsafe(
+          `SELECT
+             b.id, b.name, b.slug, b.city, b.district,
+             b."averageRating", b."totalReviews", b."claimStatus",
+             b."isVerified", b."verificationLevel", b."subscriptionPlan",
+             b."trustScore", b."trustGrade",
+             c.id as cat_id, c.name as cat_name, c.slug as cat_slug, c.icon as cat_icon,
+             (SELECT p.url FROM "BusinessPhoto" p
+              WHERE p."businessId" = b.id ORDER BY p."order" ASC LIMIT 1) as photo_url
+           FROM "Business" b
+           LEFT JOIN "Category" c ON c.id = b."categoryId"
+           WHERE b."isActive" = true AND b."isDeleted" = false
+             AND (b.name ILIKE $1 OR b.district ILIKE $1)
+             ${extraWhere.join(' ')}
+           ORDER BY ${orderByClause}
+           LIMIT $2 OFFSET $3`,
+          ...extraParams
+        )
+
+        businesses = rawRows.map(row => ({
+          id: row.id, name: row.name, slug: row.slug,
+          city: row.city, district: row.district,
+          averageRating: row.averageRating, totalReviews: row.totalReviews,
+          claimStatus: row.claimStatus, isVerified: row.isVerified,
+          verificationLevel: row.verificationLevel,
+          subscriptionPlan: row.subscriptionPlan,
+          trustScore: row.trustScore, trustGrade: row.trustGrade,
+          photos: row.photo_url ? [{ url: row.photo_url, order: 0 }] : [],
+          badges: [],
+          category: row.cat_id
+            ? { id: row.cat_id, name: row.cat_name, slug: row.cat_slug, icon: row.cat_icon }
+            : null,
+        }))
+        total = -1
+
+      } else {
+        // Normal feed: Prisma (cache destekli)
+        const [boosted, regular, tot] = await Promise.all([
+          prisma.business.findMany({ where: boostedWhere, orderBy, take: 5, select: FEED_SELECT }),
+          prisma.business.findMany({ where: regularWhere, orderBy, skip, take, select: FEED_SELECT }),
+          prisma.business.count({ where }),
+        ])
+        const boostedIds = new Set(boosted.map((b) => b.id))
+        businesses = [...boosted, ...regular.filter((b) => !boostedIds.has(b.id))]
+        total = tot
+      }
 
       const payload = {
         data: businesses,
@@ -185,12 +240,12 @@ async function businessRoutes(fastify) {
           page:       parseInt(page),
           limit:      take,
           total,
-          totalPages: Math.ceil(total / take),
+          totalPages: total > 0 ? Math.ceil(total / take) : 1,
         },
       }
 
       if (cacheKey) {
-        setCache(cacheKey, payload, 60) // 60 saniye
+        setCache(cacheKey, payload, 60)
         reply.header('X-Cache', 'MISS')
       }
 

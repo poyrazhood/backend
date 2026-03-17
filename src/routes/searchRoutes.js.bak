@@ -1,0 +1,34 @@
+import prisma from './src/lib/prisma.js'
+
+const r = await fetch('http://localhost:11434/api/embeddings', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ model: 'bge-m3', prompt: 'sakin kafe çalışma' })
+})
+const d = await r.json()
+const vec = `[${d.embedding.join(',')}]`
+
+// IVFFLAT/HNSW index var mı?
+console.time('index_check')
+const indexes = await prisma.$queryRaw`
+  SELECT indexname, indexdef FROM pg_indexes 
+  WHERE tablename = 'BusinessEmbedding' OR indexname LIKE '%embedding%'
+`
+console.timeEnd('index_check')
+console.log('Embedding indexes:', JSON.stringify(indexes, null, 2))
+
+// Direkt cosine similarity
+console.time('vector_direct')
+const res = await prisma.$queryRawUnsafe(`
+  SELECT b.id, b.name, b.city, b.district,
+         1 - (be.embedding <=> $1::vector(1024)) as score
+  FROM "BusinessEmbedding" be
+  JOIN "Business" b ON b.id = be."businessId"
+  WHERE b."isActive" = true AND b."isDeleted" = false
+  ORDER BY be.embedding <=> $1::vector(1024)
+  LIMIT 10
+`, vec)
+console.timeEnd('vector_direct')
+console.log('Results:', res.map(r => `${r.name} (${r.city}) score:${Number(r.score).toFixed(3)}`))
+
+await prisma.$disconnect()

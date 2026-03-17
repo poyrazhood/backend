@@ -172,6 +172,9 @@ model Business {
   @@index([isActive, isDeleted])
   @@index([latitude, longitude])
   @@index([googlePlaceId])
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([city(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([district(ops: raw("gin_trgm_ops"))], type: Gin)
 }
 
 model OpeningHours {

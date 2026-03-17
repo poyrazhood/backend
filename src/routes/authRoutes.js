@@ -8,19 +8,19 @@ import { getUserProfile } from '../services/userService.js';
 
 async function authRoutes(fastify) {
 
-  // ─── POST /api/auth/register ───────────────────────────────────────────────
+  // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ POST /api/auth/register Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 
   fastify.post('/register', async (request, reply) => {
     const { email, username, password, fullName } = request.body || {};
 
     if (!email || !username || !password) {
-      return reply.code(400).send({ error: 'Email, kullanıcı adı ve şifre zorunludur.' });
+      return reply.code(400).send({ error: 'Email, kullanÃ„Â±cÃ„Â± adÃ„Â± ve Ã…Å¸ifre zorunludur.' });
     }
     if (password.length < 6) {
-      return reply.code(400).send({ error: 'Şifre en az 6 karakter olmalıdır.' });
+      return reply.code(400).send({ error: 'Ã…Âifre en az 6 karakter olmalÃ„Â±dÃ„Â±r.' });
     }
     if (!/^[a-zA-Z0-9_]{3,30}$/.test(username)) {
-      return reply.code(400).send({ error: 'Kullanıcı adı 3-30 karakter, sadece harf/rakam/_ içerebilir.' });
+      return reply.code(400).send({ error: 'KullanÃ„Â±cÃ„Â± adÃ„Â± 3-30 karakter, sadece harf/rakam/_ iÃƒÂ§erebilir.' });
     }
 
     try {
@@ -29,8 +29,8 @@ async function authRoutes(fastify) {
       });
 
       if (existing) {
-        const field = existing.email === email.toLowerCase() ? 'E-posta' : 'Kullanıcı adı';
-        return reply.code(409).send({ error: `${field} zaten kayıtlı.` });
+        const field = existing.email === email.toLowerCase() ? 'E-posta' : 'KullanÃ„Â±cÃ„Â± adÃ„Â±';
+        return reply.code(409).send({ error: `${field} zaten kayÃ„Â±tlÃ„Â±.` });
       }
 
       const passwordHash = await bcrypt.hash(password, 12);
@@ -44,13 +44,13 @@ async function authRoutes(fastify) {
         },
       });
 
-      // Hoş geldin bildirimi
+      // HoÃ…Å¸ geldin bildirimi
       await prisma.notification.create({
         data: {
           userId: user.id,
           type: 'SYSTEM',
-          title: "Tecrübelerim'e Hoş Geldin! 🎉",
-          content: 'İlk yorumunu yazarak TrustScore kazanmaya başla.',
+          title: "TecrÃƒÂ¼belerim'e HoÃ…Å¸ Geldin! ÄŸÅ¸Ââ€°",
+          content: 'Ã„Â°lk yorumunu yazarak TrustScore kazanmaya baÃ…Å¸la.',
         },
       }).catch(() => {});
 
@@ -70,17 +70,17 @@ async function authRoutes(fastify) {
       });
     } catch (err) {
       fastify.log.error(err);
-      return reply.code(500).send({ error: 'Kayıt sırasında sunucu hatası.' });
+      return reply.code(500).send({ error: 'KayÃ„Â±t sÃ„Â±rasÃ„Â±nda sunucu hatasÃ„Â±.' });
     }
   });
 
-  // ─── POST /api/auth/login ──────────────────────────────────────────────────
+  // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ POST /api/auth/login Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 
   fastify.post('/login', async (request, reply) => {
     const { identifier, password } = request.body || {};
 
     if (!identifier || !password) {
-      return reply.code(400).send({ error: 'Kullanıcı adı/e-posta ve şifre zorunludur.' });
+      return reply.code(400).send({ error: 'KullanÃ„Â±cÃ„Â± adÃ„Â±/e-posta ve Ã…Å¸ifre zorunludur.' });
     }
 
     try {
@@ -94,11 +94,11 @@ async function authRoutes(fastify) {
       });
 
       if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
-        return reply.code(401).send({ error: 'Kullanıcı adı/e-posta veya şifre hatalı.' });
+        return reply.code(401).send({ error: 'KullanÃ„Â±cÃ„Â± adÃ„Â±/e-posta veya Ã…Å¸ifre hatalÃ„Â±.' });
       }
 
       if (user.isBanned) {
-        return reply.code(403).send({ error: `Hesabınız askıya alındı: ${user.banReason || 'Kural ihlali'}` });
+        return reply.code(403).send({ error: `HesabÃ„Â±nÃ„Â±z askÃ„Â±ya alÃ„Â±ndÃ„Â±: ${user.banReason || 'Kural ihlali'}` });
       }
 
       await prisma.user.update({
@@ -124,11 +124,11 @@ async function authRoutes(fastify) {
       });
     } catch (err) {
       fastify.log.error(err);
-      return reply.code(500).send({ error: 'Giriş sırasında sunucu hatası.' });
+      return reply.code(500).send({ error: 'GiriÃ…Å¸ sÃ„Â±rasÃ„Â±nda sunucu hatasÃ„Â±.' });
     }
   });
 
-  // ─── GET /api/auth/me ──────────────────────────────────────────────────────
+  // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ GET /api/auth/me Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 
   fastify.get('/me', { preHandler: [fastify.authenticate] }, async (request, reply) => {
     try {
@@ -136,38 +136,54 @@ async function authRoutes(fastify) {
       return reply.code(200).send({ user: profile });
     } catch (err) {
       fastify.log.error(err);
-      return reply.code(500).send({ error: 'Profil alınamadı.' });
+      return reply.code(500).send({ error: 'Profil alÃ„Â±namadÃ„Â±.' });
     }
   });
 
-  // ─── PATCH /api/auth/password ──────────────────────────────────────────────
+  // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ PATCH /api/auth/password Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 
   fastify.patch('/password', { preHandler: [fastify.authenticate] }, async (request, reply) => {
     const { currentPassword, newPassword } = request.body || {};
 
     if (!currentPassword || !newPassword) {
-      return reply.code(400).send({ error: 'Mevcut ve yeni şifre zorunludur.' });
+      return reply.code(400).send({ error: 'Mevcut ve yeni Ã…Å¸ifre zorunludur.' });
     }
     if (newPassword.length < 6) {
-      return reply.code(400).send({ error: 'Yeni şifre en az 6 karakter olmalıdır.' });
+      return reply.code(400).send({ error: 'Yeni Ã…Å¸ifre en az 6 karakter olmalÃ„Â±dÃ„Â±r.' });
     }
 
     try {
       const user = await prisma.user.findUnique({ where: { id: request.user.userId } });
       const valid = await bcrypt.compare(currentPassword, user.passwordHash);
-      if (!valid) return reply.code(400).send({ error: 'Mevcut şifre hatalı.' });
+      if (!valid) return reply.code(400).send({ error: 'Mevcut Ã…Å¸ifre hatalÃ„Â±.' });
 
       await prisma.user.update({
         where: { id: request.user.userId },
         data: { passwordHash: await bcrypt.hash(newPassword, 12) },
       });
 
-      return reply.code(200).send({ message: 'Şifre başarıyla güncellendi.' });
+      return reply.code(200).send({ message: 'Ã…Âifre baÃ…Å¸arÃ„Â±yla gÃƒÂ¼ncellendi.' });
     } catch (err) {
       fastify.log.error(err);
-      return reply.code(500).send({ error: 'Şifre güncellenemedi.' });
+      return reply.code(500).send({ error: 'Ã…Âifre gÃƒÂ¼ncellenemedi.' });
     }
   });
+  // check-username
+  fastify.get('/check-username', async (request, reply) => {
+    const { username } = request.query || {}
+    if (!username || username.length < 3) {
+      return reply.code(400).send({ available: false })
+    }
+    try {
+      const existing = await prisma.user.findUnique({
+        where: { username: username.toLowerCase() },
+        select: { id: true }
+      })
+      return reply.code(200).send({ available: !existing })
+    } catch (err) {
+      return reply.code(500).send({ available: false })
+    }
+  })
 }
 
 export default authRoutes;

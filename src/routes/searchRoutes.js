@@ -1,167 +1,204 @@
 import prisma from '../lib/prisma.js'
-﻿;
-import { fixTurkish } from '../utils/fixTurkish.js'
-import http from 'http';
 
-;
+// ─── Niyet Analizi ────────────────────────────────────────────────────────────
+// Kullanıcının arama sorgusundan kategori, özellik ve niyet çıkarır
 
-async function getEmbedding(text) {
-  return new Promise((resolve, reject) => {
-    const body = JSON.stringify({ model: 'bge-m3', prompt: text })
-    const req = http.request(
-      { hostname: 'localhost', port: 11434, path: '/api/embeddings', method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) } },
-      (res) => {
-        let data = ''
-        res.on('data', c => data += c)
-        res.on('end', () => {
-          try { resolve(JSON.parse(data).embedding) }
-          catch (e) { reject(new Error('Embedding parse hatasi')) }
-        })
-      }
-    )
-    req.on('error', reject)
-    req.write(body)
-    req.end()
-  })
+const INTENT_MAP = [
+  // Kategori eşleşmeleri
+  { pattern: /kafe|kahve|espresso|cappuccino/i,      category: 'kafe',           label: 'Kafe' },
+  { pattern: /restoran|yemek|lokanta|döner|kebap/i,  category: 'restoran',       label: 'Restoran' },
+  { pattern: /oto|araba|servis|tamir|lastik/i,       category: 'oto-servis',     label: 'Oto Servis' },
+  { pattern: /kuaför|berber|saç|tıraş/i,             category: 'kuafor-berber',  label: 'Kuaför & Berber' },
+  { pattern: /güzellik|cilt|makyaj|spa|masaj/i,      category: 'guzellik-bakim', label: 'Güzellik' },
+  { pattern: /doktor|hastane|klinik|sağlık/i,        category: 'saglik',         label: 'Sağlık' },
+  { pattern: /okul|kurs|dershane|eğitim/i,           category: 'egitim',         label: 'Eğitim' },
+  { pattern: /otel|pansiyon|konaklama/i,             category: 'otel',           label: 'Otel' },
+  { pattern: /market|süpermarket|bakkal/i,           category: 'market',         label: 'Market' },
+  { pattern: /avukat|hukuk|noter/i,                  category: 'hukuk',          label: 'Hukuk' },
+  { pattern: /spor|fitness|gym|yüzme/i,              category: 'spor-fitness',   label: 'Spor' },
+  { pattern: /pastane|fırın|pasta|börek/i,           category: 'pastane-firin',  label: 'Pastane' },
+  { pattern: /eczane|ilaç/i,                         category: 'eczane',         label: 'Eczane' },
+  { pattern: /veteriner|evcil|köpek|kedi/i,          category: 'veteriner',      label: 'Veteriner' },
+]
+
+const QUALITY_SIGNALS = [
+  { pattern: /ucuz|ekonomik|uygun fiyat|hesaplı/i,   signal: 'budget',     reason: 'Uygun fiyatlı seçenekler' },
+  { pattern: /kaliteli|iyi|güzel|harika|mükemmel/i,  signal: 'quality',    reason: 'Yüksek kaliteli işletmeler' },
+  { pattern: /hızlı|çabuk|express/i,                 signal: 'fast',       reason: 'Hızlı hizmet verenler' },
+  { pattern: /sakin|sessiz|huzurlu|rahat/i,          signal: 'calm',       reason: 'Sakin ve huzurlu ortam' },
+  { pattern: /çalışma|laptop|wifi|internet/i,        signal: 'work',       reason: 'Çalışma dostu mekanlar' },
+  { pattern: /aile|çocuk|bebek/i,                    signal: 'family',     reason: 'Aile dostu mekanlar' },
+  { pattern: /açık|teras|bahçe/i,                    signal: 'outdoor',    reason: 'Açık alan seçenekleri' },
+  { pattern: /gece|bar|eğlence/i,                    signal: 'nightlife',  reason: 'Gece hayatı mekanları' },
+  { pattern: /öğrenci|üniversite/i,                  signal: 'student',    reason: 'Öğrenci dostu mekanlar' },
+  { pattern: /güvenilir|güvenli|şeffaf/i,            signal: 'trust',      reason: 'Güvenilir ve şeffaf işletmeler' },
+  { pattern: /en iyi|en çok|popüler|trend/i,         signal: 'popular',    reason: 'En popüler işletmeler' },
+]
+
+function analyzeIntent(q) {
+  const detectedCategory = INTENT_MAP.find(m => m.pattern.test(q))
+  const detectedSignals = QUALITY_SIGNALS.filter(s => s.pattern.test(q))
+  const cleanQuery = q
+    .replace(/en iyi|en çok|popüler|yakın|bana|lütfen|acaba/gi, '')
+    .trim()
+
+  return {
+    categorySlug: detectedCategory?.category || null,
+    categoryLabel: detectedCategory?.label || null,
+    signals: detectedSignals,
+    cleanQuery,
+    isQualitySearch: detectedSignals.some(s => ['quality', 'trust', 'popular'].includes(s.signal)),
+    isBudgetSearch: detectedSignals.some(s => s.signal === 'budget'),
+    isWorkSearch: detectedSignals.some(s => s.signal === 'work'),
+    isCalmSearch: detectedSignals.some(s => s.signal === 'calm'),
+  }
 }
 
-function haversineKm(lat1, lng1, lat2, lng2) {
-  const R = 6371
-  const dLat = (lat2 - lat1) * Math.PI / 180
-  const dLng = (lng2 - lng1) * Math.PI / 180
-  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLng/2)**2
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+function buildReason(b, intent, trgmScore) {
+  const parts = []
+
+  if (intent.signals.length > 0) {
+    parts.push(intent.signals[0].reason)
+  } else if (trgmScore > 0.5) {
+    parts.push('İsim aramanızla doğrudan eşleşiyor')
+  } else if (trgmScore > 0.3) {
+    parts.push('Aramanızla ilgili içerik bulundu')
+  } else if (intent.categoryLabel) {
+    parts.push(`${intent.categoryLabel} kategorisinde`)
+  }
+
+  if (b.totalReviews > 100) parts.push(`${b.totalReviews} yorum`)
+  else if (b.averageRating >= 4.5) parts.push('yüksek puan')
+
+  return parts.join(' · ') || 'Aramanızla eşleşiyor'
 }
 
 async function searchRoutes(fastify) {
 
-  // GET / — Ana Arama (Hibrit: vektör + trgm)
+  // ─── GET / — Ana Arama ────────────────────────────────────────────────────
   fastify.get('/', { preHandler: [fastify.optionalAuth] }, async (request, reply) => {
     const {
       q, type = 'all',
       city, categorySlug, minRating,
       sort = 'relevance',
       page = 1, limit = 20,
-      userLat, userLng, radiusKm = 30,
-    } = request.query;
+      userLat, userLng,
+    } = request.query
 
     if (!q || q.trim().length < 2) {
-      return reply.code(200).send({ query: q, businesses: [], users: [], total: 0 });
+      return reply.code(200).send({ query: q, businesses: [], users: [], reviews: [], total: 0 })
     }
 
-    const query = q.trim();
-    const skip  = (parseInt(page) - 1) * parseInt(limit);
-    const take  = Math.min(parseInt(limit), 50);
-    const results = { query };
+    const query = q.trim()
+    const skip  = (parseInt(page) - 1) * parseInt(limit)
+    const take  = Math.min(parseInt(limit), 50)
+    const results = { query }
 
-    // Konum parametreleri
-    const hasLocation = userLat && userLng
-    const lat1 = hasLocation ? parseFloat(userLat) : null
-    const lng1 = hasLocation ? parseFloat(userLng) : null
-    const radius = parseFloat(radiusKm) || 30
+    // Niyet analizi
+    const intent = analyzeIntent(query)
+
+    // Efektif kategori: URL parametresi > niyet analizi
+    const effectiveCategorySlug = categorySlug || intent.categorySlug
 
     try {
-      // Isletme araması — hibrit
+      // ── İşletme araması ──────────────────────────────────────────────────
       if (type === 'all' || type === 'business') {
-        let businesses = []
-        try {
-          const embedding = await getEmbedding(query)
-          const vectorStr = `[${embedding.join(',')}]`
-          // Konum varsa daha fazla çek, sonra filtrele
-          const fetchLimit = hasLocation ? Math.min(take * 10, 500) : take
-          const rawBusinesses = await prisma.$queryRawUnsafe(`
-            SELECT
-              id, name, slug, city, district, category_name,
-              average_rating, total_reviews, latitude, longitude,
-              vec_score, trgm_score, final_score
-            FROM search_businesses(
-              $1::text, $2::vector(1024), $3::text, $4::text, $5::int, 0.6::float, 0.4::float
-            )
-          `, query, vectorStr, city || null, categorySlug || null, fetchLimit)
+        // Sıralama
+        const orderByClause =
+          sort === 'newest'    ? 'b."createdAt" DESC' :
+          sort === 'reviews'   ? 'b."totalReviews" DESC' :
+          sort === 'trust'     ? 'b."trustScore" DESC' :
+          // relevance: trust score + review count karma
+          'b."totalReviews" DESC, b."averageRating" DESC'
 
-          // Photos ekle
-          const bizIds = rawBusinesses.map(b => b.id)
-          const photoMap = {}
-          if (bizIds.length > 0) {
-            const rows = await prisma.$queryRawUnsafe(
-              'SELECT id, attributes->>\'coverPhoto\' as cover_photo FROM "Business" WHERE id = ANY($1) AND attributes->>\'coverPhoto\' IS NOT NULL',
-              bizIds
-            )
-            rows.forEach(r => {
-              if (r.cover_photo) photoMap[r.id] = r.cover_photo
-            })
-          }
+        // Ek filtreler
+        const extraWhere = []
+        const params = [`%${query}%`, take, skip]
+        let pIdx = 4
 
-          businesses = rawBusinesses.map(b => {
-            const vec = Number(b.vec_score)
-            const trgm = Number(b.trgm_score)
-            const boost = Number(b.category_boost || 0)
-            let reason = ''
-            if (boost > 0 && vec > 0.6) reason = 'Kategori ve icerik eslesmesi guclu'
-            else if (vec > 0.65) reason = 'Aramanizla yuksek semantik benzerlik'
-            else if (trgm > 0.4) reason = 'Isim aramanizla dogrudan eslesiyor'
-            else if (vec > 0.58) reason = 'Aramanizla ilgili icerik bulundu'
-            else reason = 'Aramanizla kismi eslesme'
-
-            // Mesafe hesapla
-            let distanceKm = null
-            if (hasLocation && b.latitude && b.longitude) {
-              distanceKm = Math.round(haversineKm(lat1, lng1, Number(b.latitude), Number(b.longitude)) * 10) / 10
-            }
-
-            return { ...b, reason, distanceKm, photos: photoMap[b.id] ? [{ url: photoMap[b.id] }] : [] }
-          })
-
-          // Mesafe filtresi
-          if (hasLocation) {
-            businesses = businesses.filter(b => {
-              if (b.distanceKm === null) return true // koordinat yoksa goster
-              return b.distanceKm <= radius
-            })
-            // Mesafe + skor karma sıralama
-            businesses.sort((a, b) => {
-              const aScore = (a.final_score || 0) - (a.distanceKm || 0) * 0.005
-              const bScore = (b.final_score || 0) - (b.distanceKm || 0) * 0.005
-              return bScore - aScore
-            })
-            businesses = businesses.slice(0, take)
-          }
-
-          // minRating filtresi
-          if (minRating) {
-            businesses = businesses.filter(b => Number(b.average_rating) >= parseFloat(minRating))
-          }
-
-        } catch (e) {
-          console.error('VEKTOR HATA DETAY:', e.message, e.stack)
-          businesses = await prisma.business.findMany({
-            where: {
-              isActive: true, isDeleted: false,
-              OR: [
-                { name:     { contains: query, mode: 'insensitive' } },
-                { district: { contains: query, mode: 'insensitive' } },
-                { category: { name: { contains: query, mode: 'insensitive' } } },
-              ],
-              ...(city      && { city: { contains: city, mode: 'insensitive' } }),
-              ...(minRating && { averageRating: { gte: parseFloat(minRating) } }),
-            },
-            orderBy: { totalViews: 'desc' },
-            skip, take,
-            select: {
-              id: true, name: true, slug: true, city: true, district: true,
-              averageRating: true, totalReviews: true,
-            },
-          })
+        if (city) {
+          extraWhere.push(`AND b.city ILIKE $${pIdx}`)
+          params.push(`%${city}%`)
+          pIdx++
         }
+        if (effectiveCategorySlug) {
+          extraWhere.push(`AND c.slug ILIKE $${pIdx}`)
+          params.push(`%${effectiveCategorySlug}%`)
+          pIdx++
+        }
+        if (minRating) {
+          extraWhere.push(`AND b."averageRating" >= $${pIdx}`)
+          params.push(parseFloat(minRating))
+          pIdx++
+        }
+
+        // Quality signal'lara göre ek filtreler
+        if (intent.isQualitySearch) {
+          extraWhere.push(`AND b."averageRating" >= 4.0`)
+        }
+        if (intent.isBudgetSearch) {
+          // Budget aramasında çok yorumlu (popüler = rekabetçi fiyat) işletmeleri öne çıkar
+          // orderBy override: totalReviews
+        }
+
+        const rawRows = await prisma.$queryRawUnsafe(
+          `SELECT
+             b.id, b.name, b.slug, b.city, b.district,
+             b."averageRating", b."totalReviews", b."claimStatus",
+             b."isVerified", b."verificationLevel", b."subscriptionPlan",
+             b."trustScore", b."trustGrade",
+             c.id as cat_id, c.name as cat_name, c.slug as cat_slug, c.icon as cat_icon,
+             (SELECT p.url FROM "BusinessPhoto" p
+              WHERE p."businessId" = b.id ORDER BY p."order" ASC LIMIT 1) as photo_url,
+             similarity(b.name, $1) as trgm_score
+           FROM "Business" b
+           LEFT JOIN "Category" c ON c.id = b."categoryId"
+           WHERE b."isActive" = true AND b."isDeleted" = false
+             AND (
+               b.name ILIKE $1
+               OR b.district ILIKE $1
+               ${effectiveCategorySlug ? '' : 'OR c.name ILIKE $1'}
+             )
+             ${extraWhere.join(' ')}
+           ORDER BY ${orderByClause}
+           LIMIT $2 OFFSET $3`,
+          ...params
+        )
+
+        const businesses = rawRows.map(row => ({
+          id: row.id, name: row.name, slug: row.slug,
+          city: row.city, district: row.district,
+          averageRating: row.averageRating,
+          totalReviews: row.totalReviews,
+          claimStatus: row.claimStatus,
+          isVerified: row.isVerified,
+          verificationLevel: row.verificationLevel,
+          subscriptionPlan: row.subscriptionPlan,
+          trustScore: row.trustScore,
+          trustGrade: row.trustGrade,
+          photos: row.photo_url ? [{ url: row.photo_url }] : [],
+          badges: [],
+          category: row.cat_id
+            ? { id: row.cat_id, name: row.cat_name, slug: row.cat_slug, icon: row.cat_icon }
+            : null,
+          reason: buildReason(row, intent, Number(row.trgm_score || 0)),
+          vec_score: null,
+          trgm_score: Number(row.trgm_score || 0),
+          final_score: Number(row.averageRating || 0),
+        }))
 
         results.businesses    = businesses
         results.businessTotal = businesses.length
+        results.intent        = {
+          detectedCategory: intent.categoryLabel,
+          signals: intent.signals.map(s => s.reason),
+          cleanQuery: intent.cleanQuery,
+        }
       }
 
-      // Kullanıcı araması
+      // ── Kullanıcı araması ─────────────────────────────────────────────────
       if (type === 'all' || type === 'user') {
-        const where = {
+        const userWhere = {
           isActive: true, isBanned: false,
           OR: [
             { username: { contains: query, mode: 'insensitive' } },
@@ -170,22 +207,23 @@ async function searchRoutes(fastify) {
         }
         const [users, userTotal] = await Promise.all([
           prisma.user.findMany({
-            where, skip, take: Math.min(take, 10),
+            where: userWhere,
+            skip, take: Math.min(take, 10),
             orderBy: { trustScore: 'desc' },
             select: {
               id: true, username: true, fullName: true, avatarUrl: true,
               trustScore: true, trustLevel: true, badgeLevel: true, totalReviews: true,
             },
           }),
-          prisma.user.count({ where }),
+          prisma.user.count({ where: userWhere }),
         ])
         results.users     = users
         results.userTotal = userTotal
       }
 
-      // Yorum araması
+      // ── Yorum araması ─────────────────────────────────────────────────────
       if (type === 'review') {
-        const where = {
+        const reviewWhere = {
           isPublished: true, isFlagged: false,
           OR: [
             { content: { contains: query, mode: 'insensitive' } },
@@ -194,25 +232,17 @@ async function searchRoutes(fastify) {
         }
         const [reviews, reviewTotal] = await Promise.all([
           prisma.review.findMany({
-            where, skip, take,
+            where: reviewWhere, skip, take,
             orderBy: { helpfulCount: 'desc' },
             include: {
               user:     { select: { id: true, username: true, fullName: true, avatarUrl: true } },
               business: { select: { id: true, name: true, slug: true } },
             },
           }),
-          prisma.review.count({ where }),
+          prisma.review.count({ where: reviewWhere }),
         ])
         results.reviews     = reviews
         results.reviewTotal = reviewTotal
-      }
-
-      // Son aramayı Redis'e kaydet
-      if (fastify.redis?.isOpen && request.user) {
-        const key = `recent_searches:${request.user.userId}`
-        fastify.redis.lPush(key, query).catch(() => {})
-        fastify.redis.lTrim(key, 0, 9).catch(() => {})
-        fastify.redis.expire(key, 60 * 60 * 24 * 7).catch(() => {})
       }
 
       return reply.code(200).send({
@@ -221,11 +251,11 @@ async function searchRoutes(fastify) {
       })
     } catch (err) {
       fastify.log.error(err)
-      return reply.code(500).send({ error: 'Arama basarisiz.' })
+      return reply.code(500).send({ error: 'Arama başarısız.' })
     }
   })
 
-  // GET /suggestions — Otomatik Tamamlama
+  // ─── GET /suggestions — Otomatik Tamamlama ────────────────────────────────
   fastify.get('/suggestions', async (request, reply) => {
     const { q } = request.query
     if (!q || q.length < 2) return reply.code(200).send({ suggestions: [] })
@@ -235,22 +265,24 @@ async function searchRoutes(fastify) {
           isActive: true, isDeleted: false,
           name: { startsWith: q, mode: 'insensitive' },
         },
-        select: { id: true, name: true, slug: true, city: true },
+        select: { id: true, name: true, slug: true, city: true, category: { select: { name: true, icon: true } } },
         take: 6,
-        orderBy: { totalViews: 'desc' },
+        orderBy: { totalReviews: 'desc' },
       })
       return reply.code(200).send({
         suggestions: businesses.map(b => ({
           type: 'business', id: b.id, label: b.name,
-          sublabel: b.city, href: `/isletme/${b.slug}`,
+          sublabel: `${b.category?.name || ''} · ${b.city}`,
+          icon: b.category?.icon || '🏢',
+          href: `/isletme/${b.slug}`,
         })),
       })
     } catch (err) {
-      return reply.code(500).send({ error: 'Oneri alinamadi.' })
+      return reply.code(500).send({ error: 'Öneri alınamadı.' })
     }
   })
 
-  // GET /trending — Trend Kategoriler
+  // ─── GET /trending — Trend Kategoriler ───────────────────────────────────
   fastify.get('/trending', async (request, reply) => {
     try {
       const trending = await prisma.category.findMany({
@@ -264,7 +296,7 @@ async function searchRoutes(fastify) {
       })
       return reply.code(200).send({ trending })
     } catch (err) {
-      return reply.code(500).send({ error: 'Trend verisi alinamadi.' })
+      return reply.code(500).send({ error: 'Trend verisi alınamadı.' })
     }
   })
 }
