@@ -492,7 +492,6 @@ async function businessRoutes(fastify) {
       select: {
         name: true, slug: true, averageRating: true,
         totalReviews: true, totalViews: true,
-        _count: { select: { externalReviews: true } },
       },
       orderBy: { averageRating: 'desc' },
       take: 5,

@@ -16,6 +16,7 @@ const { PrismaClient } = require('@prisma/client');
 const Database = require('better-sqlite3');
 const path = require('path');
 const fs = require('fs');
+const ps = require('./pipeline-status.cjs');
 
 // Lock — ayni anda sadece 1 instance calissin
 const LOCK_FILE = path.join(__dirname, 'embed-pipeline.lock');
@@ -34,6 +35,7 @@ process.on('uncaughtException', (e) => { cleanLock(); console.error(e); process.
 const OLLAMA_URL   = 'http://localhost:11434';
 const EMBED_MODEL  = 'mxbai-embed-large';
 const QUEUE_DB     = path.join(__dirname, 'embed-queue.db');
+const STATUS_INTERVAL_MS = 30_000; // 30 saniyede bir DB'ye yaz
 
 // CLI args
 const args = Object.fromEntries(
@@ -45,7 +47,7 @@ const args = Object.fromEntries(
 );
 
 const OFFSET     = parseInt(args.offset     ?? '0');
-const LIMIT      = parseInt(args.limit      ?? '0');   // 0 = tümü
+const LIMIT      = parseInt(args.limit      ?? '0');
 const BATCH_SIZE = parseInt(args['batch-size'] ?? '32');
 
 // ── SQLite queue/state DB ────────────────────────────────────────────────────
@@ -83,18 +85,15 @@ async function fetchEmbeddings(texts) {
   });
   if (!res.ok) throw new Error(`Ollama HTTP ${res.status}: ${await res.text()}`);
   const data = await res.json();
-  // Ollama /api/embed returns { embeddings: [[...], [...]] }
   return data.embeddings;
 }
 
 async function upsertEmbeddings(batch, embeddings) {
-  // pgvector: vector literal '[0.1,0.2,...]'
   const values = batch.map((r, i) => {
     const vec = '[' + embeddings[i].join(',') + ']';
     return { reviewId: r.id, model: EMBED_MODEL, embedding: vec };
   });
 
-  // Prisma doesn't natively support vector type → raw SQL
   for (const v of values) {
     await prisma.$executeRawUnsafe(
       `INSERT INTO "ReviewEmbedding" (id, "reviewId", model, embedding, "createdAt")
@@ -113,13 +112,18 @@ let stats = {
   total:     0,
 };
 
+function getSpeed() {
+  const elapsed = (Date.now() - stats.startTime) / 1000;
+  return elapsed > 0 ? stats.processed / elapsed : 0;
+}
+
 function dashboard() {
-  const elapsed  = (Date.now() - stats.startTime) / 1000;
-  const speed    = stats.processed / elapsed;           // reviews/s
+  const elapsed   = (Date.now() - stats.startTime) / 1000;
+  const speed     = getSpeed();
   const remaining = stats.total - stats.processed;
-  const eta      = speed > 0 ? remaining / speed : Infinity;
-  const etaStr   = isFinite(eta) ? fmtDuration(eta) : '?';
-  const pct      = stats.total > 0 ? ((stats.processed / stats.total) * 100).toFixed(1) : '0.0';
+  const eta       = speed > 0 ? remaining / speed : Infinity;
+  const etaStr    = isFinite(eta) ? fmtDuration(eta) : '?';
+  const pct       = stats.total > 0 ? ((stats.processed / stats.total) * 100).toFixed(1) : '0.0';
 
   process.stdout.write(
     `\r[${new Date().toLocaleTimeString('tr-TR')}] ` +
@@ -153,16 +157,36 @@ async function main() {
     console.log('✅ Ollama bağlantısı OK');
   } catch (e) {
     console.error('❌ Ollama bağlantı hatası:', e.message);
-    console.error('   Lütfen Ollama\'yı başlatın:');
-    console.error('   C:\\Users\\PC\\AppData\\Local\\Programs\\Ollama\\ollama.exe serve');
     process.exit(1);
   }
 
+  // Pipeline status — başlat
+  const run = await ps.startRun({
+    pipeline: 'reviewEmbed',
+    pid: process.pid,
+    message: `Başladı — ${stats.total.toLocaleString()} yorum bekliyor`,
+  });
+  const runId = run.id;
+
+  // Periyodik DB güncelleme
+  const statusInterval = setInterval(async () => {
+    const speed = getSpeed();
+    const remaining = stats.total - stats.processed;
+    await ps.updateRun({
+      runId,
+      pipeline: 'reviewEmbed',
+      processed: stats.processed,
+      errors: stats.errors,
+      remaining,
+      speedPerSec: parseFloat(speed.toFixed(2)),
+      message: `${stats.processed.toLocaleString()}/${stats.total.toLocaleString()} işlendi`,
+    });
+  }, STATUS_INTERVAL_MS);
+
   // Kaldığı yerden devam için cursor
   const stateKey   = `cursor_off${OFFSET}_lim${LIMIT}`;
-  let   lastCursor = getState(stateKey, null);   // son işlenen reviewId
+  let   lastCursor = getState(stateKey, null);
 
-  // Toplam sayısı
   const whereBase = {
     content: { not: null },
     embedding: null,
@@ -173,6 +197,9 @@ async function main() {
 
   if (stats.total === 0) {
     console.log('✅ Tüm yorumlar zaten embed edilmiş!');
+    clearInterval(statusInterval);
+    await ps.finishRun({ runId, pipeline: 'reviewEmbed', processed: 0, message: 'Tüm yorumlar zaten embed edilmiş' });
+    await ps.disconnect();
     return;
   }
 
@@ -182,7 +209,6 @@ async function main() {
   let done   = false;
 
   while (!done) {
-    // Batch çek
     const reviews = await prisma.externalReview.findMany({
       where:   whereBase,
       select:  { id: true, content: true, rating: true, authorLevel: true },
@@ -194,7 +220,6 @@ async function main() {
 
     if (reviews.length === 0) { done = true; break; }
 
-    // Metinleri oluştur
     const texts = reviews.map(buildText);
 
     try {
@@ -202,7 +227,6 @@ async function main() {
       await upsertEmbeddings(reviews, embeddings);
       stats.processed += reviews.length;
     } catch (e) {
-      // Batch hata verirse tek tek dene
       for (let i = 0; i < reviews.length; i++) {
         try {
           const emb = await fetchEmbeddings([texts[i]]);
@@ -215,15 +239,14 @@ async function main() {
       }
     }
 
-    // Cursor kaydet
     cursor = reviews[reviews.length - 1].id;
     setState(stateKey, cursor);
 
-    // LIMIT kontrolü
     if (LIMIT > 0 && stats.processed >= LIMIT) { done = true; }
   }
 
   clearInterval(dashInterval);
+  clearInterval(statusInterval);
   dashboard();
 
   const elapsed = ((Date.now() - stats.startTime) / 1000).toFixed(1);
@@ -232,12 +255,25 @@ async function main() {
   console.log(`   Hata           : ${stats.errors}`);
   console.log(`   Süre           : ${fmtDuration(parseFloat(elapsed))}`);
 
+  // Pipeline status — bitir
+  await ps.finishRun({
+    runId,
+    pipeline: 'reviewEmbed',
+    status: stats.errors > stats.processed * 0.5 ? 'FAILED' : 'SUCCESS',
+    processed: stats.processed,
+    errors: stats.errors,
+    message: `Tamamlandı — ${stats.processed.toLocaleString()} yorum embed edildi`,
+  });
+
+  await ps.disconnect();
   await prisma.$disconnect();
   qdb.close();
 }
 
 main().catch(async e => {
   console.error('\n❌ Fatal hata:', e);
+  await ps.finishRun({ runId: null, pipeline: 'reviewEmbed', status: 'FAILED', message: e.message }).catch(() => {});
+  await ps.disconnect().catch(() => {});
   await prisma.$disconnect();
   process.exit(1);
 });

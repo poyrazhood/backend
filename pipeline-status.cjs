@@ -22,7 +22,7 @@ async function ensureState(pipeline) {
   try {
     await prisma.$executeRawUnsafe(`
       INSERT INTO "PipelineState" ("pipeline", "status", "updatedAt")
-      VALUES ($1, 'IDLE', NOW())
+      VALUES ($1, 'IDLE'::"PipelineStatus", NOW())
       ON CONFLICT ("pipeline") DO NOTHING
     `, pipeline);
   } catch (e) { console.warn(`[PS] ensureState hata: ${e.message}`); }
@@ -33,14 +33,14 @@ async function startRun({ pipeline, pid = null, logFile = null, message = null }
   try {
     const runs = await prisma.$queryRawUnsafe(`
       INSERT INTO "PipelineRun" ("id", "pipeline", "status", "pid", "logFile", "message", "startedAt")
-      VALUES (gen_random_uuid()::text, $1, 'RUNNING', $2, $3, $4, NOW())
+      VALUES (gen_random_uuid()::text, $1, 'RUNNING'::"PipelineStatus", $2, $3, $4, NOW())
       RETURNING "id"
     `, pipeline, pid, logFile, message);
     const runId = runs[0]?.id;
 
     await prisma.$executeRawUnsafe(`
       UPDATE "PipelineState" SET
-        "status" = 'RUNNING', "currentRunId" = $2, "lastStartedAt" = NOW(),
+        "status" = 'RUNNING'::"PipelineStatus", "currentRunId" = $2, "lastStartedAt" = NOW(),
         "message" = $3, "lastProcessed" = 0, "lastErrors" = 0,
         "speedPerSec" = NULL, "updatedAt" = NOW()
       WHERE "pipeline" = $1
@@ -77,7 +77,7 @@ async function finishRun({ runId, pipeline, status = 'SUCCESS', processed = 0, e
     if (runId && runId !== 'manual-stop') {
       await prisma.$executeRawUnsafe(`
         UPDATE "PipelineRun" SET
-          "status" = $2, "finishedAt" = NOW(), "processed" = $3,
+          "status" = $2::"PipelineStatus", "finishedAt" = NOW(), "processed" = $3,
           "errors" = $4, "remaining" = $5, "speedPerSec" = $6, "message" = $7
         WHERE "id" = $1
       `, runId, status, processed, errors, remaining, speedPerSec, message);
@@ -88,7 +88,7 @@ async function finishRun({ runId, pipeline, status = 'SUCCESS', processed = 0, e
 
     await prisma.$executeRawUnsafe(`
       UPDATE "PipelineState" SET
-        "status" = $2, "currentRunId" = NULL, "lastFinishedAt" = NOW(),
+        "status" = $2::"PipelineStatus", "currentRunId" = NULL, "lastFinishedAt" = NOW(),
         "lastSuccessAt" = CASE WHEN $2 = 'SUCCESS' THEN NOW() ELSE "lastSuccessAt" END,
         "lastErrorAt"   = CASE WHEN $2 = 'FAILED'  THEN NOW() ELSE "lastErrorAt" END,
         "totalProcessed" = $3, "lastProcessed" = $4, "lastErrors" = $5,

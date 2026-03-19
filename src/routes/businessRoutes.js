@@ -288,6 +288,7 @@ async function businessRoutes(fastify) {
             },
           },
           openingHours:    { orderBy: { day: 'asc' } },
+          businessQA:      { orderBy: { order: 'asc' }, take: 10 },
           externalReviews: {
             where:   { isVisible: true },
             orderBy: { publishedAt: 'desc' },
