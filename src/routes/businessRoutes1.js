@@ -444,7 +444,7 @@ async function businessRoutes(fastify) {
   // ─── GET /:id/analytics ───────────────────────────────────────────────────────
   fastify.get('/:id/analytics', { preHandler: [fastify.authenticate] }, async (request, reply) => {
     const { id } = request.params
-    const userId = request.user.id
+    const userId = request.user.userId
 
     const business = await prisma.business.findFirst({
       where:  { id, ownerId: userId, isDeleted: false },
@@ -551,6 +551,75 @@ async function businessRoutes(fastify) {
       ],
       sentiment: { distribution: sentimentDist, topKeywords },
     })
+  })
+
+  // ─── Admin compat routes ──────────────────────────────────────────────────────
+  // GET /pending — Admin panel backward compat (returns pending businesses)
+  fastify.get('/pending', async (request, reply) => {
+    const secret = request.query.secret || request.headers['x-admin-secret']
+    if (!secret || secret !== process.env.ADMIN_SECRET) {
+      return reply.code(401).send({ error: 'Yetkisiz.' })
+    }
+    const businesses = await prisma.business.findMany({
+      where: { isVerified: false, isDeleted: false, ownerId: { not: null } },
+      select: {
+        id: true, name: true, slug: true, city: true, district: true,
+        address: true, createdAt: true,
+        category: { select: { name: true, icon: true } },
+        owner: { select: { id: true, username: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 100,
+    })
+    return reply.send({ businesses })
+  })
+
+  // POST /:id/approve — Admin panel backward compat
+  fastify.post('/:id/approve', async (request, reply) => {
+    const bodySecret = request.body?.secret
+    const headerSecret = request.headers['x-admin-secret']
+    const secret = bodySecret || headerSecret
+    if (!secret || secret !== process.env.ADMIN_SECRET) {
+      return reply.code(401).send({ error: 'Yetkisiz.' })
+    }
+    try {
+      const business = await prisma.business.update({
+        where: { id: request.params.id },
+        data: { isActive: true, isVerified: true },
+        select: { id: true, name: true, ownerId: true },
+      })
+      // +50 TP ödülü
+      if (business.ownerId) {
+        const alreadyAwarded = await prisma.marketPointLog.findFirst({
+          where: { userId: business.ownerId, reason: 'BUSINESS_ADDED', description: { contains: business.id } }
+        }).catch(() => null)
+        if (!alreadyAwarded) {
+          await prisma.$transaction([
+            prisma.user.update({ where: { id: business.ownerId }, data: { currentPoints: { increment: 50 }, totalEarnedPoints: { increment: 50 } } }),
+            prisma.marketPointLog.create({ data: { userId: business.ownerId, points: 50, reason: 'BUSINESS_ADDED', description: `İşletme ekleme ödülü (+50 TP) [${business.id}]` } })
+          ]).catch(() => {})
+        }
+      }
+      return reply.send({ ok: true })
+    } catch (err) {
+      fastify.log.error(err)
+      return reply.code(500).send({ error: 'İşlem başarısız.' })
+    }
+  })
+
+  // POST /:id/reject — Admin panel backward compat
+  fastify.post('/:id/reject', async (request, reply) => {
+    const secret = request.body?.secret || request.headers['x-admin-secret']
+    if (!secret || secret !== process.env.ADMIN_SECRET) {
+      return reply.code(401).send({ error: 'Yetkisiz.' })
+    }
+    try {
+      await prisma.business.update({ where: { id: request.params.id }, data: { isDeleted: true, isActive: false } })
+      return reply.send({ ok: true })
+    } catch (err) {
+      fastify.log.error(err)
+      return reply.code(500).send({ error: 'İşlem başarısız.' })
+    }
   })
 }
 
