@@ -1,5 +1,5 @@
 import prisma from '../lib/prisma.js'
-﻿import path from 'path'
+import path from 'path'
 import fs from 'fs'
 import { fileURLToPath } from 'url'
 import { pipeline } from 'stream/promises'
@@ -7,10 +7,30 @@ import crypto from 'crypto'
 import sharp from 'sharp'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const UPLOAD_DIR = path.join(__dirname, '../../uploads')
+
+// DUZELTME: src/routes/uploadRoutes.js -> src/routes/ -> src/ -> proje_koku/uploads
+// Onceki: ../../uploads = C:\Users\PC\uploads (yanlis!)
+// Simdi:  ../../../uploads = C:\Users\PC\Desktop\tecrubelerim\uploads (dogru)
+const UPLOAD_DIR = process.env.UPLOAD_DIR
+  ? path.resolve(process.env.UPLOAD_DIR)
+  : path.join(__dirname, '../../../uploads')
+
+// Klasorlerin varligini garantile
+;['avatars', 'reviews', 'businesses'].forEach(sub => {
+  const dir = path.join(UPLOAD_DIR, sub)
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
+})
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
 const MAX_SIZE = 5 * 1024 * 1024 // 5MB
+
+// Tarayicinin cross-origin gorsel bloklamasini engelleyen header
+// ERR_BLOCKED_BY_RESPONSE.NotSameOrigin hatasini cozer
+function setCORPHeaders(reply) {
+  reply.header('Cross-Origin-Resource-Policy', 'cross-origin')
+  reply.header('Access-Control-Allow-Origin', '*')
+  reply.header('Timing-Allow-Origin', '*')
+}
 
 async function uploadRoutes(fastify) {
   // GET /api/upload/avatars/:filename
@@ -18,6 +38,7 @@ async function uploadRoutes(fastify) {
     const { filename } = request.params
     const filePath = path.join(UPLOAD_DIR, 'avatars', filename)
     if (!fs.existsSync(filePath)) return reply.code(404).send({ error: 'Dosya bulunamadi.' })
+    setCORPHeaders(reply)
     return reply.sendFile('avatars/' + filename, UPLOAD_DIR)
   })
 
@@ -25,6 +46,7 @@ async function uploadRoutes(fastify) {
     const { filename } = request.params
     const filePath = path.join(UPLOAD_DIR, 'reviews', filename)
     if (!fs.existsSync(filePath)) return reply.code(404).send({ error: 'Dosya bulunamadi.' })
+    setCORPHeaders(reply)
     return reply.sendFile('reviews/' + filename, UPLOAD_DIR)
   })
 
@@ -32,6 +54,7 @@ async function uploadRoutes(fastify) {
     const { filename } = request.params
     const filePath = path.join(UPLOAD_DIR, 'businesses', filename)
     if (!fs.existsSync(filePath)) return reply.code(404).send({ error: 'Dosya bulunamadi.' })
+    setCORPHeaders(reply)
     return reply.sendFile('businesses/' + filename, UPLOAD_DIR)
   })
 
@@ -42,7 +65,6 @@ async function uploadRoutes(fastify) {
       if (!data) return reply.code(400).send({ error: 'Dosya bulunamadi.' })
       if (!ALLOWED_TYPES.includes(data.mimetype)) return reply.code(400).send({ error: 'Sadece JPG, PNG, WebP ve GIF desteklenir.' })
 
-      // Dosyayı buffer'a al (max 5MB)
       const chunks = []
       let size = 0
       for await (const chunk of data.file) {
@@ -52,19 +74,20 @@ async function uploadRoutes(fastify) {
       }
       const buffer = Buffer.concat(chunks)
 
-      // Sharp ile sıkıştır: 400x400 kare, WebP, kalite 80
       const filename = `${request.user.userId}-${crypto.randomBytes(6).toString('hex')}.webp`
       const filePath = path.join(UPLOAD_DIR, 'avatars', filename)
+
       await sharp(buffer)
         .resize(400, 400, { fit: 'cover', position: 'center' })
         .webp({ quality: 80 })
         .toFile(filePath)
 
-      const url = `http://localhost:3001/api/upload/avatars/${filename}`
-      const { PrismaClient } = await import('@prisma/client')
-      await prisma.user.update({ where: { id: request.user.userId }, data: { avatarUrl: url } })
-      await prisma.$disconnect()
+      const baseUrl = process.env.BASE_URL || 'http://localhost:3001'
+      const url = `${baseUrl}/api/upload/avatars/${filename}`
 
+      await prisma.user.update({ where: { id: request.user.userId }, data: { avatarUrl: url } })
+
+      setCORPHeaders(reply)
       return reply.code(200).send({ url })
     } catch (err) {
       fastify.log.error(err)
@@ -92,48 +115,30 @@ async function uploadRoutes(fastify) {
         return reply.code(400).send({ error: 'Dosya 5MB limitini asiyor.' })
       }
 
-      const url = `/api/upload/reviews/${filename}`
+      const baseUrl = process.env.BASE_URL || 'http://localhost:3001'
+      const url = `${baseUrl}/api/upload/reviews/${filename}`
 
-      // +5 TP: Fotoğraf yükleme ödülü (günlük max 3 fotoğraf)
       try {
-        const { PrismaClient } = await import('@prisma/client')
         const today = new Date()
         today.setHours(0, 0, 0, 0)
-
-        // Bugün kaç fotoğraf yüklendiğini kontrol et
         const todayPhotoCount = await prisma.marketPointLog.count({
-          where: {
-            userId: request.user.userId,
-            reason: 'PHOTO_UPLOAD',
-            createdAt: { gte: today }
-          }
-        }).catch(() => 0) // Tablo yoksa 0 döndür
+          where: { userId: request.user.userId, reason: 'PHOTO_UPLOAD', createdAt: { gte: today } }
+        }).catch(() => 0)
 
         if (todayPhotoCount < 3) {
           await prisma.user.update({
             where: { id: request.user.userId },
-            data: {
-              currentPoints:    { increment: 5 },
-              totalEarnedPoints: { increment: 5 }
-            }
+            data: { currentPoints: { increment: 5 }, totalEarnedPoints: { increment: 5 } }
           })
-
-          // Log kaydı (tablo varsa)
           await prisma.marketPointLog.create({
-            data: {
-              userId: request.user.userId,
-              points: 5,
-              reason: 'PHOTO_UPLOAD',
-              description: 'Fotoğraf yükleme ödülü'
-            }
+            data: { userId: request.user.userId, points: 5, reason: 'PHOTO_UPLOAD', description: 'Fotograf yukleme odulu' }
           }).catch(() => {})
         }
-
-        await prisma.$disconnect()
       } catch (pointErr) {
-        fastify.log.warn('Puan güncellenemedi:', pointErr.message)
+        fastify.log.warn('Puan guncellenemedi:', pointErr.message)
       }
 
+      setCORPHeaders(reply)
       return reply.code(200).send({ url, pointsEarned: 5 })
     } catch (err) {
       fastify.log.error(err)

@@ -1,0 +1,25 @@
+# Database Configuration
+DATABASE_URL="postgresql://tecrubelerim:tecrubelerim2026!@193.111.125.191:5432/tecrubelerim_db"
+
+# Redis Configuration
+REDIS_URL="redis://:dev_redis_password@localhost:6379"
+
+# Application Configuration
+NODE_ENV="development"
+PORT=3001
+
+# Security (CHANGE IN PRODUCTION!)
+JWT_SECRET="change_this_in_production_use_strong_secret"
+SESSION_SECRET="change_this_in_production_use_strong_secret"
+
+# Rate Limiting
+RATE_LIMIT_MAX=100
+RATE_LIMIT_WINDOW_MS=900000
+
+# Trust Score Algorithm Weights
+TRUST_SCORE_REVIEW_QUALITY_WEIGHT=0.4
+TRUST_SCORE_VERIFICATION_WEIGHT=0.3
+TRUST_SCORE_ENGAGEMENT_WEIGHT=0.2
+TRUST_SCORE_HISTORY_WEIGHT=0.1
+
+ADMIN_SECRET=tecrube_admin_2026

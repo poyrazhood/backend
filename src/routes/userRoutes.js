@@ -128,7 +128,7 @@ async function userRoutes(fastify) {
       return reply.code(200).send({ businesses })
     } catch (err) {
       fastify.log.error(err)
-      return reply.code(500).send({ error: 'Isletmeler alinamadi.' })
+      return reply.code(500).send({ error: 'İşletmeler alınamadı.' })
     }
   })
 
@@ -316,7 +316,7 @@ async function userRoutes(fastify) {
 
   // GET /api/users/me/export ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Veri disa aktar
   fastify.get('/me/export', { preHandler: [fastify.authenticate] }, async (request, reply) => {
-    const userId = request.user.id
+    const userId = request.user.userId
     const [user, reviews, savedBusinesses] = await Promise.all([
       prisma.user.findUnique({
         where: { id: userId },
@@ -336,7 +336,7 @@ async function userRoutes(fastify) {
 
   // DELETE /api/users/me ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Hesap sil (anonimize et)
   fastify.delete('/me', { preHandler: [fastify.authenticate] }, async (request, reply) => {
-    const userId = request.user.id
+    const userId = request.user.userId
     const anonEmail = `deleted_${userId}@tecrubelerim.com`
     await prisma.$transaction([
       // Kullanici bilgilerini anonimize et

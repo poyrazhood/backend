@@ -1,172 +1,360 @@
-/**
- * tecrubelerim.com — Business Embedding Pipeline
- *
- * Kullanım:
- *   node biz-embed-pipeline.cjs
- *   node biz-embed-pipeline.cjs --batch-size 16
- *   node biz-embed-pipeline.cjs --offset 0 --limit 100000
- *
- * Koşul:
- *   - Detayı çekilmiş (coverPhoto VEYA about dolu)
- *   - En az 1 yorumu var
- *   - BusinessEmbedding henüz yok
- */
-
-const { PrismaClient } = require('@prisma/client');
-const Database = require('better-sqlite3');
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
+const Database = require('better-sqlite3');
+const { PrismaClient } = require('@prisma/client');
 
-// Lock — ayni anda sadece 1 instance calissin
-const LOCK_FILE = path.join(__dirname, 'biz-embed-pipeline.lock');
-if (fs.existsSync(LOCK_FILE)) {
-  const pid = fs.readFileSync(LOCK_FILE, 'utf8').trim();
-  console.log('Zaten calisiyor (PID: ' + pid + '), atlaniyor.');
-  process.exit(0);
-}
-fs.writeFileSync(LOCK_FILE, String(process.pid));
-const cleanLock = () => { try { fs.unlinkSync(LOCK_FILE); } catch {} };
-process.on('exit', cleanLock);
-process.on('SIGINT', () => { cleanLock(); process.exit(0); });
-process.on('uncaughtException', (e) => { cleanLock(); console.error(e); process.exit(1); });
+const prisma = new PrismaClient();
 
-// ── Config ───────────────────────────────────────────────────────────────────
-const OLLAMA_URL   = 'http://localhost:11434';
-const EMBED_MODEL  = 'bge-m3';
-const QUEUE_DB     = path.join(__dirname, 'biz-embed-queue.db');
+const OLLAMA_URL = process.env.OLLAMA_URL || 'http://127.0.0.1:11434';
+const EMBED_MODEL = process.env.BIZ_EMBED_MODEL || 'bge-m3';
+const BATCH_SIZE = parseInt(process.env.BIZ_EMBED_BATCH_SIZE || '128', 10);
 
 const args = Object.fromEntries(
-  process.argv.slice(2)
-    .reduce((acc, v, i, arr) => { if (v.startsWith('--')) acc.push([v.slice(2), arr[i+1]]); return acc; }, [])
+  process.argv.slice(2).map(arg => {
+    const [k, v] = arg.replace(/^--/, '').split('=');
+    return [k, v ?? '1'];
+  })
 );
-const OFFSET     = parseInt(args.offset        ?? '0');
-const LIMIT      = parseInt(args.limit         ?? '0');
-const BATCH_SIZE = parseInt(args['batch-size'] ?? '16');
 
-// ── SQLite queue ──────────────────────────────────────────────────────────────
-const qdb = new Database(QUEUE_DB);
-qdb.exec(`
-  CREATE TABLE IF NOT EXISTS progress (key TEXT PRIMARY KEY, value TEXT NOT NULL);
-  CREATE TABLE IF NOT EXISTS failed   (bizId TEXT PRIMARY KEY, error TEXT, at TEXT DEFAULT (datetime('now')));
-`);
-const getState  = (k, d) => JSON.parse(qdb.prepare('SELECT value FROM progress WHERE key=?').get(k)?.value ?? JSON.stringify(d));
-const setState  = (k, v) => qdb.prepare('INSERT OR REPLACE INTO progress(key,value) VALUES(?,?)').run(k, JSON.stringify(v));
-const logFailed = (id, e) => qdb.prepare('INSERT OR REPLACE INTO failed(bizId,error) VALUES(?,?)').run(id, String(e));
+const OFFSET = parseInt(args.offset ?? '0', 10);
+const LIMIT = parseInt(args.limit ?? '0', 10);
 
-// ── Prisma ────────────────────────────────────────────────────────────────────
-const prisma = new PrismaClient({ log: [] });
+const LOCK_FILE = path.join(__dirname, 'biz-embed-pipeline.lock');
+const QUEUE_DB = path.join(__dirname, 'biz-embed-queue.db');
+const LOG_FILE = path.join(__dirname, 'biz-embed-pipeline.log');
 
-// ── Segment tespiti ──────────────────────────────────────────────────────────
-// Altin: 5+  yorum → 2 eski + 2 yeni + 1 genel
-// Gumus: 1-4 yorum → tüm yorumlar + ownerReply + kategori/lokasyon tekrarı
-// Bronz: 0   yorum → sadece yapılandırılmış veri + kategori/lokasyon tekrarı
-
-function selectReviews(reviews) {
-  if (!reviews.length) return [];
-
-  const sorted = [...reviews].sort((a, b) => {
-    const da = a.publishedAt ? new Date(a.publishedAt) : new Date(0);
-    const db = b.publishedAt ? new Date(b.publishedAt) : new Date(0);
-    return da - db;
-  });
-
-  // Altin: 5+ yorum
-  if (reviews.length >= 5) {
-    const half   = Math.ceil(sorted.length / 2);
-    const oldest = sorted.slice(0, half);
-    const newest = sorted.slice(half);
-    const topN   = (arr, n) => [...arr].sort((a, b) => (b.content?.length ?? 0) - (a.content?.length ?? 0)).slice(0, n);
-    const selected = [...topN(oldest, 2), ...topN(newest, 2), ...topN(reviews, 1)];
-    const seen = new Set();
-    return selected.filter(r => seen.has(r.id) ? false : seen.add(r.id)).slice(0, 5);
-  }
-
-  // Gumus: 1-4 yorum — hepsini al
-  return reviews;
+if (fs.existsSync(LOCK_FILE)) {
+  const pid = fs.readFileSync(LOCK_FILE, 'utf8').trim();
+  console.log(`Zaten calisiyor (PID: ${pid}), atlaniyor.`);
+  process.exit(0);
 }
 
-function buildBizText(biz, reviews, ownerReplies = []) {
-  const attr        = biz.attributes ?? {};
-  const ozellikler  = attr.about?.['Özellikler']?.join(', ') ?? '';
-  const kategori    = biz.category?.name ?? attr.subcategory ?? '';
-  const lokasyon    = [biz.city, biz.district].filter(Boolean).join(' ');
-  const fiyat       = attr.priceRange ? ` | ${attr.priceRange}` : '';
-  const rating      = biz.averageRating ? `${Number(biz.averageRating).toFixed(1)} yıldız` : '';
+fs.writeFileSync(LOCK_FILE, String(process.pid));
+
+const cleanLock = () => {
+  try { fs.unlinkSync(LOCK_FILE); } catch {}
+};
+
+process.on('SIGINT', async () => {
+  cleanLock();
+  try { await prisma.$disconnect(); } catch {}
+  process.exit(0);
+});
+
+process.on('uncaughtException', async (e) => {
+  cleanLock();
+  console.error(e);
+  try { await prisma.$disconnect(); } catch {}
+  process.exit(1);
+});
+
+process.on('unhandledRejection', async (e) => {
+  cleanLock();
+  console.error(e);
+  try { await prisma.$disconnect(); } catch {}
+  process.exit(1);
+});
+
+const qdb = new Database(QUEUE_DB);
+qdb.exec(`
+  CREATE TABLE IF NOT EXISTS progress (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS failed (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    businessId TEXT NOT NULL,
+    error TEXT,
+    createdAt TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
+const getState = (k, d) => {
+  const row = qdb.prepare('SELECT value FROM progress WHERE key=?').get(k);
+  return row ? JSON.parse(row.value) : d;
+};
+
+const setState = (k, v) => {
+  qdb.prepare(`
+    INSERT OR REPLACE INTO progress(key, value)
+    VALUES(?, ?)
+  `).run(k, JSON.stringify(v));
+};
+
+const logFailed = (businessId, error) => {
+  qdb.prepare(`
+    INSERT INTO failed(businessId, error)
+    VALUES(?, ?)
+  `).run(businessId, String(error || 'unknown'));
+};
+
+function logLine(text) {
+  const line = `[${new Date().toISOString()}] ${text}\n`;
+  try { fs.appendFileSync(LOG_FILE, line, 'utf8'); } catch {}
+}
+
+function fmtDuration(sec) {
+  if (!isFinite(sec) || sec < 0) return '?';
+  const s = Math.floor(sec % 60);
+  const m = Math.floor((sec / 60) % 60);
+  const h = Math.floor((sec / 3600) % 24);
+  const d = Math.floor(sec / 86400);
+
+  const parts = [];
+  if (d) parts.push(`${d}g`);
+  if (h) parts.push(`${h}sa`);
+  if (m) parts.push(`${m}dk`);
+  if (s || parts.length === 0) parts.push(`${s}sn`);
+  return parts.join(' ');
+}
+
+function normalizeText(value) {
+  if (!value) return '';
+  return String(value).replace(/\s+/g, ' ').trim();
+}
+
+function safeJson(input, fallback = {}) {
+  if (!input) return fallback;
+  if (typeof input === 'object') return input;
+  try { return JSON.parse(input); } catch { return fallback; }
+}
+
+function pickAttributesText(attributes) {
+  const a = safeJson(attributes, {});
+  const out = [];
+
+  const maybePush = (v) => {
+    if (!v) return;
+    if (Array.isArray(v)) {
+      for (const x of v) {
+        const t = normalizeText(x);
+        if (t) out.push(t);
+      }
+      return;
+    }
+    const t = normalizeText(v);
+    if (t) out.push(t);
+  };
+
+  maybePush(a.about);
+  maybePush(a.shortDescription);
+  maybePush(a.features);
+  maybePush(a.tags);
+  maybePush(a.services);
+  maybePush(a.highlights);
+  maybePush(a.ambience);
+  maybePush(a.priceRange);
+  maybePush(a.cuisine);
+  maybePush(a.specialties);
+
+  return [...new Set(out)].join(', ');
+}
+
+function buildBizText(biz, reviews, ownerReplies) {
+  const kategori = normalizeText(biz?.category?.name || biz.category_name || '');
+  const lokasyon = [biz.district, biz.city].map(normalizeText).filter(Boolean).join(', ');
+  const ozellikler = pickAttributesText(biz.attributes);
+  const rating = biz.averageRating ? `${biz.averageRating} puan` : '';
   const yorumSayisi = biz.totalReviews ? `${biz.totalReviews} yorum` : '';
+  const fiyat = normalizeText(safeJson(biz.attributes, {}).priceRange || '');
 
-  const baseparts = [biz.name, kategori, lokasyon, ozellikler, rating, yorumSayisi, fiyat].filter(Boolean);
-  const header    = baseparts.join(' | ');
+  const baseparts = [
+    normalizeText(biz.name),
+    kategori,
+    lokasyon,
+    ozellikler,
+    rating,
+    yorumSayisi,
+    fiyat
+  ].filter(Boolean);
 
-  const reviewTexts = reviews.map(r => r.content?.trim()).filter(Boolean);
-  const replyTexts  = ownerReplies.filter(Boolean).map(r => r.trim());
+  const header = baseparts.join(' | ');
 
-  // Altin (5+)
+  const reviewTexts = reviews.map(r => normalizeText(r.content)).filter(Boolean);
+  const replyTexts = ownerReplies.map(r => normalizeText(r)).filter(Boolean);
+
   if (reviews.length >= 5) {
-    const yorumlar = reviewTexts.length > 0 ? ' | Yorumlar: ' + reviewTexts.join(' / ') : '';
+    const yorumlar = reviewTexts.length > 0
+      ? ' | Yorumlar: ' + reviewTexts.join(' / ')
+      : '';
     return header + yorumlar;
-  }
-  // Gumus (1-4)
-  else if (reviews.length >= 1) {
-    const yorumlar = reviewTexts.length > 0 ? ' | Kullanicilar diyor ki: ' + reviewTexts.join(' / ') : '';
-    const replies  = replyTexts.length  > 0 ? ' | Isletme yaniti: ' + replyTexts.join(' / ') : '';
-    const tekrar   = ` | ${kategori} uzmanligi, ${lokasyon} lokasyonu`;
+  } else if (reviews.length >= 1) {
+    const yorumlar = reviewTexts.length > 0
+      ? ' | Kullanicilar diyor ki: ' + reviewTexts.join(' / ')
+      : '';
+    const replies = replyTexts.length > 0
+      ? ' | Isletme yaniti: ' + replyTexts.join(' / ')
+      : '';
+    const tekrar = ` | ${kategori || 'Isletme'} uzmanligi, ${lokasyon || 'yerel'} lokasyonu`;
     return header + yorumlar + replies + tekrar;
-  }
-  // Bronz (0 yorum)
-  else {
+  } else {
     return header + ` | ${lokasyon} ${kategori}`;
   }
 }
 
-// ── Ollama ────────────────────────────────────────────────────────────────────
 async function fetchEmbeddings(texts) {
-  // Bos veya null metin fallback
-  const clean = texts.map(t => (t && t.trim().length > 0) ? t.trim() : 'isletme');
+  const clean = texts.map(t => {
+    const x = normalizeText(t);
+    return x.length > 0 ? x : 'isletme';
+  });
+
   const res = await fetch(`${OLLAMA_URL}/api/embed`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: EMBED_MODEL, input: clean }),
+    body: JSON.stringify({
+      model: EMBED_MODEL,
+      input: clean
+    })
   });
+
   if (!res.ok) {
-    const body = await res.text().catch(() => '');
-    throw new Error(`Ollama HTTP ${res.status}: ${body.slice(0, 200)}`);
+    const txt = await res.text().catch(() => '');
+    throw new Error(`Ollama embed hatasi: ${res.status} ${txt}`);
   }
-  return (await res.json()).embeddings;
+
+  const data = await res.json();
+
+  if (!Array.isArray(data.embeddings)) {
+    throw new Error('Ollama embeddings donmedi');
+  }
+
+  return data.embeddings;
 }
 
 async function upsertEmbedding(bizId, embedding) {
+  if (!Array.isArray(embedding) || embedding.length === 0) {
+    throw new Error(`Gecersiz embedding: ${bizId}`);
+  }
+
   const vec = '[' + embedding.join(',') + ']';
-  await prisma.$executeRawUnsafe(
-    `INSERT INTO "BusinessEmbedding" (id, "businessId", model, embedding, "createdAt", "updatedAt")
-     VALUES (gen_random_uuid(), $1, $2, $3::vector, now(), now())
-     ON CONFLICT ("businessId") DO UPDATE
-     SET embedding = EXCLUDED.embedding, model = EXCLUDED.model, "updatedAt" = now()`,
-    bizId, EMBED_MODEL, vec
-  );
+
+  await prisma.$executeRawUnsafe(`
+    INSERT INTO "BusinessEmbedding" (
+      id,
+      "businessId",
+      model,
+      embedding,
+      "createdAt",
+      "updatedAt"
+    )
+    VALUES (
+      gen_random_uuid()::text,
+      $1,
+      $2,
+      $3::vector,
+      now(),
+      now()
+    )
+    ON CONFLICT ("businessId")
+    DO UPDATE SET
+      embedding = EXCLUDED.embedding,
+      model = EXCLUDED.model,
+      "updatedAt" = now()
+  `, bizId, EMBED_MODEL, vec);
 }
 
-// ── Dashboard ─────────────────────────────────────────────────────────────────
-const stats = { processed: 0, errors: 0, startTime: Date.now(), total: 0 };
-
-function fmtDuration(s) {
-  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sc = Math.floor(s % 60);
-  return [h && `${h}s`, m && `${m}d`, `${sc}sn`].filter(Boolean).join(' ');
-}
-
-function dashboard() {
+function renderProgress(stats) {
   const elapsed = (Date.now() - stats.startTime) / 1000;
-  const speed   = stats.processed / Math.max(elapsed, 1);
-  const eta     = speed > 0 ? (stats.total - stats.processed) / speed : Infinity;
-  const pct     = stats.total > 0 ? ((stats.processed / stats.total) * 100).toFixed(1) : '0.0';
+  const speed = stats.processed / Math.max(elapsed, 1);
+
   process.stdout.write(
     `\r[${new Date().toLocaleTimeString('tr-TR')}] ` +
-    `${stats.processed.toLocaleString()}/${stats.total.toLocaleString()} (${pct}%) | ` +
-    `${speed.toFixed(1)} biz/s | ETA: ${isFinite(eta) ? fmtDuration(eta) : '?'} | Hata: ${stats.errors}    `
+    `${stats.processed.toLocaleString()}/${stats.total != null ? stats.total.toLocaleString() : '?'} | ` +
+    `${speed.toFixed(1)} biz/s | Hata: ${stats.errors}    `
   );
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
+async function pingOllama() {
+  const res = await fetch(`${OLLAMA_URL}/api/tags`);
+  if (!res.ok) throw new Error('Ollama erisilemiyor');
+}
+
+async function fetchBusinesses(cursor) {
+  const rows = await prisma.$queryRawUnsafe(`
+    SELECT
+      b.id,
+      b.name,
+      b.city,
+      b.district,
+      b.attributes,
+      b."averageRating",
+      b."totalReviews",
+      c.name as category_name
+    FROM "Business" b
+    LEFT JOIN "Category" c ON c.id = b."categoryId"
+    WHERE (
+      b.attributes->>'coverPhoto' IS NOT NULL
+      OR b.attributes->'about' IS NOT NULL
+      OR b.attributes->>'shortDescription' IS NOT NULL
+    )
+    AND EXISTS (
+      SELECT 1
+      FROM "ExternalReview" er
+      WHERE er."businessId" = b.id
+        AND er.content IS NOT NULL
+    )
+    AND NOT EXISTS (
+      SELECT 1
+      FROM "BusinessEmbedding" be
+      WHERE be."businessId" = b.id
+    )
+    ${cursor ? `AND b.id > '${cursor}'` : ''}
+    ORDER BY b.id ASC
+    LIMIT ${BATCH_SIZE}
+    ${!cursor && OFFSET > 0 ? `OFFSET ${OFFSET}` : ''}
+  `);
+
+  return rows;
+}
+
+async function fetchReviewsForBusinesses(businessIds) {
+  if (!businessIds.length) return [];
+
+  const rows = await prisma.externalReview.findMany({
+    where: {
+      businessId: { in: businessIds },
+      content: { not: null }
+    },
+    select: {
+      businessId: true,
+      content: true,
+      publishedAt: true,
+      ownerReply: true
+    },
+    orderBy: {
+      publishedAt: 'asc'
+    }
+  });
+
+  return rows;
+}
+
+function groupReviewsByBusiness(rows) {
+  const reviewMap = new Map();
+
+  for (const row of rows) {
+    if (!reviewMap.has(row.businessId)) {
+      reviewMap.set(row.businessId, []);
+    }
+
+    const arr = reviewMap.get(row.businessId);
+    if (arr.length < 50) {
+      arr.push(row);
+    }
+  }
+
+  return reviewMap;
+}
+
 async function main() {
+  const stats = {
+    total: null,
+    processed: 0,
+    errors: 0,
+    startTime: Date.now()
+  };
+
   console.log(`\n🚀 tecrubelerim.com — Business Embedding Pipeline`);
   console.log(`   Model:      ${EMBED_MODEL}`);
   console.log(`   Batch size: ${BATCH_SIZE}`);
@@ -174,112 +362,82 @@ async function main() {
   console.log(`   Limit:      ${LIMIT || '(tümü)'}`);
   console.log(`   Queue DB:   ${QUEUE_DB}\n`);
 
-  // Ollama kontrol
   try {
-    const ping = await fetch(`${OLLAMA_URL}/api/tags`);
-    if (!ping.ok) throw new Error();
+    await pingOllama();
     console.log('✅ Ollama bağlantısı OK');
   } catch {
     console.error('❌ Ollama çalışmıyor. Lütfen başlatın:');
-    console.error('   C:\\Users\\PC\\AppData\\Local\\Programs\\Ollama\\ollama.exe serve');
+    console.error('   ollama serve');
     process.exit(1);
   }
 
-  // Toplam sayı — detayı VE yorumu olan, henüz embed edilmemiş işletmeler
-  stats.total = await prisma.$queryRawUnsafe(`
-    SELECT COUNT(*) as c FROM "Business" b
-    WHERE (
-      b.attributes->>'coverPhoto' IS NOT NULL
-      OR b.attributes->'about' IS NOT NULL
-    )
-    AND EXISTS (
-      SELECT 1 FROM "ExternalReview" er
-      WHERE er."businessId" = b.id AND er.content IS NOT NULL
-    )
-    AND NOT EXISTS (
-      SELECT 1 FROM "BusinessEmbedding" be WHERE be."businessId" = b.id
-    )
-  `).then(r => Number(r[0].c));
+  console.log('📊 Toplam sayı hesaplanmıyor, uygun işletmeler taranarak işlenecek...');
 
-  console.log(`📊 Embed edilecek işletme: ${stats.total.toLocaleString()}`);
-
-  if (stats.total === 0) {
-    console.log('✅ Tüm uygun işletmeler zaten embed edilmiş!');
-    await prisma.$disconnect(); qdb.close(); return;
-  }
-
-  const stateKey  = `cursor_off${OFFSET}_lim${LIMIT}`;
-  let cursor      = getState(stateKey, null);
-  const dashTimer = setInterval(dashboard, 1000);
-  let done        = false;
+  const stateKey = `cursor_off${OFFSET}_lim${LIMIT}`;
+  let cursor = getState(stateKey, null);
+  let done = false;
 
   while (!done) {
-    // Batch işletme çek
-    const businesses = await prisma.$queryRawUnsafe(`
-      SELECT b.id, b.name, b.city, b.district, b."averageRating", b."totalReviews",
-             b.attributes, c.name as category_name
-      FROM "Business" b
-      LEFT JOIN "Category" c ON b."categoryId" = c.id
-      WHERE (
-        b.attributes->>'coverPhoto' IS NOT NULL
-        OR b.attributes->'about' IS NOT NULL
-      )
-      AND EXISTS (
-        SELECT 1 FROM "ExternalReview" er
-        WHERE er."businessId" = b.id AND er.content IS NOT NULL
-      )
-      AND NOT EXISTS (
-        SELECT 1 FROM "BusinessEmbedding" be WHERE be."businessId" = b.id
-      )
-      ${cursor ? `AND b.id > '${cursor}'` : ''}
-      ORDER BY b.id ASC
-      LIMIT ${BATCH_SIZE}
-      ${!cursor && OFFSET > 0 ? `OFFSET ${OFFSET}` : ''}
-    `);
+    const businesses = await fetchBusinesses(cursor);
 
-    if (!businesses.length) { done = true; break; }
+    if (!businesses.length) {
+      done = true;
+      break;
+    }
 
-    // Her işletme için yorumları çek ve embed et
+    const bizIds = businesses.map(b => b.id);
+    const allReviews = await fetchReviewsForBusinesses(bizIds);
+    const reviewMap = groupReviewsByBusiness(allReviews);
+
     const texts = [];
     const validBiz = [];
 
     for (const biz of businesses) {
-      const reviews = await prisma.externalReview.findMany({
-        where:   { businessId: biz.id, content: { not: null } },
-        select:  { id: true, content: true, publishedAt: true, ownerReply: true },
-        orderBy: { publishedAt: 'asc' },
-        take:    50,
-      });
+      const reviews = reviewMap.get(biz.id) || [];
+      if (!reviews.length) continue;
 
-      const selected     = selectReviews(reviews);
-      const ownerReplies = selected.map(r => r.ownerReply).filter(Boolean);
+      const selected = reviews.filter(r => normalizeText(r.content));
+      if (!selected.length) continue;
+
+      const ownerReplies = selected
+        .map(r => r.ownerReply)
+        .filter(Boolean);
+
       const bizObj = {
         ...biz,
-        attributes: typeof biz.attributes === 'string' ? JSON.parse(biz.attributes) : biz.attributes,
-        category: { name: biz.category_name },
+        category: { name: biz.category_name }
       };
 
       texts.push(buildBizText(bizObj, selected, ownerReplies));
       validBiz.push(biz);
     }
 
-    // Batch embed
-    try {
-      const embeddings = await fetchEmbeddings(texts);
-      for (let i = 0; i < validBiz.length; i++) {
-        await upsertEmbedding(validBiz[i].id, embeddings[i]);
-      }
-      stats.processed += validBiz.length;
-    } catch (e) {
-      // Hata olursa tek tek dene
-      for (let i = 0; i < validBiz.length; i++) {
-        try {
-          const emb = await fetchEmbeddings([texts[i]]);
-          await upsertEmbedding(validBiz[i].id, emb[0]);
-          stats.processed++;
-        } catch (e2) {
-          logFailed(validBiz[i].id, e2.message);
-          stats.errors++;
+    if (validBiz.length > 0) {
+      try {
+        const embeddings = await fetchEmbeddings(texts);
+
+        if (!Array.isArray(embeddings) || embeddings.length !== validBiz.length) {
+          throw new Error(`Embedding sayisi uyusmuyor: texts=${validBiz.length}, embeddings=${embeddings?.length ?? 0}`);
+        }
+
+        for (let i = 0; i < validBiz.length; i++) {
+          await upsertEmbedding(validBiz[i].id, embeddings[i]);
+        }
+
+        stats.processed += validBiz.length;
+      } catch (e) {
+        logLine(`Batch hata: ${e.message}`);
+
+        for (let i = 0; i < validBiz.length; i++) {
+          try {
+            const emb = await fetchEmbeddings([texts[i]]);
+            await upsertEmbedding(validBiz[i].id, emb[0]);
+            stats.processed++;
+          } catch (e2) {
+            logFailed(validBiz[i].id, e2.message);
+            logLine(`Tekli hata | businessId=${validBiz[i].id} | ${e2.message}`);
+            stats.errors++;
+          }
         }
       }
     }
@@ -287,13 +445,16 @@ async function main() {
     cursor = businesses[businesses.length - 1].id;
     setState(stateKey, cursor);
 
-    if (LIMIT > 0 && stats.processed >= LIMIT) done = true;
+    renderProgress(stats);
+
+    if (LIMIT > 0 && stats.processed >= LIMIT) {
+      done = true;
+      break;
+    }
   }
 
-  clearInterval(dashTimer);
-  dashboard();
-
   const elapsed = ((Date.now() - stats.startTime) / 1000).toFixed(1);
+
   console.log(`\n\n✅ Tamamlandı!`);
   console.log(`   İşlenen : ${stats.processed.toLocaleString()}`);
   console.log(`   Hata    : ${stats.errors}`);
@@ -301,10 +462,14 @@ async function main() {
 
   await prisma.$disconnect();
   qdb.close();
+  cleanLock();
 }
 
-main().catch(async e => {
-  console.error('\n❌ Fatal hata:', e);
-  await prisma.$disconnect();
+main().catch(async (e) => {
+  console.error('\n❌ Fatal:', e);
+  logLine(`Fatal: ${e.message}`);
+  try { await prisma.$disconnect(); } catch {}
+  try { qdb.close(); } catch {}
+  cleanLock();
   process.exit(1);
 });

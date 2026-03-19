@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Tecrubelerim.com ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Ana GiriÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€¦Ã‚Â¸ NoktasÃƒÆ’Ã¢â‚¬ÂÃƒâ€šÃ‚Â±
  * High-Scale Local Business Discovery Platform
  */
