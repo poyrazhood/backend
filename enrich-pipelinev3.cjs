@@ -190,7 +190,7 @@ function parseResponse(raw) {
 async function processBusiness(biz) {
   const [reviews, openingHours] = await Promise.all([
     prisma.externalReview.findMany({ where: { businessId: biz.id, content: { not: null } }, select: { content: true, rating: true, authorLevel: true, authorReviewCount: true, ownerReply: true, publishedAt: true }, orderBy: { publishedAt: 'desc' }, take: CONFIG.maxReviewsPerBiz }),
-    prisma.openingHour.findMany({ where: { businessId: biz.id }, select: { day: true, openTime: true, closeTime: true } }).catch(() => [])
+    prisma.openingHours.findMany({ where: { businessId: biz.id }, select: { day: true, openTime: true, closeTime: true } }).catch(() => [])
   ])
 
   if (reviews.length < 3) throw new Error(`Yetersiz yorum: ${reviews.length}`)
@@ -207,7 +207,7 @@ async function processBusiness(biz) {
 
   await prisma.$transaction([
     prisma.businessQA.deleteMany({ where: { businessId: biz.id } }),
-    ...validQA.map((item, i) => prisma.businessQA.create({ data: { businessId: biz.id, question: item.soru, answer: item.cevap, order: i, source: 'ai', model: CONFIG.model } }))
+    ...validQA.map((item, i) => prisma.businessQA.create({ data: { businessId: biz.id, question: item.soru, answer: item.cevap } }))
   ])
 
   const attrUpdate = { ...(typeof biz.attributes === 'object' ? biz.attributes : {}), ai: { processedAt: new Date().toISOString(), qaCount: validQA.length, model: CONFIG.model, etiketler: result.etiketler || null } }

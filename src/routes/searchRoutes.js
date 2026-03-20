@@ -1,5 +1,38 @@
 import prisma from '../lib/prisma.js'
 
+// ─── Ollama Embedding ─────────────────────────────────────────────────────────
+const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434'
+const EMBED_MODEL = process.env.EMBED_MODEL || 'mxbai-embed-large'
+
+async function getQueryEmbedding(text) {
+  try {
+    const res = await fetch(`${OLLAMA_URL}/api/embeddings`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: EMBED_MODEL, prompt: text }),
+      signal: AbortSignal.timeout(5000), // 5s timeout
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    return data.embedding ?? null
+  } catch {
+    return null
+  }
+}
+
+// Sorgunun "doğal dil" / semantik mi yoksa isim araması mı olduğunu tahmin et
+function isSemanticQuery(q) {
+  // Kısa, noktalı veya sade isim aramaları semantik değil
+  if (q.length < 8) return false
+  // Boşluk 2'den fazlaysa (çok kelime) semantik olabilir
+  const wordCount = q.trim().split(/\s+/).length
+  if (wordCount < 3) return false
+  // Bilinen niyet pattern'leri varsa zaten INTENT_MAP yakalıyor,
+  // ama vektör arama bunların ötesine geçer
+  return true
+}
+
+
 // ─── Niyet Analizi ────────────────────────────────────────────────────────────
 // Kullanıcının arama sorgusundan kategori, özellik ve niyet çıkarır
 
@@ -141,29 +174,82 @@ async function searchRoutes(fastify) {
           // orderBy override: totalReviews
         }
 
-        const rawRows = await prisma.$queryRawUnsafe(
-          `SELECT
-             b.id, b.name, b.slug, b.city, b.district,
-             b."averageRating", b."totalReviews", b."claimStatus",
-             b."isVerified", b."verificationLevel", b."subscriptionPlan",
-             b."trustScore", b."trustGrade",
-             c.id as cat_id, c.name as cat_name, c.slug as cat_slug, c.icon as cat_icon,
-             (SELECT p.url FROM "BusinessPhoto" p
-              WHERE p."businessId" = b.id ORDER BY p."order" ASC LIMIT 1) as photo_url,
-             similarity(b.name, $1) as trgm_score
-           FROM "Business" b
-           LEFT JOIN "Category" c ON c.id = b."categoryId"
-           WHERE b."isActive" = true AND b."isDeleted" = false
-             AND (
-               b.name ILIKE $1
-               OR b.district ILIKE $1
-               ${effectiveCategorySlug ? '' : 'OR c.name ILIKE $1'}
-             )
-             ${extraWhere.join(' ')}
-           ORDER BY ${orderByClause}
-           LIMIT $2 OFFSET $3`,
-          ...params
-        )
+        // ── Vektör embedding dene (semantik sorgu ise) ──────────────────────
+        console.log('[SEARCH] query:', query, 'isSemanticQuery:', isSemanticQuery(query))
+        const useVector = isSemanticQuery(query)
+        let queryEmbedding = null
+        if (useVector) {
+          console.log('[SEARCH] fetching embedding...')
+          queryEmbedding = await getQueryEmbedding(query)
+          console.log('[SEARCH] embedding result:', queryEmbedding ? 'OK' : 'NULL')
+        }
+
+        let rawRows
+        let isAiSearch = false
+
+        if (queryEmbedding) {
+          // ── Hybrid: vektör + trgm ─────────────────────────────────────────
+          isAiSearch = true
+          const vecStr = JSON.stringify(queryEmbedding)
+          // $1 = query text (trgm için), $2 = vector string, $3 = limit
+          const vecParams = [query, vecStr, take + skip]
+          let vecIdx = 4
+          const vecWhere = ['b."isActive" = true', 'b."isDeleted" = false']
+
+          if (city) { vecWhere.push(`b.city ILIKE $${vecIdx}`); vecParams.push(`%${city}%`); vecIdx++ }
+          if (effectiveCategorySlug) { vecWhere.push(`c.slug ILIKE $${vecIdx}`); vecParams.push(`%${effectiveCategorySlug}%`); vecIdx++ }
+          if (minRating) { vecWhere.push(`b."averageRating" >= $${vecIdx}`); vecParams.push(parseFloat(minRating)); vecIdx++ }
+          if (intent.isQualitySearch) vecWhere.push(`b."averageRating" >= 4.0`)
+
+          rawRows = await prisma.$queryRawUnsafe(
+            `SELECT
+               b.id, b.name, b.slug, b.city, b.district,
+               b."averageRating", b."totalReviews", b."claimStatus",
+               b."isVerified", b."verificationLevel", b."subscriptionPlan",
+               b."trustScore", b."trustGrade",
+               c.id as cat_id, c.name as cat_name, c.slug as cat_slug, c.icon as cat_icon,
+               (SELECT p.url FROM "BusinessPhoto" p
+                WHERE p."businessId" = b.id ORDER BY p."order" ASC LIMIT 1) as photo_url,
+               similarity(b.name, $1) as trgm_score,
+               1 - (be.embedding <=> $2::vector) AS vec_score,
+               (0.6 * (1 - (be.embedding <=> $2::vector)) + 0.4 * similarity(b.name, $1)) AS hybrid_score
+             FROM "Business" b
+             JOIN "BusinessEmbedding" be ON be."businessId" = b.id
+             LEFT JOIN "Category" c ON c.id = b."categoryId"
+             WHERE ${vecWhere.join(' AND ')}
+             ORDER BY hybrid_score DESC
+             LIMIT $3`,
+            ...vecParams
+          )
+          rawRows = rawRows.slice(skip)
+        } else {
+          // ── Klasik ILIKE + trgm ───────────────────────────────────────────
+          rawRows = await prisma.$queryRawUnsafe(
+            `SELECT
+               b.id, b.name, b.slug, b.city, b.district,
+               b."averageRating", b."totalReviews", b."claimStatus",
+               b."isVerified", b."verificationLevel", b."subscriptionPlan",
+               b."trustScore", b."trustGrade",
+               c.id as cat_id, c.name as cat_name, c.slug as cat_slug, c.icon as cat_icon,
+               (SELECT p.url FROM "BusinessPhoto" p
+                WHERE p."businessId" = b.id ORDER BY p."order" ASC LIMIT 1) as photo_url,
+               similarity(b.name, $1) as trgm_score,
+               NULL::float as vec_score,
+               NULL::float as hybrid_score
+             FROM "Business" b
+             LEFT JOIN "Category" c ON c.id = b."categoryId"
+             WHERE b."isActive" = true AND b."isDeleted" = false
+               AND (
+                 b.name ILIKE $1
+                 OR b.district ILIKE $1
+                 ${effectiveCategorySlug ? '' : 'OR c.name ILIKE $1'}
+               )
+               ${extraWhere.join(' ')}
+             ORDER BY ${orderByClause}
+             LIMIT $2 OFFSET $3`,
+            ...params
+          )
+        }
 
         const businesses = rawRows.map(row => ({
           id: row.id, name: row.name, slug: row.slug,
@@ -182,13 +268,14 @@ async function searchRoutes(fastify) {
             ? { id: row.cat_id, name: row.cat_name, slug: row.cat_slug, icon: row.cat_icon }
             : null,
           reason: buildReason(row, intent, Number(row.trgm_score || 0)),
-          vec_score: null,
+          vec_score: row.vec_score ? Number(row.vec_score) : null,
           trgm_score: Number(row.trgm_score || 0),
-          final_score: Number(row.averageRating || 0),
+          final_score: row.hybrid_score ? Number(row.hybrid_score) : Number(row.averageRating || 0),
         }))
 
         results.businesses    = businesses
         results.businessTotal = businesses.length
+        results.isAiSearch    = isAiSearch
         results.intent        = {
           detectedCategory: intent.categoryLabel,
           signals: intent.signals.map(s => s.reason),
@@ -302,3 +389,5 @@ async function searchRoutes(fastify) {
 }
 
 export default searchRoutes
+
+

@@ -1,11 +1,5 @@
 /**
- * watcher.cjs — Tecrubelerim Pipeline Watcher
- * 
- * Bilgisayar açıkken sürekli çalışır.
- * Bir pipeline bitince hemen sıradakini başlatır.
- * Scheduled task ile Windows açılışında otomatik başlar.
- * 
- * Kullanım: node watcher.cjs
+ * watcher.cjs — Tecrubelerim Pipeline Watcher (Windows uyumlu)
  */
 
 'use strict';
@@ -16,9 +10,9 @@ const path = require('path');
 const ROOT = __dirname;
 const LOG  = path.join(ROOT, 'watcher.log');
 const NODE = process.execPath;
+const STATE_FILE = path.join(ROOT, 'watcher-state.json');
 
-// Kaç saniyede bir kontrol et
-const CHECK_INTERVAL_MS = 60_000; // 1 dakika
+const CHECK_INTERVAL_MS = 30_000;
 
 const PIPELINES = [
   {
@@ -29,7 +23,6 @@ const PIPELINES = [
     logFile  : path.join(ROOT, 'embed-pipeline.log'),
     nodeArgs : ['--max-old-space-size=512'],
     args     : [],
-    needsOllama: true,
   },
   {
     key      : 'bizEmbed',
@@ -39,7 +32,6 @@ const PIPELINES = [
     logFile  : path.join(ROOT, 'biz-embed-pipeline.log'),
     nodeArgs : ['--expose-gc', '--max-old-space-size=2048'],
     args     : [],
-    needsOllama: true,
   },
   {
     key      : 'enrich',
@@ -47,28 +39,34 @@ const PIPELINES = [
     script   : 'enrich-pipelinev3.cjs',
     lock     : 'enrich-pipeline.lock',
     logFile  : path.join(ROOT, 'enrich-pipeline.log'),
-    nodeArgs : ['--max-old-space-size=1024'],
-    args     : ['--resume'],
-    needsOllama: true,
+    nodeArgs : ['--max-old-space-size=4096'],
+    args     : ['--resume', '--limit', '500'],
   },
 ];
+
+// Aktif child process
+let activeChild = null;
+let activeKey = null;
+
+// Durum: hangi pipeline sırada
+function loadState() {
+  try {
+    if (fs.existsSync(STATE_FILE)) {
+      return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+    }
+  } catch {}
+  return { currentIndex: 0 };
+}
+
+function saveState(state) {
+  try { fs.writeFileSync(STATE_FILE, JSON.stringify(state)); } catch {}
+}
 
 function log(msg) {
   const ts   = new Date().toLocaleString('tr-TR');
   const line = `[${ts}] ${msg}`;
   console.log(line);
   try { fs.appendFileSync(LOG, line + '\n'); } catch {}
-}
-
-function isRunning(lockFile) {
-  const lockPath = path.join(ROOT, lockFile);
-  if (!fs.existsSync(lockPath)) return false;
-  try {
-    const pid = parseInt(fs.readFileSync(lockPath, 'utf8').trim());
-    if (isNaN(pid)) return false;
-    try { process.kill(pid, 0); return true; }
-    catch { fs.unlinkSync(lockPath); return false; }
-  } catch { return false; }
 }
 
 async function ollamaAlive() {
@@ -78,79 +76,112 @@ async function ollamaAlive() {
   } catch { return false; }
 }
 
-function startPipeline(pipeline) {
+function startPipeline(pipeline, onFinish) {
   const scriptPath = path.join(ROOT, pipeline.script);
   if (!fs.existsSync(scriptPath)) {
     log(`❌ Script bulunamadı: ${pipeline.script}`);
-    return false;
+    onFinish(1);
+    return;
   }
+
+  const lockPath = path.join(ROOT, pipeline.lock);
+  try { if (fs.existsSync(lockPath)) fs.unlinkSync(lockPath); } catch {}
 
   const out = fs.openSync(pipeline.logFile, 'a');
   const child = spawn(NODE, [...pipeline.nodeArgs, scriptPath, ...pipeline.args], {
-    detached: true,
+    detached: false,
     stdio: ['ignore', out, out],
     cwd: ROOT,
+    env: { ...process.env },
   });
 
-  fs.writeFileSync(path.join(ROOT, pipeline.lock), child.pid.toString());
-  child.unref();
+  if (!child.pid) {
+    log(`❌ ${pipeline.name} başlatılamadı`);
+    onFinish(1);
+    return;
+  }
+
+  fs.writeFileSync(lockPath, child.pid.toString());
+  activeChild = child;
+  activeKey = pipeline.key;
+
+  child.on('exit', (code) => {
+    activeChild = null;
+    activeKey = null;
+    try { if (fs.existsSync(lockPath)) fs.unlinkSync(lockPath); } catch {}
+    log(`⏹ ${pipeline.name} bitti (kod: ${code ?? '?'})`);
+    onFinish(code ?? 0);
+  });
+
+  child.on('error', (err) => {
+    activeChild = null;
+    activeKey = null;
+    try { if (fs.existsSync(lockPath)) fs.unlinkSync(lockPath); } catch {}
+    log(`❌ ${pipeline.name} hata: ${err.message}`);
+    onFinish(1);
+  });
+
   log(`▶ ${pipeline.name} başlatıldı (PID: ${child.pid})`);
-  return true;
 }
 
-async function tick() {
+async function runNext() {
+  // Zaten bir şey çalışıyorsa bekle
+  if (activeChild && activeChild.exitCode === null) return;
+
   const ollama = await ollamaAlive();
-
-  // Şu an Ollama kullanan kaç pipeline çalışıyor?
-  const runningOllama = PIPELINES
-    .filter(p => p.needsOllama && isRunning(p.lock))
-    .map(p => p.name);
-
-  for (const pipeline of PIPELINES) {
-    if (isRunning(pipeline.lock)) continue; // zaten çalışıyor
-
-    // Ollama gerektiriyorsa kontrol et
-    if (pipeline.needsOllama) {
-      if (!ollama) {
-        // Ollama kapalı, sessizce geç
-        continue;
-      }
-      if (runningOllama.length > 0) {
-        // Başka Ollama pipeline çalışıyor, bekle
-        continue;
-      }
-    }
-
-    // Script var mı?
-    const scriptPath = path.join(ROOT, pipeline.script);
-    if (!fs.existsSync(scriptPath)) continue;
-
-    log(`🚀 ${pipeline.name} başlatılıyor...`);
-    startPipeline(pipeline);
-
-    // Aynı anda sadece 1 Ollama pipeline — başlattıktan sonra döngüyü kır
-    if (pipeline.needsOllama) break;
+  if (!ollama) {
+    log('⏸ Ollama kapalı, bekleniyor...');
+    return;
   }
+
+  const state = loadState();
+  const idx = state.currentIndex % PIPELINES.length;
+  const pipeline = PIPELINES[idx];
+
+  log(`🚀 ${pipeline.name} başlatılıyor... (${idx + 1}/${PIPELINES.length})`);
+
+  startPipeline(pipeline, (code) => {
+    if (code === 0) {
+      // Başarıyla bitti, sıradakine geç
+      const nextIdx = (idx + 1) % PIPELINES.length;
+      saveState({ currentIndex: nextIdx });
+      log(`➡ Sıradaki: ${PIPELINES[nextIdx].name}`);
+    } else {
+      // Hata aldı, aynısını tekrar dene
+      log(`⚠ Hata alındı, aynı pipeline tekrar denenecek`);
+    }
+    // Bitince hemen sıradakini başlat
+    setTimeout(runNext, 3000);
+  });
 }
 
 async function main() {
   log('═'.repeat(50));
-  log('Watcher başladı — her 1 dakikada kontrol');
-  log('Durdurmak için: Ctrl+C');
+  log('Watcher başladı');
+  log(`Node: ${NODE}`);
+  const state = loadState();
+  log(`Başlangıç pipeline: ${PIPELINES[state.currentIndex % PIPELINES.length].name}`);
   log('═'.repeat(50));
 
-  // İlk kontrol
-  await tick();
+  // Tüm eski lock'ları temizle
+  for (const p of PIPELINES) {
+    const lockPath = path.join(ROOT, p.lock);
+    try { if (fs.existsSync(lockPath)) fs.unlinkSync(lockPath); } catch {}
+  }
 
-  // Periyodik kontrol
+  await runNext();
+
+  // Periyodik kontrol — eğer bir şekilde process ölmüşse tekrar başlat
   setInterval(async () => {
-    try { await tick(); } catch (e) { log(`Tick hata: ${e.message}`); }
+    if (!activeChild || activeChild.exitCode !== null) {
+      await runNext();
+    }
   }, CHECK_INTERVAL_MS);
 }
 
-// Graceful shutdown
 process.on('SIGINT', () => {
   log('Watcher durduruluyor...');
+  if (activeChild) { try { activeChild.kill(); } catch {} }
   process.exit(0);
 });
 

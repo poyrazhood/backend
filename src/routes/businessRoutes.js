@@ -288,7 +288,7 @@ async function businessRoutes(fastify) {
             },
           },
           openingHours:    { orderBy: { day: 'asc' } },
-          businessQA:      { orderBy: { order: 'asc' }, take: 10 },
+          qaEntries:       { orderBy: { createdAt: 'asc' }, take: 10 },
           externalReviews: {
             where:   { isVisible: true },
             orderBy: { publishedAt: 'desc' },
@@ -621,6 +621,101 @@ async function businessRoutes(fastify) {
       return reply.code(500).send({ error: 'İşlem başarısız.' })
     }
   })
+
+  // --- Benzer Isletmeler ---
+  fastify.get('/:id/similar', async (request, reply) => {
+    const { id } = request.params
+    const limit = Math.min(parseInt(request.query.limit ?? '6'), 12)
+    try {
+      // id hem slug hem ID olabilir
+      const business = await prisma.business.findFirst({
+        where: {
+          OR: [{ id }, { slug: id }],
+          isDeleted: false,
+        },
+        select: { id: true, categoryId: true, city: true }
+      })
+      if (!business) return reply.code(404).send({ error: 'Isletme bulunamadi' })
+
+      // Embedding raw query ile cek (vector tipi Prisma select desteklemez)
+      const embRows = await prisma.$queryRawUnsafe(
+        `SELECT embedding::text FROM "BusinessEmbedding" WHERE "businessId" = $1 LIMIT 1`,
+        business.id
+      )
+
+      const fetchLimit = limit * 3 // daha fazla cek, sonra sirala
+
+      let rows = []
+      if (embRows.length > 0 && embRows[0].embedding) {
+        rows = await prisma.$queryRawUnsafe(`
+          SELECT
+            b.id, b.name, b.slug, b.city, b.district,
+            b."averageRating", b."totalReviews",
+            b.attributes,
+            c.name AS "categoryName", c.icon AS "categoryIcon",
+            1 - (be.embedding <=> $1::vector) AS similarity,
+            CASE WHEN b.city = $5 THEN 1 ELSE 0 END AS "sameCity"
+          FROM "Business" b
+          JOIN "BusinessEmbedding" be ON be."businessId" = b.id
+          JOIN "Category" c ON c.id = b."categoryId"
+          WHERE b."isActive" = true
+            AND b."isDeleted" = false
+            AND b.id != $2
+            AND b."categoryId" = $3
+          ORDER BY
+            CASE WHEN b.city = $5 THEN 0 ELSE 1 END,
+            be.embedding <=> $1::vector
+          LIMIT $4
+        `, embRows[0].embedding, business.id, business.categoryId, fetchLimit, business.city)
+        rows = rows.slice(0, limit)
+      } else {
+        // Fallback: embedding yoksa ayni sehir once, sonra puana gore
+        const sameCity = await prisma.business.findMany({
+          where: { isActive: true, isDeleted: false, id: { not: business.id }, categoryId: business.categoryId, city: business.city },
+          select: { id: true, name: true, slug: true, city: true, district: true, averageRating: true, totalReviews: true, attributes: true, category: { select: { name: true, icon: true } } },
+          orderBy: { averageRating: 'desc' },
+          take: limit,
+        })
+        if (sameCity.length < limit) {
+          const others = await prisma.business.findMany({
+            where: { isActive: true, isDeleted: false, id: { notIn: [business.id, ...sameCity.map(b => b.id)] }, categoryId: business.categoryId },
+            select: { id: true, name: true, slug: true, city: true, district: true, averageRating: true, totalReviews: true, attributes: true, category: { select: { name: true, icon: true } } },
+            orderBy: { averageRating: 'desc' },
+            take: limit - sameCity.length,
+          })
+          rows = [...sameCity, ...others]
+        } else {
+          rows = sameCity
+        }
+      }
+
+      const similar = rows.map((r) => {
+        const attrs = r.attributes ?? {}
+        const cover = attrs.coverPhoto ?? attrs.photos?.[0] ?? null
+        return {
+          id: r.id,
+          name: r.name,
+          slug: r.slug,
+          city: r.city,
+          district: r.district,
+          averageRating: r.averageRating,
+          totalReviews: r.totalReviews,
+          coverPhoto: cover,
+          category: {
+            name: r.categoryName ?? r.category?.name,
+            icon: r.categoryIcon ?? r.category?.icon,
+          },
+          similarity: r.similarity ? Math.round(parseFloat(r.similarity) * 100) : null,
+        }
+      })
+
+      return reply.send({ similar, total: similar.length })
+    } catch (err) {
+      fastify.log.error(err)
+      return reply.code(500).send({ error: 'Benzer isletme hatasi: ' + err.message })
+    }
+  })
+
 }
 
 export default businessRoutes
