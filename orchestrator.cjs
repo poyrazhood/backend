@@ -77,6 +77,29 @@ function ollamaAlive() {
   catch { return false; }
 }
 
+function startOllama() {
+  try {
+    // Ollama zaten çalışıyorsa geç
+    if (ollamaAlive()) return true;
+    log('⚡ Ollama başlatılıyor...');
+    // Windows'ta ollama serve arka planda başlat
+    const isWin = process.platform === 'win32';
+    if (isWin) {
+      execSync('start /B ollama serve', { stdio: 'pipe', shell: true });
+    } else {
+      execSync('ollama serve &', { stdio: 'pipe', shell: true });
+    }
+    // 8 saniye bekle
+    execSync('ping -n 9 127.0.0.1 > nul 2>&1 || sleep 8', { stdio: 'pipe', shell: true });
+    const alive = ollamaAlive();
+    log(alive ? '✓ Ollama başlatıldı' : '✗ Ollama başlatılamadı');
+    return alive;
+  } catch (e) {
+    log('⚠ Ollama başlatma hatası: ' + e.message);
+    return false;
+  }
+}
+
 async function runPipeline(key, pipeline) {
   const scriptPath = path.join(ROOT, pipeline.script);
   if (!fs.existsSync(scriptPath)) {
@@ -127,8 +150,12 @@ async function main() {
   log('═'.repeat(60));
   log('Orkestratör başladı');
 
-  const ollama = ollamaAlive();
-  log(`Ollama durumu: ${ollama ? '✓ çalışıyor' : '✗ kapalı'}`);
+  let ollama = ollamaAlive();
+  if (!ollama) {
+    log('Ollama kapalı, başlatmaya çalışılıyor...');
+    ollama = startOllama();
+  }
+  log(`Ollama durumu: ${ollama ? '✓ çalışıyor' : '✗ kapalı — pipeline-lar atlanacak'}`);
 
   const sorted = Object.entries(PIPELINES).sort((a, b) => a[1].priority - b[1].priority);
   let started = 0;
@@ -177,3 +204,4 @@ main().catch(async e => {
   log(`HATA: ${e.message}`);
   await ps.disconnect();
 });
+

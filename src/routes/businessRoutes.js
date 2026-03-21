@@ -627,34 +627,29 @@ async function businessRoutes(fastify) {
     const { id } = request.params
     const limit = Math.min(parseInt(request.query.limit ?? '6'), 12)
     try {
-      // id hem slug hem ID olabilir
       const business = await prisma.business.findFirst({
-        where: {
-          OR: [{ id }, { slug: id }],
-          isDeleted: false,
-        },
+        where: { OR: [{ id }, { slug: id }], isDeleted: false },
         select: { id: true, categoryId: true, city: true }
       })
       if (!business) return reply.code(404).send({ error: 'Isletme bulunamadi' })
 
-      // Embedding raw query ile cek (vector tipi Prisma select desteklemez)
       const embRows = await prisma.$queryRawUnsafe(
         `SELECT embedding::text FROM "BusinessEmbedding" WHERE "businessId" = $1 LIMIT 1`,
         business.id
       )
 
-      const fetchLimit = limit * 3 // daha fazla cek, sonra sirala
-
       let rows = []
       if (embRows.length > 0 && embRows[0].embedding) {
+        // Soft city filter: ayni sehir once, sonra vektor benzerligi
+        const fetchLimit = limit * 3
         rows = await prisma.$queryRawUnsafe(`
           SELECT
             b.id, b.name, b.slug, b.city, b.district,
             b."averageRating", b."totalReviews",
-            b.attributes,
             c.name AS "categoryName", c.icon AS "categoryIcon",
             1 - (be.embedding <=> $1::vector) AS similarity,
-            CASE WHEN b.city = $5 THEN 1 ELSE 0 END AS "sameCity"
+            b.attributes->>'coverPhoto' AS cover_photo,
+            (SELECT p.url FROM "BusinessPhoto" p WHERE p."businessId" = b.id ORDER BY p."order" ASC LIMIT 1) AS photo_url
           FROM "Business" b
           JOIN "BusinessEmbedding" be ON be."businessId" = b.id
           JOIN "Category" c ON c.id = b."categoryId"
@@ -669,7 +664,7 @@ async function businessRoutes(fastify) {
         `, embRows[0].embedding, business.id, business.categoryId, fetchLimit, business.city)
         rows = rows.slice(0, limit)
       } else {
-        // Fallback: embedding yoksa ayni sehir once, sonra puana gore
+        // Fallback: ayni sehir once, puana gore
         const sameCity = await prisma.business.findMany({
           where: { isActive: true, isDeleted: false, id: { not: business.id }, categoryId: business.categoryId, city: business.city },
           select: { id: true, name: true, slug: true, city: true, district: true, averageRating: true, totalReviews: true, attributes: true, category: { select: { name: true, icon: true } } },
@@ -690,8 +685,8 @@ async function businessRoutes(fastify) {
       }
 
       const similar = rows.map((r) => {
-        const attrs = r.attributes ?? {}
-        const cover = attrs.coverPhoto ?? attrs.photos?.[0] ?? null
+        const attrs = (typeof r.attributes === 'string' ? JSON.parse(r.attributes) : r.attributes) ?? {}
+        const cover = r.photo_url ?? r.cover_photo ?? attrs.coverPhoto ?? attrs.photos?.[0] ?? null
         return {
           id: r.id,
           name: r.name,
