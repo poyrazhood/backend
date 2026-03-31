@@ -58,6 +58,7 @@ model User {
   userFollowing        UserFollow[]           @relation("Followers")
   userFollowers        UserFollow[]           @relation("Following")
   referralUse          ReferralUse?
+  supportTickets       SupportTicket[]
 
   @@index([email])
   @@index([username])
@@ -728,4 +729,23 @@ model ReferralUse {
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([referralCodeId])
+}
+
+model SupportTicket {
+  id        String   @id @default(cuid())
+  email     String
+  phone     String?
+  category  String   @default("other")
+  subject   String?
+  message   String
+  status    String   @default("open")
+  adminNote String?
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([category])
+  @@index([createdAt])
 }
